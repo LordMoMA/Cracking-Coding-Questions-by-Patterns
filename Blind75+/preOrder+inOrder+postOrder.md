@@ -1,3 +1,5 @@
+![Alt text](traversal.png)
+
 [105. Construct Binary Tree from Preorder and Inorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
 
 ```go
@@ -44,7 +46,29 @@ func buildTree2(preorder []int, inorder []int) *TreeNode {
 [106. Construct Binary Tree from Inorder and Postorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/)
 
 ```go
+
 func buildTree(inorder []int, postorder []int) *TreeNode {
+    
+    if len(postorder) == 0 {
+        return nil
+    }
+    root := &TreeNode{Val: postorder[len(postorder)-1]}
+    mid := indexOf(inorder, root.Val)
+    root.Left = buildTree(inorder[:mid], postorder[:mid])
+    root.Right = buildTree(inorder[mid+1:], postorder[mid:len(postorder)-1])
+    return root
+}
+
+func indexOf(arr []int, val int) int {
+    for i := range arr {
+        if arr[i] == val {
+            return i
+        }
+    }
+    return -1
+}
+
+func buildTree2(inorder []int, postorder []int) *TreeNode {
     if len(postorder) == 0 {
         return nil
     }
@@ -58,8 +82,8 @@ func buildTree(inorder []int, postorder []int) *TreeNode {
             break
         }
     }
-    root.Left = buildTree(inorder[:idx], postorder[:idx])
-    root.Right = buildTree(inorder[idx+1:], postorder[idx:len(postorder)-1])
+    root.Left = buildTree2(inorder[:idx], postorder[:idx])
+    root.Right = buildTree2(inorder[idx+1:], postorder[idx:len(postorder)-1])
     return root
 }
 ```
@@ -67,7 +91,31 @@ func buildTree(inorder []int, postorder []int) *TreeNode {
 [889. Construct Binary Tree from Preorder and Postorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-postorder-traversal/)
 
 ```go
-func constructFromPrePost(pre []int, post []int) *TreeNode {
+
+func constructFromPrePost(preorder []int, postorder []int) *TreeNode {
+    if len(postorder) == 0 {
+        return nil
+    }
+    root := &TreeNode{Val: postorder[len(postorder)-1]}
+    if len(postorder) == 1 {
+        return root
+    }
+    idx := indexOf(preorder[1:], postorder[len(postorder)-2]) 
+    root.Left = constructFromPrePost(preorder[1:idx+1], postorder[:idx])
+    root.Right = constructFromPrePost(preorder[idx+1:], postorder[idx:len(postorder)-1])
+    return root
+}
+
+func indexOf(arr []int, val int) int {
+    for i := range arr {
+        if arr[i] == val {
+            return i
+        }
+    }
+    return -1
+}
+
+func constructFromPrePost2(pre []int, post []int) *TreeNode {
     if len(pre) == 0 {
         return nil
     }
@@ -81,8 +129,8 @@ func constructFromPrePost(pre []int, post []int) *TreeNode {
             break
         }
     }
-    root.Left = constructFromPrePost(pre[1:idx+2], post[:idx+1])
-    root.Right = constructFromPrePost(pre[idx+2:], post[idx+1:len(post)-1])
+    root.Left = constructFromPrePost2(pre[1:idx+2], post[:idx+1])
+    root.Right = constructFromPrePost2(pre[idx+2:], post[idx+1:len(post)-1])
     return root
 }
 ```
