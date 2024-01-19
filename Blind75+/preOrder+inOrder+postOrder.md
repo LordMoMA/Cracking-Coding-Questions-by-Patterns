@@ -100,9 +100,24 @@ func constructFromPrePost(preorder []int, postorder []int) *TreeNode {
     if len(postorder) == 1 {
         return root
     }
-    idx := indexOf(preorder[1:], postorder[len(postorder)-2]) 
+    idx := indexOf(preorder[1:], postorder[len(postorder)-2]) // finding the index of the root of the right subtree in the preorder array.
     root.Left = constructFromPrePost(preorder[1:idx+1], postorder[:idx])
     root.Right = constructFromPrePost(preorder[idx+1:], postorder[idx:len(postorder)-1])
+    return root
+}
+
+func constructFromPrePost2(pre []int, post []int) *TreeNode {
+    if len(pre) == 0 {
+        return nil
+    }
+
+    root := &TreeNode{Val: pre[0]}
+    if len(post) == 1 {
+        return root
+    }
+    idx := indexOf(post, pre[1])
+    root.Left = constructFromPrePost2(pre[1:idx+2], post[:idx+1])
+    root.Right = constructFromPrePost2(pre[idx+2:], post[idx+1:len(post)-1])
     return root
 }
 
@@ -115,7 +130,7 @@ func indexOf(arr []int, val int) int {
     return -1
 }
 
-func constructFromPrePost2(pre []int, post []int) *TreeNode {
+func constructFromPrePost3(pre []int, post []int) *TreeNode {
     if len(pre) == 0 {
         return nil
     }
@@ -129,8 +144,8 @@ func constructFromPrePost2(pre []int, post []int) *TreeNode {
             break
         }
     }
-    root.Left = constructFromPrePost2(pre[1:idx+2], post[:idx+1])
-    root.Right = constructFromPrePost2(pre[idx+2:], post[idx+1:len(post)-1])
+    root.Left = constructFromPrePost3(pre[1:idx+2], post[:idx+1]) // preorder starts its left from 1, so to include everything in the left subtree, we need to add 2 to idx.
+    root.Right = constructFromPrePost3(pre[idx+2:], post[idx+1:len(post)-1])
     return root
 }
 ```
