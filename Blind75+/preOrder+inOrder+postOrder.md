@@ -6,6 +6,26 @@ func buildTree(preorder []int, inorder []int) *TreeNode {
         return nil
     }
     root := &TreeNode{Val: preorder[0]}
+    mid := indexOf(inorder, preorder[0])
+    root.Left = buildTree(preorder[1:mid+1], inorder[:mid])
+    root.Right = buildTree(preorder[mid+1:], inorder[mid+1:])
+    return root
+}
+
+func indexOf(arr []int, val int) int {
+    for i := range arr {
+        if arr[i] == val {
+            return i
+        }
+    }
+    return -1
+}
+
+func buildTree2(preorder []int, inorder []int) *TreeNode {
+    if len(preorder) == 0 {
+        return nil
+    }
+    root := &TreeNode{Val: preorder[0]}
     if len(preorder) == 1 {
         return root
     }
@@ -15,8 +35,8 @@ func buildTree(preorder []int, inorder []int) *TreeNode {
             break
         }
     }
-    root.Left = buildTree(preorder[1:idx+1], inorder[:idx])
-    root.Right = buildTree(preorder[idx+1:], inorder[idx+1:])
+    root.Left = buildTree2(preorder[1:idx+1], inorder[:idx])
+    root.Right = buildTree2(preorder[idx+1:], inorder[idx+1:])
     return root
 }
 ```
