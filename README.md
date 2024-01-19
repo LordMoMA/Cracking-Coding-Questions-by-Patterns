@@ -1,6 +1,7 @@
 # Cracking-Coding-Questions-by-Patterns
 
 ## Patterns:
+
 1. Sliding Window
 2. Two Pointers
 3. Fast — Slow pointers
@@ -22,6 +23,7 @@
 With the above Repo at hand, you can either use LeetCode or any IDE or terminal to practice these questions.
 
 ## Tips:
+
 ### For first time programmers:
 Think and look for insights online for the first 30 minutes, if it still does not work. Check my solutions! Don’t be ashamed and don’t waste time on thinking too much like I used to.
 
