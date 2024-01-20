@@ -1,3 +1,6 @@
+![Alt text](trie.png)
+![Alt text](trie-search.png)
+
 [208. Implement Trie (Prefix Tree)](https://leetcode.com/problems/implement-trie-prefix-tree/)
 
 ```go
