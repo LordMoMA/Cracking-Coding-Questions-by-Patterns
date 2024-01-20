@@ -1,6 +1,6 @@
-![Alt text](trie.png)
-![Alt text](trie-search.png)
-![Alt text](trie-example.gif)
+![Alt text](images/trie.png)
+![Alt text](images/trie-search.png)
+![Alt text](images/trie-example.gif)
 
 [208. Implement Trie (Prefix Tree)](https://leetcode.com/problems/implement-trie-prefix-tree/)
 
