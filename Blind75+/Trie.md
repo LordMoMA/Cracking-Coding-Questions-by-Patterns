@@ -63,9 +63,72 @@ func (this *Trie) StartsWith(prefix string) bool {
  * param_3 := obj.StartsWith(prefix);
  */
 ```
+
 [211. Design Add and Search Words Data Structure](https://leetcode.com/problems/design-add-and-search-words-data-structure/)
 
 ```go
+type Trie struct {
+    children map[rune]*Trie
+    isEnd bool
+}
+
+type WordDictionary struct {
+    root *Trie
+}
+
+
+func Constructor() WordDictionary {
+    return WordDictionary{
+        root: &Trie{
+            children: make(map[rune]*Trie),
+        },
+    }
+}
+
+
+func (this *WordDictionary) AddWord(word string)  {
+    node := this.root
+    for _, ch := range word {
+        if _, ok := node.children[ch]; !ok {
+            node.children[ch] = &Trie{
+                children: make(map[rune]*Trie),
+            }
+        }
+        node = node.children[ch]
+    }
+    node.isEnd = true
+}
+
+
+func (this *WordDictionary) Search(word string) bool {
+    return this.SearchTrie(word, this.root)
+}
+
+func (this *WordDictionary) SearchTrie(word string, node *Trie) bool {
+    for i, ch := range word {
+        if ch != '.' {
+            if _, ok := node.children[ch]; !ok {
+                return false
+            }
+            node = node.children[ch]
+        } else {
+            for _, child := range node.children {
+                if this.SearchTrie(word[i+1:], child) {
+                    return true
+                }   
+            }
+            return false
+        }
+    }
+    return node.isEnd
+}
+
+/**
+ * Your WordDictionary object will be instantiated and called as such:
+ * obj := Constructor();
+ * obj.AddWord(word);
+ * param_2 := obj.Search(word);
+ */
 
 ```
 
