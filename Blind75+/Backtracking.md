@@ -38,5 +38,33 @@ The space complexity of the function is O(T/M) because in the worst case, if eve
 [79. Word Search](https://leetcode.com/problems/word-search/)
 
 ```go
+func exist(board [][]byte, word string) bool {
+    for i := 0; i < len(board); i++ {
+        for j := 0; j < len(board[0]); j++ {
+            if backtrack(board, word, i, j, 0) {
+                return true
+            }
+        }
+    }
+    return false
+}
 
+func backtrack(board [][]byte, word string, row, col, idx int) bool{
+    if idx == len(word) {
+        return true
+    }
+    if row >= len(board) || row < 0 || col >= len(board[0]) || col < 0 || board[row][col] != word[idx] {
+        return false
+    }
+    temp := board[row][col]
+    board[row][col] = '#'
+    dirs := [][]int{{-1, 0}, {1, 0}, {0, -1}, {0, 1}}
+    for _, dir := range dirs {
+        if backtrack(board, word, row+dir[0], col+dir[1], idx+1) {
+            return true
+        }
+    }
+    board[row][col] = temp
+    return false
+}
 ```
