@@ -72,4 +72,5 @@ For both DFS and BFS, the time complexity is O(M*N), where M is the number of ro
 Space Complexity:
 
 For DFS, the space complexity is O(MN) in the worst case due to recursion. This happens when the grid map is filled with lands where DFS goes by MN deep.
+
 For BFS, the space complexity is O(min(M, N)) because in worst case you could end up adding all the cells in the grid into the queue. However, in practice, it will be the maximum size of the queue, which depends on the size of the largest level in the graph (i.e., the maximum number of nodes reachable within the same number of steps from the start node). In the case of a grid, this would be min(M, N).
