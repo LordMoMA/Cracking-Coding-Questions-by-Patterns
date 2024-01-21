@@ -112,18 +112,30 @@ func cloneGraph(node *Node) *Node {
     visited[node] = &Node{Val: node.Val, Neighbors: []*Node{}}
 
     for len(queue) > 0 {
-        node := queue[0]
+        n := queue[0]
         queue = queue[1:]
 
-        for _, neighbor := range node.Neighbors {
+        for _, neighbor := range n.Neighbors {
             if _, ok := visited[neighbor]; !ok {
                 visited[neighbor] = &Node{Val: neighbor.Val, Neighbors: []*Node{}}
                 queue = append(queue, neighbor)
             }
-            visited[node].Neighbors = append(visited[node].Neighbors, visited[neighbor])
+            visited[n].Neighbors = append(visited[n].Neighbors, visited[neighbor])
         }
     }
 
     return visited[node]
 }
 ```
+
+Time Complexity: O(N)
+
+N is the number of nodes in the graph.
+This is because each node in the graph is visited and cloned exactly once.
+Space Complexity: O(N)
+
+N is the number of nodes in the graph.
+The space complexity is determined by the storage required for the visited map and the recursive call stack (for DFS) or the queue (for BFS).
+The visited map stores a clone of each node in the graph, hence O(N).
+In the worst case, the maximum depth of the recursive call stack (for DFS) or the size of the queue (for BFS) can be O(N), such as in the case of a path graph (a graph that is a single line).
+So, both the DFS and BFS solutions have a time complexity of O(N) and a space complexity of O(N).
