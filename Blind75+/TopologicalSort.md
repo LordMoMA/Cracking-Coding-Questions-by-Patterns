@@ -1,10 +1,28 @@
-topological sorting can be viewed as a specific application of Breadth-First Search (BFS).
+## Topological Sort
+
+Topological Sorting can be viewed as a specific application of Breadth-First Search (BFS).
 
 In a typical BFS, you traverse the graph level by level, starting from a certain node. However, in topological sorting, you start from nodes that have no incoming edges (in-degree of 0), i.e., no dependencies. These nodes are equivalent to the 'level 0' in BFS.
 
 After visiting a node, you remove its edges, which is equivalent to decrementing the in-degrees of its adjacent nodes. If this results in any nodes having an in-degree of 0, they are added to the queue, just like how you would add the next level of nodes in a BFS.
 
 So, while topological sorting uses a queue and has a similar flow to BFS, it's specifically designed to handle directed acyclic graphs and to provide a linear ordering of the nodes that respects the partial order that the edges give.
+
+## About In-degree
+
+In the context of topological sorting, the in-degree of a node represents the number of prerequisites or dependencies that node has. A node with an in-degree of 0 has no prerequisites, meaning it can be processed immediately without waiting for any other nodes.
+
+When performing topological sorting, we start with nodes that have an in-degree of 0, because these nodes have no dependencies and can be processed right away. We add these nodes to the queue. 
+
+As we process each node from the queue (i.e., remove it from the queue and add it to the sorted list), we also reduce the in-degree of its children by 1. This represents that one of their dependencies has been processed. If this causes any of the children to have an in-degree of 0, it means all of their dependencies have been processed, and they can now be processed as well. So, we add them to the queue.
+
+The reason we decrease the in-degree of all its neighboring nodes by 1 is because once a node is processed, it's as if it no longer exists in the graph. Therefore, all the edges coming from this node to its neighboring nodes are removed. In terms of in-degrees, this is equivalent to decreasing the in-degree of each neighboring node by 1.
+
+This is important because it may cause some neighboring nodes to have an in-degree of 0, meaning they have no more prerequisites left to be processed. These nodes can then be added to the queue to be processed next.
+
+This process continues until the queue is empty, at which point all nodes have been processed and added to the sorted list in a way that respects their dependencies. If there are still nodes left with a non-zero in-degree, it means there's a cycle in the graph, and a topological sort is not possible.
+
+## Philosophy Details
 
 The basic idea behind the topological sort is to provide a partial ordering among the vertices of the graph such that if there is an edge from U to V then U≤V i.e., U comes before V in the ordering. Here are a few fundamental concepts related to topological sort:
 
