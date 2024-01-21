@@ -189,3 +189,16 @@ func dfs(heights [][]int, visited [][]bool, r, c int) {
     }
 }
 ```
+The dfs function only marks a cell as true in the pacific or atlantic 2D slice if it can be reached from the starting cell of the DFS without moving "uphill" (i.e., to a cell with a higher value). This is controlled by the condition in the if statement.
+
+```go
+if nr < 0 || nc < 0 || nr >= len(heights) || nc >= len(heights[0]) || visited[nr][nc] || heights[nr][nc] < heights[r][c] {
+    continue
+}
+```
+
+Time Complexity: O(M*N) 
+Space Complexity: O(M*N)
+
+
+
