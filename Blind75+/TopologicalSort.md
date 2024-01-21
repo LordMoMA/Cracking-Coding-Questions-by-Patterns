@@ -1,8 +1,18 @@
+topological sorting can be viewed as a specific application of Breadth-First Search (BFS).
+
+In a typical BFS, you traverse the graph level by level, starting from a certain node. However, in topological sorting, you start from nodes that have no incoming edges (in-degree of 0), i.e., no dependencies. These nodes are equivalent to the 'level 0' in BFS.
+
+After visiting a node, you remove its edges, which is equivalent to decrementing the in-degrees of its adjacent nodes. If this results in any nodes having an in-degree of 0, they are added to the queue, just like how you would add the next level of nodes in a BFS.
+
+So, while topological sorting uses a queue and has a similar flow to BFS, it's specifically designed to handle directed acyclic graphs and to provide a linear ordering of the nodes that respects the partial order that the edges give.
+
 The basic idea behind the topological sort is to provide a partial ordering among the vertices of the graph such that if there is an edge from U to V then U≤V i.e., U comes before V in the ordering. Here are a few fundamental concepts related to topological sort:
 
 Source: Any node that has no incoming edge and has only outgoing edges is called a source.
 
 Sink: Any node that has only incoming edges and no outgoing edge is called a sink.
+
+InDegree: "in-degree" of a node refers to the number of incoming edges to that node.
 
 So, we can say that a topological ordering starts with one of the sources and ends at one of the sinks.
 
@@ -36,6 +46,45 @@ If a child’s in-degree becomes ‘0’, add it to the sources Queue.
 Repeat step 1, until the source Queue is empty.
 
 [207. Course Schedule](https://leetcode.com/problems/course-schedule/)
+
+Topological Sort Pattern
+
+```go
+func canFinish(numCourses int, prerequisites [][]int) bool {
+    // Step 1: Represent the courses and prerequisites as a directed graph
+    graph := make([][]int, numCourses)
+    inDegree := make([]int, numCourses)
+    for _, pair := range prerequisites {
+        graph[pair[1]] = append(graph[pair[1]], pair[0])
+        inDegree[pair[0]]++
+    }
+
+    // Step 2: Initialize a queue to keep track of all nodes with no incoming edge
+    queue := []int{}
+    for i := 0; i < numCourses; i++ {
+        if inDegree[i] == 0 {
+            queue = append(queue, i)
+        }
+    }
+
+    // Step 3: While the queue is not empty, remove a node from the queue, increment a count of visited nodes, and decrease the in-degree of all its neighboring nodes by 1
+    count := 0
+    for len(queue) != 0 {
+        node := queue[0]
+        queue = queue[1:]
+        count++
+        for _, neighbor := range graph[node] {
+            inDegree[neighbor]--
+            if inDegree[neighbor] == 0 {
+                queue = append(queue, neighbor)
+            }
+        }
+    }
+
+    // Step 4: After the above process, if the count of visited nodes is equal to the total number of courses, return true. Otherwise, return false.
+    return count == numCourses
+}
+```
 
 The problem can be modeled as a directed graph where each course is a node and a prerequisite relationship is a directed edge. The problem then becomes finding if there's a cycle in the graph.
 
@@ -77,44 +126,5 @@ func isCyclic(v int, visited []bool, recStack []bool, graph [][]int) bool {
 
     recStack[v] = false
     return false
-}
-```
-
-Topological Sort Pattern
-
-```go
-func canFinish(numCourses int, prerequisites [][]int) bool {
-    // Step 1: Represent the courses and prerequisites as a directed graph
-    graph := make([][]int, numCourses)
-    inDegree := make([]int, numCourses)
-    for _, pair := range prerequisites {
-        graph[pair[1]] = append(graph[pair[1]], pair[0])
-        inDegree[pair[0]]++
-    }
-
-    // Step 2: Initialize a queue to keep track of all nodes with no incoming edge
-    queue := []int{}
-    for i := 0; i < numCourses; i++ {
-        if inDegree[i] == 0 {
-            queue = append(queue, i)
-        }
-    }
-
-    // Step 3: While the queue is not empty, remove a node from the queue, increment a count of visited nodes, and decrease the in-degree of all its neighboring nodes by 1
-    count := 0
-    for len(queue) != 0 {
-        node := queue[0]
-        queue = queue[1:]
-        count++
-        for _, neighbor := range graph[node] {
-            inDegree[neighbor]--
-            if inDegree[neighbor] == 0 {
-                queue = append(queue, neighbor)
-            }
-        }
-    }
-
-    // Step 4: After the above process, if the count of visited nodes is equal to the total number of courses, return true. Otherwise, return false.
-    return count == numCourses
 }
 ```
