@@ -185,9 +185,3 @@ func findOrder(n int, pre [][]int) []int {
     return []int{}
 }
 ```
-
-[630. Course Schedule III](https://leetcode.com/problems/course-schedule-iii/description/)
-
-```go
-
-```

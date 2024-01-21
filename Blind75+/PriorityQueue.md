@@ -55,6 +55,54 @@ func (m *minHeap) Pop() interface{} {
 }
 ```
 
+[630. Course Schedule III](https://leetcode.com/problems/course-schedule-iii/description/)
+
+```go
+import (
+    "container/heap"
+    "sort"
+)
+
+func scheduleCourse(courses [][]int) int {
+    sort.Slice(courses, func(i, j int) bool {
+        return courses[i][1] < courses[j][1]
+    })
+
+    maxHeap := &IntHeap{}
+    heap.Init(maxHeap)
+    time := 0
+
+    for _, course := range courses {
+        time += course[0]
+        heap.Push(maxHeap, course[0])
+        if time > course[1] {
+            time -= heap.Pop(maxHeap).(int)
+        }
+    }
+
+    return maxHeap.Len()
+}
+
+type IntHeap []int
+
+func (h IntHeap) Len() int           { return len(h) }
+func (h IntHeap) Less(i, j int) bool { return h[i] > h[j] }
+func (h IntHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+
+func (h *IntHeap) Push(x interface{}) {
+    *h = append(*h, x.(int))
+}
+
+func (h *IntHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+```
+
+
 [692. Top K Frequent Words](https://leetcode.com/problems/top-k-frequent-words/)
 [703. Kth Largest Element in a Stream](https://leetcode.com/problems/kth-largest-element-in-a-stream/)
 [767. Reorganize String](https://leetcode.com/problems/reorganize-string/)
