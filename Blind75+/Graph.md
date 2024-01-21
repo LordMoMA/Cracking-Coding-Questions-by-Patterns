@@ -143,4 +143,49 @@ So, both the DFS and BFS solutions have a time complexity of O(N) and a space co
 [417. Pacific Atlantic Water Flow](https://leetcode.com/problems/pacific-atlantic-water-flow/)
 
 ```go
+func pacificAtlantic(heights [][]int) [][]int {
+    if len(heights) == 0 || len(heights[0]) == 0 {
+        return [][]int{}
+    }
+
+    m, n := len(heights), len(heights[0])
+    pacific, atlantic := make([][]bool, m), make([][]bool, m)
+    for i := 0; i < m; i++ {
+        pacific[i], atlantic[i] = make([]bool, n), make([]bool, n)
+    }
+
+    for i := 0; i < m; i++ {
+        dfs(heights, pacific, i, 0)
+        dfs(heights, atlantic, i, n-1)
+    }
+
+    for i := 0; i < n; i++ {
+        dfs(heights, pacific, 0, i)
+        dfs(heights, atlantic, m-1, i)
+    }
+
+    res := [][]int{}
+    for i := 0; i < m; i++ {
+        for j := 0; j < n; j++ {
+            if pacific[i][j] && atlantic[i][j] {
+                res = append(res, []int{i, j})
+            }
+        }
+    }
+
+    return res
+}
+
+func dfs(heights [][]int, visited [][]bool, r, c int) {
+    directions := [][]int{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}
+    visited[r][c] = true
+
+    for _, d := range directions {
+        nr, nc := r+d[0], c+d[1]
+        if nr < 0 || nr >= len(heights) || nc < 0 || nc >= len(heights[0]) || visited[nr][nc] || heights[nr][nc] < heights[r][c] {
+            continue
+        }
+        dfs(heights, visited, nr, nc)
+    }
+}
 ```
