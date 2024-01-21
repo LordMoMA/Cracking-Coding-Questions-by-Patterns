@@ -73,8 +73,4 @@ The time complexity of the exist function is O(N * 4^L), where N is the total nu
 
 The space complexity of the function is O(L), where L is the length of the word. This is because in the worst case, if the word is found, the maximum depth of the recursion (and hence the maximum size of the call stack) can be the length of the word. The space complexity also accounts for the space required to store the word.
 
-[200. Number of Islands](https://leetcode.com/problems/number-of-islands/)
 
-```go   
-
-```
