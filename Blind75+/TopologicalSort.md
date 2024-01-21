@@ -142,7 +142,52 @@ func isCyclic(v int, visited []bool, recStack []bool, graph [][]int) bool {
         }
     }
 
-    recStack[v] = false
+    recStack[v] = false // backtracking
     return false
 }
+```
+
+[210. Course Schedule II](https://leetcode.com/problems/course-schedule-ii/)
+
+```go
+func findOrder(n int, pre [][]int) []int {
+    graph := make([][]int, n)
+    inDegree := make([]int, n)
+    res := []int{}
+
+    for _, pair := range pre {
+        graph[pair[1]] = append(graph[pair[1]], pair[0])
+        inDegree[pair[0]]++
+    }
+
+    queue := []int{}
+    for i := 0; i < n; i++ {
+        if inDegree[i] == 0 {
+            queue = append(queue, i)
+        }
+    }
+
+    for len(queue) > 0 {
+        node := queue[0]
+        queue = queue[1:]
+        res = append(res, node)
+
+        for _, neighbor := range graph[node] {
+            inDegree[neighbor]--
+            if inDegree[neighbor] == 0 {
+                queue = append(queue, neighbor)
+            }
+        }
+    }
+    if len(res) == n {
+        return res
+    }
+    return []int{}
+}
+```
+
+[630. Course Schedule III](https://leetcode.com/problems/course-schedule-iii/description/)
+
+```go
+
 ```
