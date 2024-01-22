@@ -7,10 +7,47 @@ After the recursive solution, we will modify our algorithm to apply advanced tec
 Read this file first:
 [DP Comprehensive Introduction](http://htmlpreview.github.io/?https://github.com/LordMoMA/Cracking-Coding-Questions-by-Patterns/blob/main/Blind75%2B/files/DP.html)
 
+[Climbing Stairs - Dynamic Programming - Leetcode 70](https://www.youtube.com/watch?v=Y0lT9Fck7qI&t=731s&ab_channel=NeetCode)
+
 [70. Climbing Stairs](http://www.leetcode.com/problems/climbing-stairs/)
 
 ```go
+func climbStairs(n int) int {
+    one := 1
+    two := 1
+    for i := 0; i < n - 1; i++ {
+        temp := one
+        one = one + two
+        two = temp
+    }
+    return one
+}
+```
 
+The expression dp[i] = dp[i-1] + dp[i-2] is a recurrence relation that forms the basis of the solution to the Climbing Stairs problem. It's derived from the problem statement itself.
+
+The problem states that you can climb to a step in one of two ways:
+
+Taking a single step from the previous step.
+Taking two steps from the step before the previous one.
+Therefore, the total number of ways to reach a step i is the sum of:
+
+The number of ways to reach the previous step (dp[i-1]), because from there you can take a single step to reach step i.
+The number of ways to reach the step before the previous one (dp[i-2]), because from there you can take two steps to reach step i.
+
+```go
+func climbStairs(n int) int {
+    if n <= 2 {
+        return n
+    }
+    dp := make([]int, n+1)
+    dp[1] = 1
+    dp[2] = 2
+    for i := 3; i <= n; i++ {
+        dp[i] = dp[i-1]+ dp[i-2]
+    }
+    return dp[n]
+}
 ```
 
 [198. House Robber](http://www.leetcode.com/problems/house-robber/)
