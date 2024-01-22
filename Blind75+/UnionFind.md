@@ -60,7 +60,11 @@ func countComponents(n int, edges [][]int) int {
 }
 ```
 
-with "union by rank" optimization
+With "union by rank" optimization:
+
+The "union by rank" or "union by size" optimization is used to keep the trees in the Union-Find data structure as balanced as possible. The idea is to minimize the tree height because the operations Find and Union have a time complexity proportional to the height of the tree.
+
+When you merge two sets, if you always make the root of the smaller set point to the root of the larger set, you ensure that the height of the resulting tree is not greater than the maximum height of the two original trees. This is because the smaller tree is added as a subtree of the larger tree, so it doesn't increase the height.
 
 ```go
 type UnionFind struct {
@@ -112,5 +116,106 @@ func countComponents(n int, edges [][]int) int {
 [547. Number of Provinces](https://leetcode.com/problems/number-of-provinces/description/)
 
 ```go
+func findCircleNum(isConnected [][]int) int {
+    n := len(isConnected)
+    uf := NewUnionFind(n)
+    for i := 0; i < n; i++ {
+        for j := 0; j < i; j++ {
+            if isConnected[i][j] == 1 {
+                uf.Union(i, j)
+            }
+        }
+    }
+    return uf.count
+}
 
+type UnionFind struct {
+    parent []int
+    count int
+}
+
+func NewUnionFind(n int) *UnionFind {
+    parent := make([]int, n)
+    for i := range parent {
+        parent[i] = i
+    }
+    return &UnionFind{
+        parent: parent,
+        count: n,
+    }
+}
+
+func (uf *UnionFind) Find(x int) int {
+    if uf.parent[x] != x {
+        uf.parent[x] = uf.Find(uf.parent[x])
+    }
+    return uf.parent[x]
+}
+
+func (uf *UnionFind) Union(x, y int) {
+    xRoot, yRoot := uf.Find(x), uf.Find(y)
+    if xRoot != yRoot {
+        uf.parent[xRoot] = yRoot
+        uf.count--
+    }
+}
+```
+
+Rank Optimization:
+
+```go
+func findCircleNum(isConnected [][]int) int {
+    n := len(isConnected)
+    uf := NewUnionFind(n)
+    for i := 0; i < n; i++ {
+        for j := 0; j < i; j++ {
+            if isConnected[i][j] == 1 {
+                uf.Union(i, j)
+            }
+        }
+    }
+    return uf.count
+}
+
+type UnionFind struct {
+    parent []int
+    rank []int
+    count int
+}
+
+func NewUnionFind(n int) *UnionFind {
+    parent := make([]int, n)
+    rank := make([]int, n)
+    for i := range parent {
+        parent[i] = i
+        rank[i] = 1
+    }
+    return &UnionFind{
+        parent: parent,
+        rank: rank,
+        count: n,
+    }
+}
+
+func (uf *UnionFind) Find(x int) int {
+    if uf.parent[x] != x {
+        uf.parent[x] = uf.Find(uf.parent[x])
+    }
+    return uf.parent[x]
+}
+
+func (uf *UnionFind) Union(x, y int) {
+    xRoot, yRoot := uf.Find(x), uf.Find(y)
+    if xRoot != yRoot {
+        if uf.rank[xRoot] > uf.rank[yRoot] {
+            uf.parent[yRoot] = xRoot
+        } else if uf.rank[xRoot] > uf.rank[yRoot] {
+            uf.parent[xRoot] = yRoot
+        } else {
+            uf.parent[yRoot] = xRoot
+            uf.rank[xRoot]++
+        }
+        uf.count--
+    }
+}
 ```
