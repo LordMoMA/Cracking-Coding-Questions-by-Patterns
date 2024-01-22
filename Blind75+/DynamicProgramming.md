@@ -1,3 +1,12 @@
+## Dynamic Programming
+
+In this pattern, we will go through a set of problems to develop an understanding of DP. We will always start with a brute-force recursive solution to see the overlapping subproblems, i.e., realizing that we are solving the same problems repeatedly.
+
+After the recursive solution, we will modify our algorithm to apply advanced techniques of Memoization and Bottom-Up Dynamic Programming to develop a complete understanding of this pattern.
+
+Read this file first:
+[DP Comprehensive Introduction](files/DP.html)
+
 [70. Climbing Stairs](http://www.leetcode.com/problems/climbing-stairs/)
 
 ```go
