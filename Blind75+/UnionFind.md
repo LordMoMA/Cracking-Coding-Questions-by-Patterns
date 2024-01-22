@@ -1,6 +1,14 @@
 [Union Find in 5 minutes](https://www.youtube.com/watch?v=ayW5B2W9hfo&ab_channel=PotatoCoders)
 
-Pattern:
+rank is used to keep track of the depth of the trees representing the sets. Initially, all elements are their own set, so the depth of each tree is 0, which is the default value for elements in an int slice in Go. Therefore, there's no need to explicitly set the rank of each element to 0.
+
+ size is used to keep track of the number of elements in each set. Initially, all elements are their own set, so each set has one element. Therefore, the size of each set is initialized to 1.
+
+Both implementations use a similar strategy to optimize the union operation: they always attach the smaller set to the larger set to minimize the increase in depth/size. The NewUnionFind function does this by comparing the ranks (depths) of the sets, while the newUnionFind function does it by comparing the sizes of the sets.
+
+So, both implementations are correct, and the best one to use depends on whether you want to optimize based on the depth of the sets (NewUnionFind) or the number of elements in the sets (newUnionFind).
+
+Pattern 1:
 
 ```go
 type UnionFind struct {
@@ -42,6 +50,62 @@ func (uf *UnionFind) Union(x, y int) {
         }
         uf.count--
     }
+}
+```
+
+Pattern 2:
+
+```go
+type UnionFind struct {
+	parent []int
+	size   []int
+	count  int
+}
+
+func newUnionFind(numOfElements int) *UnionFind {
+	// makeSet
+	parent := make([]int, numOfElements)
+	size := make([]int, numOfElements)
+	for i := 0; i < numOfElements; i++ {
+		parent[i] = i
+		size[i] = 1
+	}
+	return &UnionFind{
+		parent: parent,
+		size:   size,
+		count:  numOfElements,
+	}
+}
+
+// Time: O(logn) | Space: O(1)
+func (uf *UnionFind) find(node int) int {
+	for node != uf.parent[node] {
+		// path compression
+		uf.parent[node] = uf.parent[uf.parent[node]]
+		node = uf.parent[node]
+	}
+	return node
+}
+
+// Time: O(1) | Space: O(1)
+func (uf *UnionFind) union(node1, node2 int) {
+	root1 := uf.find(node1)
+	root2 := uf.find(node2)
+
+	// already in the same set
+	if root1 == root2 {
+		return
+	}
+
+	if uf.size[root1] > uf.size[root2] {
+		uf.parent[root2] = root1
+		uf.size[root1] += 1
+	} else {
+		uf.parent[root1] = root2
+		uf.size[root2] += 1
+	}
+
+	uf.count -= 1
 }
 ```
 
