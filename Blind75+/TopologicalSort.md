@@ -188,6 +188,8 @@ func findOrder(n int, pre [][]int) []int {
 
 [269. Alien Dictionary](https://leetcode.com/problems/alien-dictionary/)
 
+We need to build the graph of the characters by comparing adjacent words first, and then perform the topological sort for the graph to determine the order of the characters.
+
 In the context of the Alien Dictionary problem, a node with in-degree == 0 is a character that does not come after any other character in the alien language.
 
 ```go
