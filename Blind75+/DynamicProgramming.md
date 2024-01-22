@@ -5,7 +5,7 @@ In this pattern, we will go through a set of problems to develop an understandin
 After the recursive solution, we will modify our algorithm to apply advanced techniques of Memoization and Bottom-Up Dynamic Programming to develop a complete understanding of this pattern.
 
 Read this file first:
-[DP Comprehensive Introduction](files/DP.html)
+[DP Comprehensive Introduction](http://htmlpreview.github.io/?https://github.com/LordMoMA/Cracking-Coding-Questions-by-Patterns/blob/main/Blind75%2B/files/DP.html)
 
 [70. Climbing Stairs](http://www.leetcode.com/problems/climbing-stairs/)
 
