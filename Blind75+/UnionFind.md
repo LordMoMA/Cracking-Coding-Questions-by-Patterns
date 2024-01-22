@@ -1,5 +1,50 @@
 [Union Find in 5 minutes](https://www.youtube.com/watch?v=ayW5B2W9hfo&ab_channel=PotatoCoders)
 
+Pattern:
+
+```go
+type UnionFind struct {
+    parent []int
+    rank   []int
+    count  int
+}
+
+func NewUnionFind(n int) *UnionFind {
+    parent := make([]int, n)
+    rank := make([]int, n)
+    for i := range parent {
+        parent[i] = i
+    }
+    return &UnionFind{
+        parent: parent,
+        rank:   rank,
+        count:  n,
+    }
+}
+
+func (uf *UnionFind) Find(x int) int {
+    if uf.parent[x] != x {
+        uf.parent[x] = uf.Find(uf.parent[x])
+    }
+    return uf.parent[x]
+}
+
+func (uf *UnionFind) Union(x, y int) {
+    xRoot, yRoot := uf.Find(x), uf.Find(y)
+    if xRoot != yRoot {
+        if uf.rank[xRoot] > uf.rank[yRoot] {
+            uf.parent[yRoot] = xRoot
+        } else if uf.rank[xRoot] < uf.rank[yRoot] {
+            uf.parent[xRoot] = yRoot
+        } else {
+            uf.parent[yRoot] = xRoot
+            uf.rank[xRoot]++
+        }
+        uf.count--
+    }
+}
+```
+
 [323 Number of Connected Components In An Undirected Graph (Medium)](https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/)
 
 Given n nodes labeled from 0 to n - 1 and a list of undirected edges (each edge is a pair of nodes), write a function to find the number of connected components in an undirected graph.
@@ -219,3 +264,21 @@ func (uf *UnionFind) Union(x, y int) {
     }
 }
 ```
+
+[261 Graph Valid Tree](https://leetcode.com/problems/graph-valid-tree/description/)
+
+```go
+func validTree(n int, edges [][]int) bool {
+    if len(edges) != n-1 {
+        return false
+    }
+
+    uf := NewUnionFind(n)
+    for _, edge := range edges {
+        uf.Union(edge[0], edge[1])
+    }
+
+    return uf.count == 1
+}
+```
+

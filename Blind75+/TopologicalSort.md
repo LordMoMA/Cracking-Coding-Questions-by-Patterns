@@ -186,4 +186,135 @@ func findOrder(n int, pre [][]int) []int {
 }
 ```
 
+[269. Alien Dictionary](https://leetcode.com/problems/alien-dictionary/)
 
+In the context of the Alien Dictionary problem, a node with in-degree == 0 is a character that does not come after any other character in the alien language.
+
+```go
+words := []string{"wrt", "wrf", "er", "ett", "rftt"}
+```
+In this case, the character 'w' is a node with in-degree == 0. This is because 'w' does not come after any other character in the words list. It always appears before other characters ('r' and 't').
+
+
+```go
+func alienOrder(words []string) string {
+    graph := make(map[byte][]byte)
+    degree := make(map[byte]int)
+    for _, word := range words {
+        for i := 0; i < len(word); i++ {
+            graph[word[i]] = []byte{}
+            degree[word[i]] = 0
+        }
+    }
+
+    for i := 0; i < len(words)-1; i++ {
+        cur := words[i]
+        next := words[i+1]
+        length := min(len(cur), len(next))
+        for j := 0; j < length; j++ {
+            if cur[j] != next[j] {
+                graph[cur[j]] = append(graph[cur[j]], next[j])
+                degree[next[j]]++
+                break
+            }
+        }
+    }
+
+    queue := []byte{}
+    for b, d := range degree {
+        if d == 0 {
+            queue = append(queue, b)
+        }
+    }
+
+    var res []byte
+    for len(queue) > 0 {
+        b := queue[0]
+        queue = queue[1:]
+        res = append(res, b)
+        for _, next := range graph[b] {
+            degree[next]--
+            if degree[next] == 0 {
+                queue = append(queue, next)
+            }
+        }
+    }
+
+    // determine if there is a cycle in the graph.
+    if len(res) != len(degree) {
+        return ""
+    }
+
+    return string(res)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+len(res) represents the number of nodes that have been processed (i.e., added to the result string), and len(degree) represents the total number of nodes in the graph.
+
+```go
+import "container/list"
+
+func alienOrder(words []string) string {
+    graph := make(map[byte]*list.List)
+    degree := make(map[byte]int)
+    for _, word := range words {
+        for i := 0; i < len(word); i++ {
+            graph[word[i]] = list.New()
+            degree[word[i]] = 0
+        }
+    }
+
+    for i := 0; i < len(words)-1; i++ {
+        cur := words[i]
+        next := words[i+1]
+        length := min(len(cur), len(next))
+        for j := 0; j < length; j++ {
+            if cur[j] != next[j] {
+                graph[cur[j]].PushBack(next[j])
+                degree[next[j]]++
+                break
+            }
+        }
+    }
+
+    queue := list.New()
+    for b, d := range degree {
+        if d == 0 {
+            queue.PushBack(b)
+        }
+    }
+
+    var res []byte
+    for queue.Len() > 0 {
+        b := queue.Remove(queue.Front()).(byte)
+        res = append(res, b)
+        for e := graph[b].Front(); e != nil; e = e.Next() {
+            next := e.Value.(byte)
+            degree[next]--
+            if degree[next] == 0 {
+                queue.PushBack(next)
+            }
+        }
+    }
+
+    if len(res) != len(degree) {
+        return ""
+    }
+
+    return string(res)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
