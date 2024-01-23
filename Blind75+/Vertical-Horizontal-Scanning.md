@@ -18,7 +18,7 @@ func longestCommonPrefix(strs []string) string {
     return prefix
 }
 
-// Vertical Scanning
+// 🫡 Vertical Scanning 
 func longestCommonPrefix(strs []string) string {
     if len(strs) == 0 {
         return ""
