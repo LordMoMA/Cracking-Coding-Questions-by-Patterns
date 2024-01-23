@@ -115,6 +115,12 @@ More optimized version:
 
 note: the negative numbers in freq help us keep track of characters that are not in s1 or are in s2 more times than they are in s1.
 
+The freq slice could look like this at some point during the execution of the program:
+```go
+freq := []int{2, 1, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0}
+```
+This represents a string where 'a' appears 2 times, 'b' appears 1 time, 'e' appears 3 times, 'i' appears 1 time, 'n' appears 2 times, and 'r' appears 1 time. All other letters do not appear in the string.
+
 ```go
 func checkInclusion(s1 string, s2 string) bool {
     if len(s1) > len(s2) {
