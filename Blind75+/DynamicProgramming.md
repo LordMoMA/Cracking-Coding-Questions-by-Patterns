@@ -50,6 +50,23 @@ func climbStairs(n int) int {
 }
 ```
 
+[118. Pascal's Triangle](https://leetcode.com/problems/pascals-triangle/description/)
+
+```go
+func generate(n int) [][]int {
+    res := make([][]int, n)
+
+    for i := range res {
+        res[i] = make([]int, i+1)
+        res[i][0], res[i][i] = 1, 1
+        for j := 1; j < i; j++ {
+            res[i][j] = res[i-1][j-1] + res[i-1][j]
+        }
+    }
+    return res
+}
+```
+
 [198. House Robber](http://www.leetcode.com/problems/house-robber/)
 
 ```go
