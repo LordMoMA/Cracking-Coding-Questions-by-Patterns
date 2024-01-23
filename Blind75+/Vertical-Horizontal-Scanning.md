@@ -1,5 +1,9 @@
 [14. Longest Common Prefix](http://www.leetcode.com/problems/longest-common-prefix/)
 
+The strings.Index(s, substr) function in Go returns the index of the first instance of substr in s. If substr is not present in s, -1 is returned.
+
+Use vertical scanning version.
+
 ```go
 // Horizontal Scanning
 func longestCommonPrefix(strs []string) string {
