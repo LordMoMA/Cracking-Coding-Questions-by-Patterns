@@ -70,5 +70,9 @@ func twoSum(numbers []int, target int) []int {
     return []int{}
 }
 ```
+[42. Trapping Rain Water](http://leetcode.com/problems/trapping-rain-water/)
 
+```go
+
+```
 
