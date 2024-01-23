@@ -113,6 +113,8 @@ func checkInclusion(s1 string, s2 string) bool {
 
 More optimized version:
 
+note: the negative numbers in freq help us keep track of characters that are not in s1 or are in s2 more times than they are in s1.
+
 ```go
 func checkInclusion(s1 string, s2 string) bool {
     if len(s1) > len(s2) {
