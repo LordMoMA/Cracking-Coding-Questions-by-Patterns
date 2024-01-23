@@ -56,3 +56,95 @@ func minWindow(s string, t string) string {
     return s[minLeft : minRight+1]
 }
 ```
+
+[567. Permutation in String](http://leetcode.com/problems/permutation-in-string/)
+
+Same pattern like above:
+
+```go
+func checkInclusion(s1 string, s2 string) bool {
+    if len(s1) > len(s2) {
+        return false
+    }
+
+    // Create frequency map for s1
+    freqMap := make(map[rune]int)
+    for _, char := range s1 {
+        freqMap[char]++
+    }
+
+    required := len(freqMap)
+    formed := 0
+    windowCounts := make(map[rune]int)
+
+    left, right := 0, 0
+
+    for right < len(s2) {
+        char := rune(s2[right])
+        windowCounts[char]++
+
+        if _, ok := freqMap[char]; ok && windowCounts[char] == freqMap[char] {
+            formed++
+        }
+
+        // Try to contract the window
+        for left <= right && formed == required {
+            char = rune(s2[left])
+
+            // Check if the current window has all the characters of s1
+            if right-left+1 == len(s1) {
+                return true
+            }
+
+            // Move the left pointer
+            windowCounts[char]--
+            if _, ok := freqMap[char]; ok && windowCounts[char] < freqMap[char] {
+                formed--
+            }
+            left++
+        }
+
+        right++
+    }
+
+    return false
+}
+```
+
+More optimized version:
+
+```go
+func checkInclusion(s1 string, s2 string) bool {
+    if len(s1) > len(s2) {
+        return false
+    }
+
+    freq := make([]int, 26)
+    for _, ch := range s1 {
+        freq[ch-'a']++
+    }
+
+    left, right, count := 0, 0, len(s1)
+    for right < len(s2) {
+        if freq[s2[right]-'a'] > 0 {
+            count--
+        }
+        freq[s2[right]-'a']--
+        right++
+
+        if count == 0 {
+            return true
+        }
+
+        if right - left == len(s1) {
+            if freq[s2[left]-'a'] >= 0 {
+                count++
+            }
+            freq[s2[left]-'a']++
+            left++
+        }
+    }
+
+    return false
+}
+```
