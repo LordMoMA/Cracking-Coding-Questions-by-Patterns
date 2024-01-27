@@ -155,6 +155,43 @@ func max(a, b int) int {
 }
 ```
 
+[5. Longest Palindromic Substring](https://leetcode.com/problems/longest-palindromic-substring/description/)
+
+DP: O(n^2) time and O(n^2) space:
+
+```go
+func longestPalindrome(s string) string {
+    n := len(s)
+    if n < 2 {
+        return s
+    }
+
+    start, maxLen := 0, 1
+    dp := make([][]bool, n)
+    for i := range dp {
+        dp[i] = make([]bool, n)
+        dp[i][i] = true
+    }
+
+    for begin := n - 1; begin >= 0; begin-- {
+        for end := begin + 1; end < n; end++ {
+            if s[begin] == s[end] {
+                if end-begin == 1 || dp[begin+1][end-1] {
+                    dp[begin][end] = true
+                    if end-begin+1 > maxLen {
+                        maxLen = end - begin + 1
+                        start = begin
+                    }
+                }
+            }
+        }
+    }
+
+    return s[start : start+maxLen]
+}
+
+```
+
 [337. House Robber III](http://www.leetcode.com/problems/house-robber-iii/)
 
 ```go
