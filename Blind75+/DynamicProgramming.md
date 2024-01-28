@@ -156,22 +156,65 @@ func max(a, b int) int {
 ```
 
 [91. Decode Ways](http://www.leetcode.com/problems/decode-ways/)
-Consider the string "226".
+let's illustrate the dynamic programming (DP) solution for the "91. Decode Ways" problem with the string "123".
 
 We initialize a DP array of size n+1 (where n is the length of the string) as follows:
 
-]
+```go
+dp = [1, 1, 0, 0]
+```
+
 The first two elements are set to 1 because there is one way to decode an empty string and one way to decode a string of length 1 if it's not '0'.
 
 We then iterate over the string from the second character onwards and update the DP array as follows:
 
 If the current character is not '0', it can be decoded on its own, so we add the number of ways to decode the string up to the previous index to the current index. In this case, the second character is '2', so we add dp[1] to dp[2], resulting in dp = [1, 1, 1, 0].
 
-If the current character and the previous character form a valid two-digit number (10 to 26), it can be decoded as a pair, so we add the number of ways to decode the string up to the second previous index to the current index. In this case, '22' is a valid two-digit number, so we add dp[0] to dp[2], resulting in dp = [1, 1, 2, 0].
+If the current character and the previous character form a valid two-digit number (10 to 26), it can be decoded as a pair, so we add the number of ways to decode the string up to the second previous index to the current index. In this case, '12' is a valid two-digit number, so we add dp[0] to dp[2], resulting in dp = [1, 1, 2, 0].
 
-We repeat this process for the third character, '6'. Since '6' is not '0', we add dp[2] to dp[3], resulting in dp = [1, 1, 2, 2]. Since '26' is a valid two-digit number, we also add dp[1] to dp[3], resulting in dp = [1, 1, 2, 3].
+We repeat this process for the third character, '3'. Since '3' is not '0', we add dp[2] to dp[3], resulting in dp = [1, 1, 2, 2]. Since '23' is a valid two-digit number, we also add dp[1] to dp[3], resulting in dp = [1, 1, 2, 3].
 
-So, there are 3 ways to decode the string "226", which is the last element in the DP array.
+So, there are 3 ways to decode the string "123", which is the last element in the DP array.
+
+```go
+func numDecodings(s string) int {
+    if s[0] == '0' {
+        return 0
+    }
+
+    dp := make([]int, len(s)+1)
+    dp[0] = 1
+    dp[1] = 1
+
+    for i := 2; i <= len(s); i++ {
+        if s[i-1] != '0' {  // attention: it's s[i-1], not dp[i-1]
+            dp[i] += dp[i-1]
+        }
+        // attention: it's s[i-2], not dp[i-2]
+        if s[i-2] == '1' || (s[i-2] == '2' && s[i-1] <=  '6') {
+            dp[i] += dp[i-2]
+        }
+    }
+
+    return dp[len(s)]
+}
+```
+
+[322. Coin Change](http://www.leetcode.com/problems/coin-change/)
+
+let's break down dp[x] = min(dp[x], dp[x-coin]+1).
+
+This line of code is trying to find the minimum number of coins needed to make up the amount x. There are two options:
+
+dp[x]: This is the current minimum number of coins needed to make up the amount x. It's the result we've calculated in previous steps.
+
+dp[x-coin]+1: This represents the scenario where we use one coin of value coin to contribute towards the total amount x. So, we look at the minimum number of coins needed to make up the amount x-coin (which we've already calculated), and add one (for the coin we're currently considering).
+
+Let's consider an example where coins = [1, 2, 5] and amount = 11.
+
+When x = 11 and coin = 5, dp[11-5] or dp[6] is the minimum number of coins needed to make up the amount 6. If we add one 5-coin to this, we get a way to make up the amount 11. So, dp[6]+1 is a candidate for the minimum number of coins needed to make up the amount 11.
+
+We then take the minimum of dp[11] (the current minimum number of coins for amount 11) and dp[6]+1 (the new candidate), and store it in dp[11]. This ensures that dp[11] always contains the minimum number of coins needed to make up the amount 11.
 
 ```go
 
@@ -190,11 +233,7 @@ So, there are 3 ways to decode the string "226", which is the last element in th
 
 ```
 
-[322. Coin Change](http://www.leetcode.com/problems/coin-change/)
 
-```go
-
-```
 
 [518. Coin Change 2](http://www.leetcode.com/problems/coin-change-2/)
 
