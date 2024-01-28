@@ -334,7 +334,70 @@ Note: The BFS solution's time complexity can be much worse than the DP solution 
 
 [152. Maximum Product Subarray](http://www.leetcode.com/problems/maximum-product-subarray/)
 
+Time and Space Complexity: O(n) O(1)
+
 ```go
+func maxProduct(nums []int) int {
+    if len(nums) == 0 {
+        return 0
+    }
+
+    maxSoFar := nums[0]
+    minSoFar := nums[0]
+    result := maxSoFar
+
+    for i := 1; i < len(nums); i++ {
+        curr := nums[i]
+        tempMax := max(curr, max(maxSoFar*curr, minSoFar*curr))
+        minSoFar = min(curr, min(maxSoFar*curr, minSoFar*curr))
+
+        maxSoFar = tempMax
+
+        result = max(maxSoFar, result)
+    }
+
+    return result
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```go
+func maxProduct(nums []int) int {
+    if len(nums) == 0 {
+        return 0
+    }
+
+    maxSoFar := nums[0]
+    minSoFar := nums[0]
+    result := maxSoFar
+
+    for i := 1; i < len(nums); i++ {
+        curr := nums[i]
+        if curr < 0 {
+            // Swap maxSoFar and minSoFar when current number is negative
+            maxSoFar, minSoFar = minSoFar, maxSoFar
+        }
+        maxSoFar = max(curr, maxSoFar*curr)
+        minSoFar = min(curr, minSoFar*curr)
+
+        result = max(result, maxSoFar)
+    }
+
+    return result
+}
 
 ```
 
