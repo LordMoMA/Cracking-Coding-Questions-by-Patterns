@@ -218,6 +218,7 @@ func maxPalindrome(s string, res string, l, r int) string{
 ```
 
 Manacher's algorithm: O(n) time and O(n) space:
+[Manacher's algorithm Explaination](https://books.halfrost.com/leetcode/ChapterFour/0001~0099/0005.Longest-Palindromic-Substring/)
 
 ```go
 func longestPalindrome(s string) string {
