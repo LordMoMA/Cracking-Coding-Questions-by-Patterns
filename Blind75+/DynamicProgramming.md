@@ -401,6 +401,39 @@ func maxProduct(nums []int) int {
 
 ```
 
+[139. Word Break](https://leetcode.com/problems/word-break/description/)
+
+Time: O(n^2) Space O(m+n)
+
+```go
+func wordBreak(s string, wordDict []string) bool {
+    wordSet := make(map[string]bool)
+    for _, word := range wordDict {
+        wordSet[word] = true
+    }
+
+    dp := make([]bool, len(s)+1)
+    dp[0] = true
+
+    for i := 1; i <= len(s); i++ {
+        for j := 0; j < i; j++ {
+            if dp[j] && wordSet[s[j:i]] {
+                dp[i] = true
+                break
+            }
+        }
+    }
+
+    return dp[len(s)]
+}
+```
+
+dp[j]: This checks if the substring s[0...j] can be segmented into a space-separated sequence of one or more dictionary words. If dp[j] is true, it means s[0...j] is a valid sequence of words.
+
+wordSet[s[j:i]]: This checks if the substring s[j...i] is a word in the dictionary. If wordSet[s[j:i]] is true, it means s[j...i] is a valid word.
+
+If both conditions are true, it means that the substring s[0...i] can be segmented into a space-separated sequence of one or more dictionary words, so we set dp[i] as true.
+
 
 
 [518. Coin Change 2](http://www.leetcode.com/problems/coin-change-2/)
