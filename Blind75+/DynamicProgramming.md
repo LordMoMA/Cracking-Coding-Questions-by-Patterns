@@ -155,7 +155,27 @@ func max(a, b int) int {
 }
 ```
 
+[91. Decode Ways](http://www.leetcode.com/problems/decode-ways/)
+Consider the string "226".
 
+We initialize a DP array of size n+1 (where n is the length of the string) as follows:
+
+]
+The first two elements are set to 1 because there is one way to decode an empty string and one way to decode a string of length 1 if it's not '0'.
+
+We then iterate over the string from the second character onwards and update the DP array as follows:
+
+If the current character is not '0', it can be decoded on its own, so we add the number of ways to decode the string up to the previous index to the current index. In this case, the second character is '2', so we add dp[1] to dp[2], resulting in dp = [1, 1, 1, 0].
+
+If the current character and the previous character form a valid two-digit number (10 to 26), it can be decoded as a pair, so we add the number of ways to decode the string up to the second previous index to the current index. In this case, '22' is a valid two-digit number, so we add dp[0] to dp[2], resulting in dp = [1, 1, 2, 0].
+
+We repeat this process for the third character, '6'. Since '6' is not '0', we add dp[2] to dp[3], resulting in dp = [1, 1, 2, 2]. Since '26' is a valid two-digit number, we also add dp[1] to dp[3], resulting in dp = [1, 1, 2, 3].
+
+So, there are 3 ways to decode the string "226", which is the last element in the DP array.
+
+```go
+
+```
 
 
 [337. House Robber III](http://www.leetcode.com/problems/house-robber-iii/)
