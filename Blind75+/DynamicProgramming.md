@@ -189,7 +189,32 @@ func longestPalindrome(s string) string {
 
     return s[start : start+maxLen]
 }
+```
 
+Expand Around Center: O(n^2) time and O(1) space:
+
+```go
+func longestPalindrome(s string) string {
+    res := ""
+    for i := 0; i < len(s); i ++ {
+        res = maxPalindrome(s, res, i, i)
+        res = maxPalindrome(s, res, i, i+1)    
+    }
+    return res
+}
+
+func maxPalindrome(s string, res string, l, r int) string{
+    sub := ""
+    for l >= 0 && r < len(s) && s[l] == s[r]{
+        sub = s[l : r+1]
+        l--
+        r++
+    }
+    if len(sub) > len(res){
+        return sub
+    }
+    return res
+}
 ```
 
 [337. House Robber III](http://www.leetcode.com/problems/house-robber-iii/)
