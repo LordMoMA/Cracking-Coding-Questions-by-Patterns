@@ -312,6 +312,7 @@ func coinChange(coins []int, amount int) int {
     return -1
 }
 ```
+
 Time Complexity: O(amount * n), where n is the number of coins. This is because for each coin, we traverse through the dp array up to amount.
 
 Space Complexity: O(amount), as we use a dp array of length amount + 1.
