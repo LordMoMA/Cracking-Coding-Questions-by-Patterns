@@ -279,6 +279,51 @@ func min(a, b int) int {
 }
 ```
 
+```go
+import "math"
+
+func coinChange(coins []int, amount int) int {
+    if amount == 0 {
+        return 0
+    }
+
+    queue := []int{amount}
+    visited := make([]bool, amount+1)
+    visited[amount] = true
+    level := 0
+
+    for len(queue) > 0 {
+        level++
+        size := len(queue)
+        for i := 0; i < size; i++ {
+            remaining := queue[0]
+            queue = queue[1:]
+            for _, coin := range coins {
+                if remaining == coin {
+                    return level
+                } else if remaining > coin && !visited[remaining-coin] {
+                    queue = append(queue, remaining-coin)
+                    visited[remaining-coin] = true
+                }
+            }
+        }
+    }
+
+    return -1
+}
+```
+Time Complexity: O(amount * n), where n is the number of coins. This is because for each coin, we traverse through the dp array up to amount.
+
+Space Complexity: O(amount), as we use a dp array of length amount + 1.
+
+Breadth-First Search (BFS) Solution:
+
+Time Complexity: O(amount * n), where n is the number of coins. This is because in the worst case, we may need to explore each combination of coins.
+
+Space Complexity: O(amount), as in the worst case we may need to store all amounts in the queue. The visited array also takes O(amount) space.
+
+Note: The BFS solution's time complexity can be much worse than the DP solution in certain cases, especially when the amount is large and the number of coins is small. The BFS solution explores all possible combinations, while the DP solution reuses previously computed results.
+
 
 [337. House Robber III](http://www.leetcode.com/problems/house-robber-iii/)
 
