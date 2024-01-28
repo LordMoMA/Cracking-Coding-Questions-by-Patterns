@@ -216,8 +216,67 @@ When x = 11 and coin = 5, dp[11-5] or dp[6] is the minimum number of coins neede
 
 We then take the minimum of dp[11] (the current minimum number of coins for amount 11) and dp[6]+1 (the new candidate), and store it in dp[11]. This ensures that dp[11] always contains the minimum number of coins needed to make up the amount 11.
 
-```go
+The initialization dp[i] = amount + 1 is a common technique used in dynamic programming problems where the goal is to find the minimum of something
 
+If we initialized dp[i] to amount or any value less than amount + 1, there could be cases where the minimum number of coins needed is actually equal to amount, and we wouldn't be able to distinguish this valid case from our initial value.
+
+In other words, amount + 1 serves as a placeholder for "infinity" to indicate that we haven't found a way to make up i with the given coins yet. If dp[i] remains amount + 1 after our algorithm, it means i cannot be made up by any combination of the given coins.
+
+Let's illustrate the bottom-up dynamic programming solution for the coin change problem with an example.
+
+Consider coins = [1, 2, 5] and amount = 11.
+
+Initialize the dp array with size amount+1 (12 in this case). Set all elements to amount+1 (12), except dp[0], which is set to 0.
+
+dp = [0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12]
+
+For each coin, iterate through the dp array from the index of coin to amount.
+
+For coin = 1, update dp[x] for x from 1 to 11. After this step, dp looks like this:
+
+dp = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+
+For coin = 2, update dp[x] for x from 2 to 11. After this step, dp looks like this:
+
+dp = [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6]
+
+For coin = 5, update dp[x] for x from 5 to 11. After this step, dp looks like this:
+
+dp = [0, 1, 1, 2, 2, 1, 2, 2, 3, 3, 2, 3]
+
+Finally, if dp[amount] is still amount+1 (12), it means there's no way to make up the amount with the given coins, so return -1. Otherwise, return dp[amount].
+
+In this case, dp[11] is 3, so we return 3.
+
+This solution works by building up the solution from smaller subproblems (hence "bottom-up"). For each coin, it updates the minimum number of coins needed for all amounts that can be made up with this coin. The final answer is built up from these intermediate results.
+
+```go
+func coinChange(coins []int, amount int) int {
+    dp := make([]int, amount+1)
+    for i := range dp {
+        dp[i] = amount + 1
+    }
+    dp[0] = 0
+
+    for _, coin := range coins {
+        for x := coin; x <= amount; x++ {
+            dp[x] = min(dp[x], dp[x-coin]+1)
+        }
+    }
+
+    if dp[amount] > amount {
+        return -1
+    }
+
+    return dp[amount]
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
 ```
 
 
