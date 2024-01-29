@@ -434,6 +434,12 @@ wordSet[s[j:i]]: This checks if the substring s[j...i] is a word in the dictiona
 
 If both conditions are true, it means that the substring s[0...i] can be segmented into a space-separated sequence of one or more dictionary words, so we set dp[i] as true.
 
+[300. Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/description/)
+
+```go
+
+```
+
 
 
 [518. Coin Change 2](http://www.leetcode.com/problems/coin-change-2/)
