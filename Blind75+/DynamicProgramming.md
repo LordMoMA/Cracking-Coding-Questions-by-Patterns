@@ -522,6 +522,12 @@ func uniquePaths(m int, n int) int {
 
 [1143. Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence/description/)
 
+The reason for using m+1 and n+1 when creating the DP array in the Longest Common Subsequence problem is to account for the base case where one or both of the strings are empty.
+
+In this problem, dp[i][j] represents the length of the longest common subsequence between the first i characters of text1 and the first j characters of text2. When i or j is 0, it means we're considering an empty string, because there are 0 characters from text1 or text2. Therefore, we need an extra row and an extra column in the DP array to represent these base cases.
+
+In other problems, whether you need to add 1 when creating the DP array depends on how you define the states and the base cases. If the base case involves a 0 index (like an empty string or an array of size 0), then you'll likely need to add 1 when creating the DP array.
+
 ```go
 func longestCommonSubsequence(text1 string, text2 string) int {
     m, n := len(text1), len(text2)
@@ -550,6 +556,24 @@ func max(a, b int) int {
     return b
 }
 ```
+The reason for starting the loops from 1 is because we have already initialized dp[i][0] and dp[0][j] to 0 for all valid i and j in the DP table initialization step. These represent the base cases where one or both of the strings are empty.
+
+In Go, when you create a slice (or an array) with make, all elements are automatically initialized to the zero value of the element type. For int, the zero value is 0.
+
+So, when you do:
+
+ ```go
+ dp := make([][]int, m+1)
+for i := range dp {
+    dp[i] = make([]int, n+1)
+}
+ ```
+
+ You're creating a 2D slice dp with m+1 rows and n+1 columns, and all elements are initialized to 0. This includes dp[i][0] for all i from 0 to m, and dp[0][j] for all j from 0 to n. These represent the base cases where one or both of the strings are empty.
+
+If text1[i-1] is not equal to text2[j-1], it means the current characters in text1 and text2 do not match. Therefore, the LCS up to the ith character of text1 and the jth character of text2 does not include the current characters.
+
+In this case, the LCS could either be the LCS of the first i-1 characters of text1 and the first j characters of text2 (i.e., excluding the current character from text1), or the LCS of the first i characters of text1 and the first j-1 characters of text2 (i.e., excluding the current character from text2).
 
 
 
