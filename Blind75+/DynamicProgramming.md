@@ -475,6 +475,8 @@ Binary Search Solution
 
 This solution has a time complexity of O(n log n) and a space complexity of O(n), where n is the length of the input slice nums.
 
+if nums = [10, 9, 2, 5, 3, 7, 101, 18], the code will produce tails = [2, 3, 7, 18] and return 4
+
 ```go
 import "sort"
 
