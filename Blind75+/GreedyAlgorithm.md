@@ -56,7 +56,9 @@ We initialize dp[n-1] to true because we can always reach the end from the end. 
 
 ## Interval Problems
 
-In general, if you're trying to merge or combine intervals in some way, it's often helpful to sort by start time so you can process the intervals in the order they begin. If you're trying to select or remove intervals, it's often helpful to sort by end time so you can make decisions based on when intervals end.
+In general, if you're trying to merge or combine intervals in some way, it's often helpful to sort by start time so you can process the intervals in the order they begin. 
+
+If you're trying to select or remove intervals, it's often helpful to sort by end time so you can make decisions based on when intervals end.
 
 [57. Insert Interval](https://leetcode.com/problems/insert-interval/description/)
 
