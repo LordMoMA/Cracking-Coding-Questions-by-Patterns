@@ -579,36 +579,45 @@ In this case, the LCS could either be the LCS of the first i-1 characters of tex
 
 It's a more space-efficient version of DP known as Kadane's algorithm.
 
+Kadane's algorithm essentially does the same thing, but it only keeps track of the current sum (currentSum, equivalent to dp[i]) and the maximum sum seen so far (maxSoFar, equivalent to the maximum value in dp). This reduces the space complexity from O(n) to O(1), but the time complexity remains O(n).
 
 ```go
-
+func maxSubArray(nums []int) int {
+    maxSoFar := nums[0]
+    currentSum := nums[0]
+    
+    for i := 1; i < len(nums); i++ {
+        // attention, it's currentSum < 0, not nums[i] < 0
+        if currentSum < 0 { 
+            currentSum = nums[i]
+        } else {
+            currentSum += nums[i]
+        }
+        
+        if currentSum > maxSoFar {
+            maxSoFar = currentSum
+        }
+    }
+    
+    return maxSoFar
+}
 ```
 
 Traditional DP solution:
 
 ```go
 func maxSubArray(nums []int) int {
-    // Initialize the DP array
     dp := make([]int, len(nums))
     dp[0] = nums[0]
-
-    // Initialize the maximum sum so far
     maxSoFar := dp[0]
 
-    // Iterate over the array, starting from the second element
     for i := 1; i < len(nums); i++ {
-        // Update dp[i] to be the maximum of nums[i] and nums[i] + dp[i-1]
         dp[i] = max(nums[i], nums[i] + dp[i-1])
-
-        // Update maxSoFar if necessary
         maxSoFar = max(maxSoFar, dp[i])
     }
-
-    // Return the maximum sum
     return maxSoFar
 }
 
-// Helper function to calculate the maximum of two integers
 func max(a, b int) int {
     if a > b {
         return a
