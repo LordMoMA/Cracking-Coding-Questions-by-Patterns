@@ -436,8 +436,39 @@ If both conditions are true, it means that the substring s[0...i] can be segment
 
 [300. Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/description/)
 
-```go
+O(n^2) time complexity and O(n) space complexity
 
+```go
+func lengthOfLIS(nums []int) int {
+    if len(nums) == 0 {
+        return 0
+    }
+
+    dp := make([]int, len(nums))
+    for i := range dp {
+        dp[i] = 1
+    }
+
+    for i := range nums {
+        for j := 0; j < i; j++ {
+            if nums[i] > nums[j] {
+                dp[i] = max(dp[i], dp[j]+1)
+            }
+        }
+    }
+
+    return max(dp...)
+}
+
+func max(nums ...int) int {
+    maxNum := nums[0]
+    for _, num := range nums {
+        if num > maxNum {
+            maxNum = num
+        }
+    }
+    return maxNum
+}
 ```
 
 
