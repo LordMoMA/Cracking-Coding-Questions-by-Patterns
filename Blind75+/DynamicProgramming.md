@@ -575,6 +575,48 @@ If text1[i-1] is not equal to text2[j-1], it means the current characters in tex
 
 In this case, the LCS could either be the LCS of the first i-1 characters of text1 and the first j characters of text2 (i.e., excluding the current character from text1), or the LCS of the first i characters of text1 and the first j-1 characters of text2 (i.e., excluding the current character from text2).
 
+[53. Maximum Subarray](https://leetcode.com/problems/maximum-subarray/description/)
+
+It's a more space-efficient version of DP known as Kadane's algorithm.
+
+
+```go
+
+```
+
+Traditional DP solution:
+
+```go
+func maxSubArray(nums []int) int {
+    // Initialize the DP array
+    dp := make([]int, len(nums))
+    dp[0] = nums[0]
+
+    // Initialize the maximum sum so far
+    maxSoFar := dp[0]
+
+    // Iterate over the array, starting from the second element
+    for i := 1; i < len(nums); i++ {
+        // Update dp[i] to be the maximum of nums[i] and nums[i] + dp[i-1]
+        dp[i] = max(nums[i], nums[i] + dp[i-1])
+
+        // Update maxSoFar if necessary
+        maxSoFar = max(maxSoFar, dp[i])
+    }
+
+    // Return the maximum sum
+    return maxSoFar
+}
+
+// Helper function to calculate the maximum of two integers
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
 
 
 [518. Coin Change 2](http://www.leetcode.com/problems/coin-change-2/)
