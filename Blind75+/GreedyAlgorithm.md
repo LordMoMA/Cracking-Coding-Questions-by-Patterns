@@ -20,3 +20,32 @@ The reason we work backwards is because it simplifies the problem.
 If we start from the beginning, we would have to keep track of all possible positions we could reach from the current position and then check if any of them can reach the end. This could potentially involve tracking multiple "paths" through the array, which can complicate the algorithm.
 
 On the other hand, if we start from the end, we only need to keep track of one thing: the furthest position from the end that we know we can reach (i.e., lastPos). At each position, we just check if we can reach lastPos from there. If we can, we update lastPos to be the current position. This simplifies the problem to only tracking a single "path" through the array.
+
+Traditional DP 
+
+```go
+func canJump(nums []int) bool {
+    n := len(nums)
+    dp := make([]bool, n)
+    dp[n-1] = true // we can always reach the end from the end
+
+    for i := n - 2; i >= 0; i-- {
+        furthestJump := min(i + nums[i], n - 1)
+        for j := i + 1; j <= furthestJump; j++ {
+            if dp[j] == true {
+                dp[i] = true
+                break
+            }
+        }
+    }
+
+    return dp[0]
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
