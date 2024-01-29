@@ -54,6 +54,10 @@ func min(a, b int) int {
 
 We initialize dp[n-1] to true because we can always reach the end from the end. Then we iterate backwards over the array, and for each index i, we check if there's any index j that we can jump to from i such that dp[j] is true. If there is, we set dp[i] to true and break the loop.
 
+## Interval Problems
+
+In general, if you're trying to merge or combine intervals in some way, it's often helpful to sort by start time so you can process the intervals in the order they begin. If you're trying to select or remove intervals, it's often helpful to sort by end time so you can make decisions based on when intervals end.
+
 [57. Insert Interval](https://leetcode.com/problems/insert-interval/description/)
 
 ```go
@@ -165,4 +169,3 @@ func eraseOverlapIntervals(intervals [][]int) int {
 
 The variable count is initialized as 1 because we automatically include the first interval (after sorting) in our count of non-overlapping intervals. This is because the first interval will always be part of the solution, as there are no previous intervals that it can overlap with. We then iterate over the remaining intervals, incrementing count each time we find a non-overlapping interval.
 
-In general, if you're trying to merge or combine intervals in some way, it's often helpful to sort by start time so you can process the intervals in the order they begin. If you're trying to select or remove intervals, it's often helpful to sort by end time so you can make decisions based on when intervals end.
