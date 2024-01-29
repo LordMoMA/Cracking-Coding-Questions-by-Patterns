@@ -21,7 +21,9 @@ If we start from the beginning, we would have to keep track of all possible posi
 
 On the other hand, if we start from the end, we only need to keep track of one thing: the furthest position from the end that we know we can reach (i.e., lastPos). At each position, we just check if we can reach lastPos from there. If we can, we update lastPos to be the current position. This simplifies the problem to only tracking a single "path" through the array.
 
-Traditional DP 
+Traditional DP:
+
+This solution has a time complexity of O(n^2) and a space complexity of O(n)
 
 ```go
 func canJump(nums []int) bool {
@@ -49,3 +51,5 @@ func min(a, b int) int {
     return b
 }
 ```
+
+We initialize dp[n-1] to true because we can always reach the end from the end. Then we iterate backwards over the array, and for each index i, we check if there's any index j that we can jump to from i such that dp[j] is true. If there is, we set dp[i] to true and break the loop.
