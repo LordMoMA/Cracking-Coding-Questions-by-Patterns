@@ -56,7 +56,7 @@ We initialize dp[n-1] to true because we can always reach the end from the end. 
 
 ## Interval Problems
 
-In general, if you're trying to merge or combine intervals in some way, it's often helpful to sort by start time so you can process the intervals in the order they begin. 
+In general, if you're trying to merge or combine intervals in some way, it's often helpful to sort by start time so you can process the intervals in the order they begin.
 
 If you're trying to select or remove intervals, it's often helpful to sort by end time so you can make decisions based on when intervals end.
 
@@ -171,3 +171,41 @@ func eraseOverlapIntervals(intervals [][]int) int {
 
 The variable count is initialized as 1 because we automatically include the first interval (after sorting) in our count of non-overlapping intervals. This is because the first interval will always be part of the solution, as there are no previous intervals that it can overlap with. We then iterate over the remaining intervals, incrementing count each time we find a non-overlapping interval.
 
+[252. Meeting Rooms](http://www.leetcode.com/problems/meeting-rooms/)
+
+The problem "252. Meeting Rooms" asks if a person could attend all meetings. Given an array of meeting time intervals where intervals[i] = [starti, endi], the task is to determine if a person could attend all meetings.
+
+If we sorted by end time, we would still need to check for overlaps, but the check would be more complicated because an interval could potentially overlap with multiple previous intervals, not just the immediately preceding one.
+
+```go
+import "sort"
+
+func canAttendMeetings(intervals [][]int) bool {
+    // Sort the intervals by start time
+    sort.Slice(intervals, func(i, j int) bool {
+        return intervals[i][0] < intervals[j][0]
+    })
+
+    // Check for any overlapping intervals
+    for i := 1; i < len(intervals); i++ {
+        if intervals[i][0] < intervals[i-1][1] {
+            // If the start time of the current interval is earlier than the end time of the previous interval,
+            // then the person cannot attend all meetings.
+            return false
+        }
+    }
+
+    // If no overlapping intervals were found, then the person can attend all meetings.
+    return true
+}
+```
+
+[253. Meeting Rooms II](http://www.leetcode.com/problems/meeting-rooms-ii/)
+
+```go
+
+```
+
+[253. Meeting Rooms II](http://www.leetcode.com/problems/meeting-rooms-ii/)
+
+```go
