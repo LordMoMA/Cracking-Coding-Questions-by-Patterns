@@ -514,6 +514,30 @@ func lengthOfLIS(nums []int) int {
 }
 ```
 
+```go
+func lengthOfLIS(nums []int) int {
+    tails := []int{}
+    for _, num := range nums {
+        left, right := 0, len(tails)
+        for left < right {
+            mid := left + (right-left)/2
+            if tails[mid] < num {
+                left = mid + 1
+            } else {
+                right = mid
+            }
+        }
+        i := left
+        if i == len(tails) {
+            tails = append(tails, num)
+        } else {
+            tails[i] = num
+        }
+    }
+    return len(tails)
+}
+```
+
 
 
 [518. Coin Change 2](http://www.leetcode.com/problems/coin-change-2/)
