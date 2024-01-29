@@ -132,7 +132,9 @@ func max(a, b int) int {
 
 [435. Non-overlapping Intervals](https://leetcode.com/problems/non-overlapping-intervals/description/)
 
-```go   
+We sort by end time because we want to select the interval that ends the earliest (to leave as much room as possible for the remaining intervals), which requires processing the intervals in the order they end.
+
+```go
 import "sort"
 
 func eraseOverlapIntervals(intervals [][]int) int {
@@ -160,3 +162,7 @@ func eraseOverlapIntervals(intervals [][]int) int {
     return len(intervals) - count
 }
 ```
+
+The variable count is initialized as 1 because we automatically include the first interval (after sorting) in our count of non-overlapping intervals. This is because the first interval will always be part of the solution, as there are no previous intervals that it can overlap with. We then iterate over the remaining intervals, incrementing count each time we find a non-overlapping interval.
+
+In general, if you're trying to merge or combine intervals in some way, it's often helpful to sort by start time so you can process the intervals in the order they begin. If you're trying to select or remove intervals, it's often helpful to sort by end time so you can make decisions based on when intervals end.
