@@ -471,6 +471,27 @@ func max(nums ...int) int {
 }
 ```
 
+Binary Search Solution
+
+This solution has a time complexity of O(n log n) and a space complexity of O(n), where n is the length of the input slice nums.
+
+```go
+import "sort"
+
+func lengthOfLIS(nums []int) int {
+    tails := []int{}
+    for _, num := range nums {
+        i := sort.Search(len(tails), func(i int) bool { return tails[i] >= num })
+        if i == len(tails) {
+            tails = append(tails, num)
+        } else {
+            tails[i] = num
+        }
+    }
+    return len(tails)
+}
+```
+
 
 
 [518. Coin Change 2](http://www.leetcode.com/problems/coin-change-2/)
