@@ -208,4 +208,57 @@ func canAttendMeetings(intervals [][]int) bool {
 
 [253. Meeting Rooms II](http://www.leetcode.com/problems/meeting-rooms-ii/)
 
+Min heap for end times:
+
+The min heap is used to track the end times of the meetings currently being held. The meeting that ends the earliest is always at the top of the min heap. This is important because when a new meeting is scheduled to start, we need to check if there's a meeting that ends before or at the same time. If such a meeting exists, we can use the same room for the new meeting. If not, we need to allocate a new room.
+
 ```go
+import (
+    "container/heap"
+    "sort"
+)
+
+func minMeetingRooms(intervals [][]int) int {
+    if len(intervals) == 0 {
+        return 0
+    }
+
+    // Sort the intervals by start time
+    sort.Slice(intervals, func(i, j int) bool {
+        return intervals[i][0] < intervals[j][0]
+    })
+
+    // Initialize a min heap to store the end time of intervals
+    minHeap := &IntHeap{intervals[0][1]}
+    heap.Init(minHeap)
+
+    // Iterate over the intervals
+    for _, interval := range intervals[1:] {
+        // If the current interval's start time is greater than or equal to the earliest end time,
+        // then we can reuse the room
+        if interval[0] >= (*minHeap)[0] {
+            heap.Pop(minHeap)
+        }
+
+        // Push the end time of the current interval into the min heap
+        heap.Push(minHeap, interval[1])
+    }
+
+    // The size of the min heap is the minimum number of rooms required
+    return minHeap.Len()
+}
+
+type IntHeap []int
+
+func (h IntHeap) Len() int { return len(h) }
+func (h IntHeap) Less(i, j int) bool { return h[i] < h[j] }
+func (h IntHeap) Swap(i, j int) { h[i], h[j] = h[j], h[i] }
+func (h *IntHeap) Push(x interface{}) { *h = append(*h, x.(int)) }
+func (h *IntHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+```
