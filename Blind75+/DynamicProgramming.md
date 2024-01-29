@@ -477,6 +477,26 @@ This solution has a time complexity of O(n log n) and a space complexity of O(n)
 
 if nums = [10, 9, 2, 5, 3, 7, 101, 18], the code will produce tails = [2, 3, 7, 18] and return 4
 
+let's break down how this code works with an example. Suppose we have nums = [10, 9, 2, 5, 3, 7, 101, 18] and we're iterating through nums in the lengthOfLIS function.
+
+num = 10: tails is currently empty. sort.Search returns 0 because there's no element in tails that is greater than or equal to 10. Since 0 == len(tails), we append 10 to tails. Now, tails = [10].
+
+num = 9: sort.Search returns 0 because 10 (the first element in tails) is greater than 9. Since 0 != len(tails), we replace tails[0] with 9. Now, tails = [9].
+
+num = 2: sort.Search returns 0 because 9 is greater than 2. We replace tails[0] with 2. Now, tails = [2].
+
+num = 5: sort.Search returns 1 because there's no element in tails that is greater than or equal to 5. We append 5 to tails. Now, tails = [2, 5].
+
+num = 3: sort.Search returns 1 because 5 is greater than 3. We replace tails[1] with 3. Now, tails = [2, 3].
+
+num = 7: sort.Search returns 2 because there's no element in tails that is greater than or equal to 7. We append 7 to tails. Now, tails = [2, 3, 7].
+
+num = 101: sort.Search returns 3 because there's no element in tails that is greater than or equal to 101. We append 101 to tails. Now, tails = [2, 3, 7, 101].
+
+num = 18: sort.Search returns 3 because 101 is greater than 18. We replace tails[3] with 18. Now, tails = [2, 3, 7, 18].
+
+At the end of the process, tails contains the smallest tail elements of all increasing subsequences of lengths 1, 2, 3, 4. The length of tails is 4, which is the length of the longest increasing subsequence in nums.
+
 ```go
 import "sort"
 
