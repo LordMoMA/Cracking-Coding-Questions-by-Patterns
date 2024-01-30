@@ -1,5 +1,7 @@
 [347. Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/)
 
+The heap data structure in Go does not provide direct access to its elements. It only provides access to the top element (the minimum or maximum, depending on whether it's a min-heap or max-heap) through the heap.Pop() function. This is because heaps are binary trees that are stored in arrays for efficiency, and the elements are not sorted in a way that allows direct access.
+
 ```go
 func topKFrequent(nums []int, k int) []int {
     countMap := map[int]int{}
