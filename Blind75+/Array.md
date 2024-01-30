@@ -45,6 +45,8 @@ decoded := codec.Decode(encoded)
 // decoded should be ["Hello", "World"]
 ```
 
+"Codec" is a term that's short for "Coder-Decoder".
+
 ```go
 import (
     "strconv"
