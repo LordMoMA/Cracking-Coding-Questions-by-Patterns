@@ -1,3 +1,64 @@
+[125. Valid Palindrome](https://leetcode.com/problems/valid-palindrome/)
+
+time is O(n), space is O(1)
+
+```go
+func isPalindrome(s string) bool {
+    l, r := 0, len(s)-1
+    for l < r {
+        for l < r && !isAlphaNumeric(s[l]) {
+            l++
+        }
+        for l < r && !isAlphaNumeric(s[r]) {
+            r--
+        }
+        if l < r && !isEqual(s[l], s[r]) {
+            return false
+        }
+        l++
+        r--
+    }
+    return true
+}
+
+func isAlphanumeric(c byte) bool {
+    return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || ('0' <= c && c <= '9')
+}
+
+func isAlphaNumeric2(c byte) bool {
+    return isDigit(c) || isAlpha(c)
+}
+
+func isDigit(c byte) bool {
+    return c >= '0' && c <= '9'
+}
+
+func isAlpha(c byte) bool {
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+}
+```
+
+time and space are both O(n)
+
+```go
+func isPalindrome(s string) bool {
+    s = strings.ToLower(s)
+    runes := []rune{}
+    for _, r := range s {
+        if unicode.IsLetter(r) || unicode.IsNumber(r){
+            runes = append(runes, r)
+        }
+    }
+
+    for i := 0; i < len(runes)/2; i++ {
+        if runes[i] != runes[len(runes) - i - 1] {
+            return false
+        }
+    }
+    return true
+}
+```
+
 [392. Is Subsequence](https://leetcode.com/problems/is-subsequence/)
 
 ```go
