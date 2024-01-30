@@ -1,3 +1,89 @@
+## Sliding Window
+
+the Sliding Window pattern often goes hand in hand with a map (or a set, or an array, depending on the language and the specific problem).
+
+[3. Longest Substring Without Repeating Characters](http://leetcode.com/problems/longest-substring-without-repeating-characters/)
+
+Why not `charMap := make(map[rune]int)` ?
+
+In Go, a string is a sequence of bytes, but those bytes are often used to represent Unicode characters, also known as runes. A single Unicode character can be one to four bytes long.
+
+When you index a string like s[right], you're getting the byte at that index, not necessarily the full character. If the string contains non-ASCII characters (i.e., characters that are more than one byte long), indexing the string will not give you the correct character.
+
+By converting the byte to a rune with rune(s[right]), you're ensuring that you're working with the full Unicode character, not just a single byte. This is important if the string can contain non-ASCII characters.
+
+```go
+func lengthOfLongestSubstring(s string) int {
+    if len(s) == 0 {
+        return 0
+    }
+
+    charMap := make(map[rune]int)
+    left, right := 0, 0
+    maxLen := 0
+
+    for right < len(s) {
+        char := rune(s[right])
+        charMap[char]++
+        right++
+
+        for charMap[char] > 1 {
+            charMap[rune(s[left])]--
+            left++
+        }
+
+        maxLen = max(maxLen, right-left)
+    }
+
+    return maxLen
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+[424. Longest Repeating Character Replacement](http://leetcode.com/problems/longest-repeating-character-replacement/)
+
+```go
+func characterReplacement(s string, k int) int {
+    if len(s) == 0 {
+        return 0
+    }
+
+    charMap := make(map[rune]int)
+    left, right := 0, 0
+    maxLen := 0
+    maxCount := 0
+
+    for right < len(s) {
+        char := rune(s[right])
+        charMap[char]++
+        maxCount = max(maxCount, charMap[char])
+        right++
+
+        for right-left-maxCount > k {
+            charMap[rune(s[left])]--
+            left++
+        }
+
+        maxLen = max(maxLen, right-left)
+    }
+
+    return maxLen
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
 [76. Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/description/)
 
 ```go
