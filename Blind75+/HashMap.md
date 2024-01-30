@@ -36,3 +36,45 @@ func isAnagram(s string, t string) bool {
     return true
 }
 ```
+
+[1. Two Sum](https://leetcode.com/problems/two-sum/description/)
+
+```go
+func twoSum(nums []int, target int) []int {
+    cache := make(map[int]int)
+
+    for i := 0; i < len(nums); i++ {
+        another := target - nums[i]
+        if _, ok := cache[another]; ok {
+            return []int{cache[another], i}
+        }
+        cache[nums[i]] = i
+    }
+    return nil
+}
+```
+
+[49. Group Anagrams](https://leetcode.com/problems/group-anagrams/description/)
+
+```go
+func groupAnagrams(strs []string) [][]string {
+    cache := map[string][]string{}
+    res := [][]string{}
+    for _, str := range strs {
+        sortedStr := sortString(str)
+        cache[sortedStr] = append(cache[sortedStr], str)
+    }
+
+    for _, group := range cache {
+        res = append(res, group)
+    }
+
+    return res
+}
+
+func sortString(str string) string {
+    split := strings.Split(str, "")
+    sort.Strings(split)
+    return strings.Join(split, "")
+}
+```
