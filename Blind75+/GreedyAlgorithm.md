@@ -2,6 +2,29 @@
 
 Greedy algorithms make the locally optimal choice at each step in the hope that these local choices will lead to a global optimum. They are typically used for optimization problems.
 
+[121. Best Time to Buy and Sell Stock](http://www.leetcode.com/problems/best-time-to-buy-and-sell-stock/)
+
+```go
+func maxProfit(prices []int) int {
+    minPrice := math.MaxInt64
+    maxProfit := 0
+
+    for _, price := range prices {
+        if price < minPrice {
+            minPrice = price
+        } else if price - minPrice > maxProfit {
+            maxProfit = price - minPrice
+        }
+    }
+
+    return maxProfit
+}
+```
+
+[122. Best Time to Buy and Sell Stock II](http://www.leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/)
+
+
+
 [55. Jump Game](https://leetcode.com/problems/jump-game/description/)
 
 This solution has a time complexity of O(n) and a space complexity of O(1), where n is the length of the input array nums. It's more efficient than the traditional DP solution.
