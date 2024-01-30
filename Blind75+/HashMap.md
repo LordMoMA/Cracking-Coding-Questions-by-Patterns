@@ -58,6 +58,7 @@ func twoSum(nums []int, target int) []int {
 
 ```go
 func groupAnagrams(strs []string) [][]string {
+    //cache := make(map[string][]string)
     cache := map[string][]string{}
     res := [][]string{}
     for _, str := range strs {
