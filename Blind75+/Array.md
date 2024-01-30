@@ -80,6 +80,31 @@ func (this *Codec) Decode(s string) []string {
     return res
 }
 ```
+There are other ways to encode a list of strings to a single string without using strings.Builder. One common alternative is to use string concatenation with the + operator. However, keep in mind that this can be less efficient than using strings.Builder if you're concatenating a large number of strings.
+
+```go
+// Encodes a list of strings to a single string.
+func (this *Codec) Encode(strs []string) string {
+    encoded := ""
+    for _, str := range strs {
+        encoded += strconv.Itoa(len(str)) + ":" + str
+    }
+    return encoded
+}
+```
+
+Another alternative is to use the fmt.Sprintf function, which can be more readable but also less efficient:
+
+```go
+// Encodes a list of strings to a single string.
+func (this *Codec) Encode(strs []string) string {
+    encoded := ""
+    for _, str := range strs {
+        encoded += fmt.Sprintf("%d:%s", len(str), str)
+    }
+    return encoded
+}
+```
 
 [1929. Concatenation of Array](http://www.leetcode.com/problems/concatenation-of-array/)
 
