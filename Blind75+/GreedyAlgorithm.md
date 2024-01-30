@@ -1,3 +1,7 @@
+## Greedy Algorithms
+
+Greedy algorithms make the locally optimal choice at each step in the hope that these local choices will lead to a global optimum. They are typically used for optimization problems.
+
 [55. Jump Game](https://leetcode.com/problems/jump-game/description/)
 
 This solution has a time complexity of O(n) and a space complexity of O(1), where n is the length of the input array nums. It's more efficient than the traditional DP solution.
