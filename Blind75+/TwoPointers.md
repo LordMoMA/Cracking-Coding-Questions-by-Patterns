@@ -94,6 +94,67 @@ func threeSum(nums []int) [][]int {
 }
 ```
 
+[11. Container With Most Water](http://leetcode.com/problems/container-with-most-water/)
+
+```go
+func maxArea(height []int) int {
+    left, right := 0, len(height)-1
+    maxArea := 0
+    for left < right {
+        area := min(height[left], height[right]) * (right - left)
+        maxArea = max(maxArea, area)
+        if height[left] < height[right] {
+            left++
+        } else {
+            right--
+        }
+    }
+    return maxArea
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```go
+func maxArea(height []int) int {
+    max, start, end := 0, 0, len(height) - 1
+
+    for start < end {
+        width := end - start
+        high := 0
+        if height[start] < height[end]{
+            high = height[start]
+            start++
+        } else {
+            high = height[end]
+            end--
+        }
+
+        temp := width * high
+        if max < temp {
+            max = temp
+        }
+    }
+    return max
+}
+```
+
+[42. Trapping Rain Water](http://leetcode.com/problems/trapping-rain-water/)
+
+```go
+
 [392. Is Subsequence](https://leetcode.com/problems/is-subsequence/)
 
 ```go
