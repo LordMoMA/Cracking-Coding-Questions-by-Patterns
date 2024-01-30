@@ -46,6 +46,25 @@ func max(a, b int) int {
 }
 ```
 
+```go
+func characterReplacement(s string, k int) int {
+    count := make([]int, 26)
+    maxCount, maxLen, start := 0, 0, 0
+
+    for end := 0; end < len(s); end++ {
+        count[s[end] - 'A']++
+        maxCount = max(maxCount, count[s[end] - 'A'])
+        if end - start + 1 - maxCount > k {
+            count[s[start] - 'A']--
+            start++
+        } else {
+            maxLen = max(maxLen, end - start + 1)
+        }
+    }
+    return maxLen
+}
+```
+
 [424. Longest Repeating Character Replacement](http://leetcode.com/problems/longest-repeating-character-replacement/)
 
 ```go
