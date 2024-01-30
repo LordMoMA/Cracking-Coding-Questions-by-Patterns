@@ -32,3 +32,51 @@ func rotate(matrix [][]int) {
 
 [54. Spiral Matrix](http://www.leetcode.com/problems/spiral-matrix/)
 
+The checks if top <= bottom and if left <= right inside the loop are necessary because the top and right boundaries are updated after the first two traversals (left to right and top to bottom), but before the last two traversals (right to left and bottom to top).
+
+Consider a case where the matrix has more columns than rows. After the first two traversals, top might become greater than bottom, but we're still inside the loop because left is not yet greater than right. If we don't check if top <= bottom before the third traversal (right to left), we might end up accessing an invalid row.
+
+Similarly, in a case where the matrix has more rows than columns, right might become less than left after the first two traversals, but we're still inside the loop because top is not yet greater than bottom. If we don't check if left <= right before the fourth traversal (bottom to top), we might end up accessing an invalid column.
+
+```go
+func spiralOrder(matrix [][]int) []int {
+    if len(matrix) == 0 {
+        return nil
+    }
+
+    result := []int{}
+    top, bottom, left, right := 0, len(matrix)-1, 0, len(matrix[0])-1
+
+    for top <= bottom && left <= right {
+        // Traverse from left to right.
+        for j := left; j <= right; j++ {
+            result = append(result, matrix[top][j])
+        }
+        top++
+
+        // Traverse from top to bottom.
+        for i := top; i <= bottom; i++ {
+            result = append(result, matrix[i][right])
+        }
+        right--
+
+        if top <= bottom {
+            // Traverse from right to left.
+            for j := right; j >= left; j-- {
+                result = append(result, matrix[bottom][j])
+            }
+        }
+        bottom--
+
+        if left <= right {
+            // Traverse from bottom to top.
+            for i := bottom; i >= top; i-- {
+                result = append(result, matrix[i][left])
+            }
+        }
+        left++
+    }
+
+    return result
+}
+```
