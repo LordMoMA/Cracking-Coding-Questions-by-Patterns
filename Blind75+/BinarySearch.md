@@ -1,3 +1,61 @@
+## Binary Search 
+
+The choice between for l < r and for l <= r in binary search depends on the problem you're trying to solve.
+
+for l < r: This is used when you're trying to find a specific element in the array, and you want to narrow down the search space to a single element. In this case, the loop continues until l and r point to the same element. This is what's happening in the findMin function. The loop continues until l and r point to the minimum element.
+
+for l <= r: This is used when you're trying to find the position of a target value in the array. In this case, the loop continues until l and r cross each other. If the target is found, the function returns the position. If the target is not found, l will be the position where the target should be inserted to maintain the sorted order of the array. This is what's happening in the search function.
+
+So, the choice between for l < r and for l <= r depends on whether you're trying to narrow down the search space to a single element or find the position of a target value.
+
+When `for l < r` use `r = mid`
+When `for l <= r` use `r = mid - 1`
+
+[153. Find Minimum in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/description/)
+
+```go
+func findMin(nums []int) int {
+    l, r := 0, len(nums) - 1
+    for l < r {
+    mid := l + (r - l) / 2
+        if nums[mid] > nums[r] {
+            l = mid + 1
+        } else {
+            r = mid
+        }
+    }
+    return nums[l]
+}
+```
+
+[33. Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/description/)
+
+```go
+func search(nums []int, target int) int {
+    l, r := 0, len(nums) - 1
+    for l <= r {
+        mid := l + (r - l) / 2
+        if nums[mid] == target {
+            return mid
+        }
+        if nums[l] <= nums[mid] {
+             if nums[l] <= target && target < nums[mid] {
+                r = mid - 1
+            } else {
+                l = mid + 1
+            }       
+        } else {
+            if nums[mid] < target && target <= nums[r] {
+                l = mid + 1
+            } else {
+                r = mid - 1
+            }
+        }
+    }
+    return -1
+}
+```
+
 [4. Median of Two Sorted Arrays](http://www.leetcode.com/problems/median-of-two-sorted-arrays/)
 
 ```go
