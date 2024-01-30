@@ -59,6 +59,41 @@ func isPalindrome(s string) bool {
 }
 ```
 
+[15. 3Sum](https://leetcode.com/problems/3sum/description/)
+
+```go
+func threeSum(nums []int) [][]int {
+    sort.Ints(nums)
+    result := [][]int{}
+    for i := 0; i < len(nums)-2; i++ {
+        if i > 0 && nums[i] == nums[i-1] {
+            continue
+        }
+        left, right := i+1, len(nums)-1
+        for left < right {
+            sum := nums[i] + nums[left] + nums[right]
+            if sum > 0 {
+                right--
+            } else if sum < 0 {
+                left++
+            } else {
+                result = append(result, []int{nums[i], nums[left], nums[right]})
+                // avoid adding duplicate triplets to the result
+                for left < right && nums[left] == nums[left+1] {
+                    left++
+                }
+                for left < right && nums[right] == nums[right-1] {
+                    right--
+                }
+                left++
+                right--
+            }
+        }
+    }
+    return result
+}
+```
+
 [392. Is Subsequence](https://leetcode.com/problems/is-subsequence/)
 
 ```go
