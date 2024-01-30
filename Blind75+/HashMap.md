@@ -12,3 +12,27 @@ func containsDuplicate(nums []int) bool {
     return false
 }
 ```
+
+[242. Valid Anagram](http://leetcode.com/problems/valid-anagram/description/)
+
+```go
+func isAnagram(s string, t string) bool {
+    if len(s) != len(t) {
+        return false
+    }
+
+    count := make(map[rune]int)
+    for _, char := range s {
+        count[char]++
+    }
+
+    for _, char := range t {
+        count[char]--
+        if count[char] < 0 { // the most important check
+            return false
+        }
+    }
+
+    return true
+}
+```
