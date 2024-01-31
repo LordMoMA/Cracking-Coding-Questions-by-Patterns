@@ -123,3 +123,23 @@ func removeNthFromEnd(head *ListNode, n int) *ListNode {
     return dummy.Next
 }
 ```
+
+[141. Linked List Cycle](https://leetcode.com/problems/linked-list-cycle/)
+
+```go
+func hasCycle(head *ListNode) bool {
+    // if head == nil {
+    //     return false
+    // }
+    fast, slow := head, head
+    for fast != nil && fast.Next != nil {
+        fast = fast.Next.Next
+        slow = slow.Next
+        if fast == slow {
+            return  true
+        }
+    }
+    return false
+}
+```
+
