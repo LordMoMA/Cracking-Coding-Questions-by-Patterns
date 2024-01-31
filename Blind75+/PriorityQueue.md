@@ -1,3 +1,11 @@
+##  Priority Queue
+
+In Go, the sort.Interface requires three methods: Len, Less, and Swap.
+
+The heap.Interface includes the sort.Interface and adds two more methods: Push and Pop.
+
+When you're implementing a priority queue using the container/heap package in Go, you need to define these five methods.
+
 [347. Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/)
 
 The heap data structure in Go does not provide direct access to its elements. It only provides access to the top element (the minimum or maximum, depending on whether it's a min-heap or max-heap) through the heap.Pop() function. This is because heaps are binary trees that are stored in arrays for efficiency, and the elements are not sorted in a way that allows direct access.
@@ -56,6 +64,64 @@ func (m *minHeap) Pop() interface{} {
     return x
 }
 ```
+
+[23. Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists/description/)
+
+The dummy node is a common technique used in linked list problems to simplify edge cases, particularly where the head of the list might change.
+
+In removeNthFromEnd, the dummy node is initialized with Next pointing to head because the function needs to return the head of the modified list, which might be different from the original head if the nth node from the end happens to be the head of the list. By having dummy.Next point to head, we can always return dummy.Next as the head of the modified list.
+
+In mergeKLists, the dummy node is initialized with Next as nil because it serves as a placeholder for the head of the new merged list. As we merge the lists, we attach nodes to dummy.Next and then move dummy forward. At the end, dummy.Next will be the head of the merged list.
+
+```go
+import "container/heap"
+
+type ListNodeHeap []*ListNode
+
+func (h ListNodeHeap) Len() int           { return len(h) }
+func (h ListNodeHeap) Less(i, j int) bool { return h[i].Val < h[j].Val }
+func (h ListNodeHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+
+func (h *ListNodeHeap) Push(x interface{}) {
+    *h = append(*h, x.(*ListNode))
+}
+
+func (h *ListNodeHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+
+func mergeKLists(lists []*ListNode) *ListNode {
+    h := &ListNodeHeap{}
+    heap.Init(h)
+
+    for _, node := range lists {
+        if node != nil {
+            heap.Push(h, node)
+        }
+    }
+
+    dummy := &ListNode{}
+    current := dummy
+
+    for h.Len() > 0 {
+        minNode := heap.Pop(h).(*ListNode)
+        current.Next = minNode
+        current = current.Next
+
+        if minNode.Next != nil {
+            heap.Push(h, minNode.Next)
+        }
+    }
+
+    return dummy.Next
+}
+```
+
+we return dummy.Next because that's the head of the merged list. If we returned dummy, we would be returning the dummy node we created, not the actual list.
 
 [630. Course Schedule III](https://leetcode.com/problems/course-schedule-iii/description/)
 
