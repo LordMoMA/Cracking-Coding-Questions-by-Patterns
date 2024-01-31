@@ -103,5 +103,28 @@ func isSameTree(p *TreeNode, q *TreeNode) bool {
 }
 ```
 
+[235. Lowest Common Ancestor of a Binary Search Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/description/)
 
+```go
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+	if root == nil {
+        return nil
+    }
+
+    if root.Val == p.Val || root.Val == q.Val {
+        return root
+    }
+
+    left := lowestCommonAncestor(root.Left, p, q)
+    right := lowestCommonAncestor(root.Right, p, q)
+
+    if left != nil && right != nil {
+        return root
+    } else if left != nil {
+        return left
+    } else {
+        return right
+    }
+}
+```
 
