@@ -2,6 +2,14 @@
 [21. Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists/description/)
 
 ```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+ 
 func mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
     if list1 == nil {
         return list2
