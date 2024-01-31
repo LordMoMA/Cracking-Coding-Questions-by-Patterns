@@ -78,3 +78,30 @@ func isSameTree(p *TreeNode, q *TreeNode) bool {
 }
 ```
 
+[572. Subtree of Another Tree](http://leetcode.com/problems/subtree-of-another-tree/)
+
+```go
+func isSubtree(s *TreeNode, t *TreeNode) bool {
+    if s == nil {
+        return false
+    }
+    if isSameTree(s, t) {
+        return true
+    }
+    return isSubtree(s.Left, t) || isSubtree(s.Right, t)
+}
+
+func isSameTree(p *TreeNode, q *TreeNode) bool {
+    if p == nil && q == nil {
+        return true
+    }
+    if p == nil || q == nil || p.Val != q.Val {
+        return false
+    }
+
+    return isSameTree(p.Left, q.Left) && isSameTree(p.Right, q.Right)
+}
+```
+
+
+
