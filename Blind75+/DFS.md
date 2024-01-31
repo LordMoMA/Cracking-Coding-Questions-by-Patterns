@@ -37,3 +37,25 @@ func invertTree2(root *TreeNode) *TreeNode {
 }
 ```
 
+[104. Maximum Depth of Binary Tree](http://leetcode.com/problems/maximum-depth-of-binary-tree/)
+
+plus 1 (for the root node itself). This is done by recursively calling maxDepth on root.Left and root.Right, and then taking the maximum of the two depths and adding 1 to it for the current node.
+
+```go
+func maxDepth(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+    return max(maxDepth(root.Left), maxDepth(root.Right)) + 1
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+
+
