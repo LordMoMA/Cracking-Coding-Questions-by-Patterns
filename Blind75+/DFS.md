@@ -128,3 +128,37 @@ func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
 }
 ```
 
+[124. Binary Tree Maximum Path Sum](http://leetcode.com/problems/binary-tree-maximum-path-sum/)
+
+
+A path in a binary tree is a sequence of nodes where each pair of adjacent nodes in the sequence has an edge connecting them. A node can only appear in the sequence at most once.
+
+Consider a node in the tree. If we were to include both its left and right children in the path, then this path would go down the left child, up to the node, and then down the right child. This is not a valid path because a path in a tree must be a sequence of nodes where each pair of consecutive nodes in the sequence is connected by an edge, and it does not go upwards and then downwards.
+
+```go
+func maxPathSum(root *TreeNode) int {
+    maxSum := math.MinInt32
+    dfs(root, &maxSum)
+    return maxSum
+}
+
+func dfs(root *TreeNode, maxSum *int) int {
+    if root == nil {
+        return 0
+    }
+
+    left := max(0, dfs(root.Left, maxSum))
+    right := max(0, dfs(root.Right, maxSum))
+
+    *maxSum = max(*maxSum, left + right + root.Val)
+
+    return max(left, right) + root.Val
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
