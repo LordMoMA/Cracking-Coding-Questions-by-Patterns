@@ -162,3 +162,34 @@ func max(a, b int) int {
     return b
 }
 ```
+
+[543. Diameter of Binary Tree](http://leetcode.com/problems/diameter-of-binary-tree/)
+
+```go
+func diameterOfBinaryTree(root *TreeNode) int {
+    maxDiameter := 0
+    dfs(root, &maxDiameter)
+    return maxDiameter
+}
+
+func dfs(root *TreeNode, maxDiameter *int) int {
+    if root == nil {
+        return 0
+    }
+
+    left := dfs(root.Left, maxDiameter)
+    right := dfs(root.Right, maxDiameter)
+
+    *maxDiameter = max(*maxDiameter, left + right)
+
+    return max(left, right) + 1
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
