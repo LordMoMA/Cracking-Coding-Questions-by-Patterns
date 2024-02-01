@@ -311,6 +311,11 @@ This represents the following binary tree:
 
 Depth-First Search (DFS) pattern, specifically Pre-Order Traversal.:
 
+Time: O(n) n is the number of nodes in the tree
+Space:
+serialize: O(n), where n is the height of the tree.
+deserialize: O(n), where n is the number of nodes in the tree.
+
 ```go
 import (
     "strings"
@@ -360,6 +365,11 @@ func (this *Codec) buildTree(list *[]string) *TreeNode {
 ```
 
 Breadth-First Search (BFS) or Level-Order Traversal:
+
+Time: O(n)
+Space:
+serialize: O(n), where n is the maximum width of the tree. This is due to the maximum number of nodes stored in the queue.
+deserialize: O(n), where n is the maximum width of the tree. This is due to the maximum number of nodes stored in the queue.
 
 ```go
 type Codec struct {
