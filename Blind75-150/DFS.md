@@ -193,3 +193,100 @@ func max(a, b int) int {
 }
 ```
 
+[110. Balanced Binary Tree](http://leetcode.com/problems/balanced-binary-tree/)
+
+A binary tree is height-balanced if for every node in the tree, the difference between the height of the left subtree and the right subtree is at most 1.
+
+The purpose of returning -1 in the DFS function when the tree is not balanced is to signal an early termination of the function.
+
+In the context of checking if a binary tree is height-balanced, the DFS function is designed to return the height of the tree if it is balanced. However, if at any point it detects that the tree is not balanced (i.e., the difference in heights between the left and right subtrees of any node is more than 1), it returns -1.
+
+Returning -1 serves two purposes:
+
+It provides a way to indicate that the tree is not balanced. Since the height of a tree can never be negative, -1 is used as a special value that can't be confused with a valid height.
+
+It allows for early termination of the function. As soon as the function detects that the tree is not balanced, it can immediately stop further computation and return -1. This can significantly improve the efficiency of the function for large trees that are not balanced.
+
+```go
+func isBalanced(root *TreeNode) bool {
+    return dfs(root) != -1
+}
+
+func dfs(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+
+    left := dfs(root.Left)
+    if left == -1 {
+        return -1
+    }
+
+    right := dfs(root.Right)
+    if right == -1 {
+        return -1
+    }
+
+    if abs(left - right) > 1 {
+        return -1
+    }
+
+    return max(left, right) + 1
+}
+
+func abs(a int) int {
+    if a < 0 {
+        return -a
+    }
+    return a
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+Consider a binary tree like this:
+
+```bash
+    A
+   / \
+  B   C
+ / \
+D   E
+```
+
+In this tree, node A is the root, B and C are its children, and D and E are children of B. C, D, and E are leaf nodes.
+
+The dfs function is called on each node to calculate its height and check if the tree is balanced at that node. The height of a node is the maximum of the heights of its left and right children, plus 1.
+
+When dfs is called on a leaf node (C, D, or E), it returns 0 because a leaf node has no children.
+
+When dfs is called on B, it calculates the heights of its left and right children (D and E), which are both 0. So, the height of B is max(0, 0) + 1 = 1. Since the difference in heights between D and E is 0, which is not more than 1, B is balanced.
+
+When dfs is called on A, it calculates the heights of its left and right children (B and C). The height of B is 1 and the height of C is 0. So, the height of A is max(1, 0) + 1 = 2. However, the difference in heights between B and C is 1 - 0 = 1, which is not more than 1, so A is also balanced.
+
+Now, let's add another node F as a child of E and call dfs on A again:
+
+```bash
+    A
+   / \
+  B   C
+ / \
+D   E
+   /
+  F 
+```
+
+When dfs is called on E, it calculates the height of its left child F, which is 0. So, the height of E is max(0, 0) + 1 = 1. E is balanced because it has only one child.
+
+When dfs is called on B, it calculates the heights of its left and right children (D and E), which are 0 and 1, respectively. So, the height of B is max(0, 1) + 1 = 2. However, the difference in heights between D and E is 1 - 0 = 1, which is not more than 1, so B is also balanced.
+
+When dfs is called on A, it calculates the heights of its left and right children (B and C). The height of B is 2 and the height of C is 0. So, the height of A is max(2, 0) + 1 = 3. However, the difference in heights between B and C is 2 - 0 = 2, which is more than 1. So, A is not balanced.
+
+At this point, dfs returns -1, which is propagated up the call stack. So, left in the call left := dfs(root.Left) in the context of A will be -1. That's why we need to check if left == -1 { return -1 }. If left is -1, it means the left subtree is not balanced, and by extension, the entire tree is not balanced. The same logic applies to right and the right subtree.
+
+
