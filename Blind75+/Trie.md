@@ -4,6 +4,10 @@
 
 [208. Implement Trie (Prefix Tree)](https://leetcode.com/problems/implement-trie-prefix-tree/)
 
+In ASCII, 'A' is 65 and 'B' is 66. So, 'B' - 'A' equals 1.
+
+Similarly, in ASCII, 'a' is 97 and 'b' is 98. So, 'b' - 'a' also equals 1.
+
 ```go
 type Trie struct {
     children [26]*Trie
@@ -53,7 +57,65 @@ func (this *Trie) StartsWith(prefix string) bool {
     }
     return true
 }
+```
 
+Modification: word contains both upper and lower case letters
+
+```go
+type Trie struct {
+    children [52]*Trie
+    isEnd bool
+}
+
+func Constructor() Trie {
+    return Trie{}
+}
+
+func (this *Trie) Insert(word string)  {
+    node := this
+    for _, ch := range word {
+        ch = toIndex(ch)
+        if node.children[ch] == nil {
+            node.children[ch] = &Trie{}
+        }
+        node = node.children[ch]
+    }
+    node.isEnd = true
+}
+
+func (this *Trie) Search(word string) bool {
+    node := this
+    for _, ch := range word {
+        ch = toIndex(ch)
+        if node.children[ch] == nil {
+            return false
+        }
+        node = node.children[ch]
+    }
+    return node.isEnd
+}
+
+func (this *Trie) StartsWith(prefix string) bool {
+    node := this
+    for _, ch := range prefix {
+        ch = toIndex(ch)
+        if node.children[ch] == nil {
+            return false
+        }
+        node = node.children[ch]
+    }
+    return true
+}
+
+// Helper function to convert a rune to an index in the children array.
+// It maps 'a'-'z' to 0-25 and 'A'-'Z' to 26-51.
+func toIndex(ch rune) int {
+    if 'a' <= ch && ch <= 'z' {
+        return int(ch - 'a')
+    } else {
+        return int(ch - 'A') + 26
+    }
+}
 
 /**
  * Your Trie object will be instantiated and called as such:
