@@ -292,3 +292,135 @@ func constructFromPrePost3(pre []int, post []int) *TreeNode {
     return root
 }
 ```
+
+[297. Serialize and Deserialize Binary Tree](http://leetcode.com/problems/serialize-and-deserialize-binary-tree/)
+
+If you serialize a binary tree using "#" to represent null nodes, the serialized string would look something like this:
+
+"1,2,#,#,3,4,#,#,5,#,#"
+
+This represents the following binary tree:
+
+```bash
+    1
+   / \
+  2   3
+     / \
+    4   5
+```
+
+Depth-First Search (DFS) pattern, specifically Pre-Order Traversal.:
+
+```go
+import (
+    "strings"
+    "strconv"
+)
+
+type TreeNode struct {
+    Val int
+    Left *TreeNode
+    Right *TreeNode
+}
+
+type Codec struct {
+}
+
+func Constructor() Codec {
+    return Codec{}
+}
+
+// Serializes a tree to a single string.
+func (this *Codec) serialize(root *TreeNode) string {
+    if root == nil {
+        return "#"
+    }
+    return strconv.Itoa(root.Val) + "," + this.serialize(root.Left) + "," + this.serialize(root.Right)
+}
+
+// Deserializes your encoded data to tree.
+func (this *Codec) deserialize(data string) *TreeNode {
+    list := strings.Split(data, ",")
+    return this.buildTree(&list)
+}
+
+func (this *Codec) buildTree(list *[]string) *TreeNode {
+    if (*list)[0] == "#" {
+        *list = (*list)[1:]
+        return nil
+    }
+    val, _ := strconv.Atoi((*list)[0])
+    *list = (*list)[1:]
+    node := &TreeNode{Val: val}
+    node.Left = this.buildTree(list)
+    node.Right = this.buildTree(list)
+    return node
+}
+```
+
+Breadth-First Search (BFS) or Level-Order Traversal:
+
+```go
+type Codec struct {
+    
+}
+
+func Constructor() Codec {
+    return Codec{}
+}
+
+// Serializes a tree to a single string.
+func (this *Codec) serialize(root *TreeNode) string {
+    res := []string{}
+    queue := []*TreeNode{root}
+    for len(queue) > 0 {
+        node := queue[0]
+        queue = queue[1:]
+        if node == nil {
+            res = append(res, "null")
+        } else {
+            res = append(res, strconv.Itoa(node.Val))
+            queue = append(queue, node.Left)
+            queue = append(queue, node.Right)
+        }
+    }
+    return strings.Join(res, ",")
+}
+
+// Deserializes your encoded data to tree.
+func (this *Codec) deserialize(data string) *TreeNode {
+    if data == "" {
+        return nil
+    }
+    arr := strings.Split(data, ",")
+    root := &TreeNode{}
+    root.Val, _ = strconv.Atoi(arr[0])
+    queue := []*TreeNode{root}
+    i := 1
+    for len(queue) > 0 {
+        node := queue[0]
+        queue = queue[1:]
+        if arr[i] != "null" {
+            left, _ := strconv.Atoi(arr[i])
+            node.Left = &TreeNode{Val: left}
+            queue = append(queue, node.Left)
+        }
+        i++
+        if arr[i] != "null" {
+            right, _ := strconv.Atoi(arr[i])
+            node.Right = &TreeNode{Val: right}
+            queue = append(queue, node.Right)
+        }
+        i++
+    }
+    return root
+}
+
+// Your Codec object will be instantiated and called as such:
+// var ser Codec
+// var deser Codec
+// deser.deserialize(ser.serialize(root))
+```
+
+The BFS approach has the advantage of being able to handle trees that are very deep without risking a stack overflow, which could be a problem for the DFS approach if the tree is not balanced. However, the BFS approach could use more space than the DFS approach if the tree is very wide, because it needs to store all the nodes at a level in the queue at the same time.
+
