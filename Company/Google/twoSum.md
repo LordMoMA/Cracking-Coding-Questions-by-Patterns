@@ -1,5 +1,7 @@
 ## Advanced Two Sum -- Processing Large Volumes of Data
 
+[How to: Work at Google — Example Coding/Engineering Interview](https://www.youtube.com/watch?v=XKu_SEDAykw&t=1s&ab_channel=LifeatGoogle)
+
 [1. Two Sum](http://leetcode.com/problems/two-sum/)
 
 ```go
