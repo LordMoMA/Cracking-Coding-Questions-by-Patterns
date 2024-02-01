@@ -302,3 +302,48 @@ func checkInclusion(s1 string, s2 string) bool {
     return s1Freq == s2Freq
 }
 ```
+
+[239. Sliding Window Maximum](http://leetcode.com/problems/sliding-window-maximum/)
+
+```go
+
+```
+
+[438. Find All Anagrams in a String](https://leetcode.com/problems/find-all-anagrams-in-a-string/description/)
+
+```go
+func findAnagrams(s string, p string) []int {
+    var result []int
+    if len(p) > len(s) {
+        return result
+    }
+
+    pFreq := make([]int, 26)
+    for _, ch := range p {
+        pFreq[ch-'a']++
+    }
+
+    left, right, count := 0, 0, len(p)
+    for right < len(s) {
+        if pFreq[s[right]-'a'] > 0 {
+            count--
+        }
+        pFreq[s[right]-'a']--
+        right++
+
+        if count == 0 {
+            result = append(result, left)
+        }
+
+        if right - left == len(p) {
+            if pFreq[s[left]-'a'] >= 0 { // attention, should be >=
+                count++
+            }
+            pFreq[s[left]-'a']++
+            left++
+        }
+    }
+
+    return result
+}
+```
