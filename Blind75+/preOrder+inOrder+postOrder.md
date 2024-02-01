@@ -344,6 +344,7 @@ func (this *Codec) deserialize(data string) *TreeNode {
     return this.buildTree(&list)
 }
 
+//  It uses pre-order traversal (root, left, right) to build the tree.
 func (this *Codec) buildTree(list *[]string) *TreeNode {
     if (*list)[0] == "#" {
         *list = (*list)[1:]
