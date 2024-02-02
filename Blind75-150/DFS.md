@@ -291,6 +291,54 @@ At this point, dfs returns -1, which is propagated up the call stack. So, left i
 
 [1448. Count Good Nodes in Binary Tree](http://leetcode.com/problems/count-good-nodes-in-binary-tree/)
 
-```go
+The expression -int(1e4) in Go is a way to represent a large negative integer. The 1e4 is a scientific notation for 10,000, so -int(1e4) is -10,000.
 
+The math.MinInt32 constant in Go represents the smallest possible value that a 32-bit integer can have, which is -2147483648.
+
+```go
+func goodNodes(root *TreeNode) int {
+    return dfs(root, -int(1e4))
+}
+
+func dfs(node *TreeNode, maxSoFar int) int {
+    if node == nil {
+        return 0
+    }
+    count := 0
+    if node.Val >= maxSoFar {
+        count++
+        maxSoFar = node.Val
+    }
+    count += dfs(node.Left, maxSoFar)
+    count += dfs(node.Right, maxSoFar)
+    return count
+}
+```
+
+The reason we don't need to check if node.Left != nil and if node.Right != nil before calling dfs(node.Left, maxSoFar) and dfs(node.Right, maxSoFar) respectively is because the first thing we do in the dfs function is check if node == nil.
+
+If node.Left or node.Right is nil, the dfs function will be called with nil as the node argument. Then, the if node == nil check at the start of the dfs function will be true, and the function will immediately return 0 without doing anything else. This effectively skips over nil children, so there's no need to check for nil children before calling dfs.
+
+This is a common pattern in recursive functions that operate on binary trees. It simplifies the code by eliminating the need for nil checks before each recursive call.
+
+Another Way of DFS:
+
+```go
+func goodNodes(root *TreeNode) int {
+    count := 0
+    dfs(root, math.MinInt32, &count)
+    return count
+}
+
+func dfs(node *TreeNode, maxSoFar int, count *int) {
+    if node == nil {
+        return
+    }
+    if node.Val >= maxSoFar {
+        *count++
+        maxSoFar = node.Val
+    }
+    dfs(node.Left, maxSoFar, count)
+    dfs(node.Right, maxSoFar, count)
+}
 ```
