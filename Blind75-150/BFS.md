@@ -131,3 +131,43 @@ func dfs(node *TreeNode, level int, result *[]int) {
     dfs(node.Left, level+1, result)
 }
 ```
+
+[1448. Count Good Nodes in Binary Tree](http://leetcode.com/problems/count-good-nodes-in-binary-tree/)
+
+Better to be solved by DFS
+
+```go
+type NodeMax struct {
+    Node *TreeNode
+    Max  int
+}
+
+func goodNodes(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+
+    count := 0
+    queue := []NodeMax{{Node: root, Max: root.Val}}
+
+    for len(queue) > 0 {
+        curr := queue[0]
+        queue = queue[1:]
+
+        if curr.Node.Val >= curr.Max {
+            count++
+        }
+
+        if curr.Node.Left != nil {
+            queue = append(queue, NodeMax{Node: curr.Node.Left, Max: max(curr.Max, curr.Node.Left.Val)})
+        }
+
+        if curr.Node.Right != nil {
+            queue = append(queue, NodeMax{Node: curr.Node.Right, Max: max(curr.Max, curr.Node.Right.Val)})
+        }
+    }
+
+    return count
+}
+
+```

@@ -289,4 +289,8 @@ When dfs is called on A, it calculates the heights of its left and right childre
 
 At this point, dfs returns -1, which is propagated up the call stack. So, left in the call left := dfs(root.Left) in the context of A will be -1. That's why we need to check if left == -1 { return -1 }. If left is -1, it means the left subtree is not balanced, and by extension, the entire tree is not balanced. The same logic applies to right and the right subtree.
 
+[1448. Count Good Nodes in Binary Tree](http://leetcode.com/problems/count-good-nodes-in-binary-tree/)
 
+```go
+
+```
