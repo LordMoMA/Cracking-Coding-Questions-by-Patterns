@@ -125,3 +125,23 @@ func evalRPN(tokens []string) int {
     return stack[0]
 }
 ```
+
+[739. Daily Temperatures](http://leetcode.com/problems/daily-temperatures/)
+
+```go
+func dailyTemperatures(temps []int) []int {
+    n := len(temps)
+    res := make([]int, n)
+    stack := []int{} // maintain the indices of the "hotter" days.
+    for i := 0; i < n; i++ {
+        for len(stack) > 0 && temps[i] > temps[stack[len(stack)-1]] {
+            lastIdx := stack[len(stack)-1]
+            stack = stack[:len(stack)-1]
+            res[lastIdx] = i - lastIdx
+        }
+        stack = append(stack, i)
+    }
+    return res
+}
+```
+

@@ -99,3 +99,21 @@ func backtrack(left, right int, path string, res *[]string) {
 ```
 
 The time complexity of the generateParenthesis function is O(4^n/sqrt(n)), where n is the given number n. This is the Nth Catalan number, which is the number of valid parentheses strings with n pairs of parentheses. The time complexity is determined by the number of recursive calls, which is the Nth Catalan number.
+
+The function is generating all valid combinations of n pairs of parentheses. In the worst case, it's similar to generating all combinations of 2n bits (since a pair of parentheses can be thought of as an opening bit and a closing bit), which would be 2^(2n) or 4^n combinations.
+
+The sqrt(n) factor in the denominator is a result of the Catalan number sequence, which counts the number of valid parentheses expressions.
+
+The first few Catalan numbers for n = 0, 1, 2, 3, ... are 1, 1, 2, 5, 14, 42, 132, .... The nth Catalan number is given by the formula C(n) = (2n)! / ((n + 1)! * n!).
+
+The space complexity of the generateParenthesis function is O(n), where n is the input to the function.
+
+Here's why:
+
+The res slice that stores the results will, in the worst case, contain all valid combinations of parentheses. The number of valid combinations is given by the nth Catalan number, which is O(4^n / sqrt(n)). However, we only count the number of strings (combinations), not the total size of these strings. So, the res slice contributes O(1) to the space complexity.
+
+The path string that is built up during the recursion can have a maximum length of 2n (n opening parentheses and n closing parentheses). This string is built up and torn down during the recursion, but at any given time, the maximum length is 2n. So, the path string contributes O(n) to the space complexity.
+
+The recursion stack can go as deep as 2n (in the case where we add n opening parentheses and then n closing parentheses). Each recursive call adds a new layer to the stack. So, the recursion stack contributes O(n) to the space complexity.
+
+Adding these up, the total space complexity is O(n).
