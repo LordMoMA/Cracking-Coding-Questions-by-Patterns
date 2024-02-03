@@ -73,4 +73,29 @@ The time complexity of the exist function is O(N * 4^L), where N is the total nu
 
 The space complexity of the function is O(L), where L is the length of the word. This is because in the worst case, if the word is found, the maximum depth of the recursion (and hence the maximum size of the call stack) can be the length of the word. The space complexity also accounts for the space required to store the word.
 
+[22. Generate Parentheses](http://leetcode.com/problems/generate-parentheses/)
 
+The solution for generating parentheses is often referred to as a backtracking solution because it builds candidates for the solution incrementally and abandons a candidate ("backtracks") as soon as it determines that the candidate cannot possibly be extended to a valid solution.
+
+```go
+func generateParenthesis(n int) []string {
+    var res []string
+    backtrack(n, n, "", &res)
+    return res
+}
+
+func backtrack(left, right int, path string, res *[]string) {
+    if left == 0 && right == 0 {
+        *res = append(*res, path)
+        return
+    }
+    if left > 0 {
+        backtrack(left-1, right, path+"(", res)
+    }
+    if right > left {
+        backtrack(left, right-1, path+")", res)
+    }
+}
+```
+
+The time complexity of the generateParenthesis function is O(4^n/sqrt(n)), where n is the given number n. This is the Nth Catalan number, which is the number of valid parentheses strings with n pairs of parentheses. The time complexity is determined by the number of recursive calls, which is the Nth Catalan number.
