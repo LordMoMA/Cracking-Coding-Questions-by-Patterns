@@ -95,6 +95,8 @@ func (this *MinStack) GetMin() int {
 
 [150. Evaluate Reverse Polish Notation](https://leetcode.com/problems/evaluate-reverse-polish-notation/description/)
 
+In Go, you cannot directly convert a string to an operator and use it. However, you can use a switch statement or if-else conditions to check the string and perform the corresponding operation.
+
 ```go
 func evalRPN(tokens []string) int {
     stack := []int{}
