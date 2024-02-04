@@ -11,6 +11,26 @@ So, the choice between for l < r and for l <= r depends on whether you're trying
 When `for l < r` use `r = mid`
 When `for l <= r` use `r = mid - 1`
 
+[704. Binary Search](http://leetcode.com/problems/binary-search/)
+
+```go
+func search(nums []int, target int) int {
+    l, r := 0, len(nums) - 1
+    for l <= r {
+        mid := l + (r - l) / 2
+        if nums[mid] == target {
+            return mid
+        }
+        if nums[mid] < target {
+            l = mid + 1
+        } else {
+            r = mid - 1
+        }
+    }
+    return -1
+}
+```
+
 [153. Find Minimum in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/description/)
 
 ```go
@@ -190,3 +210,55 @@ func lengthOfLIS(nums []int) int {
     return len(tails)
 }
 ```
+
+[74. Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/description/)
+
+To convert a 2D index (row, column) into a 1D index in a matrix, you can use the formula index = row * numberOfColumns + column.
+
+row * numberOfColumns gives the index of the first element of the row in the flattened 1D array.
+
++ column then offsets this index to the right column.
+
+For example, in a 3x3 matrix, the 2D index (1, 2) (second row, third column) would be converted to the 1D index 1 * 3 + 2 = 5.
+
+```go
+func convert2DTo1D(row int, col int, cols int) int {
+    return row * cols + col
+}
+```
+
+1D -> 2D:
+
+```go
+func convert1DTo2D(index int, cols int) (int, int) {
+    row := index / cols
+    col := index % cols
+    return row, col
+}
+```
+
+```go
+func searchMatrix(matrix [][]int, target int) bool {
+    if len(matrix) == 0 || len(matrix[0]) == 0 {
+        return false
+    }
+    rows, cols := len(matrix), len(matrix[0])
+    l, r := 0, rows*cols-1
+    for l <= r {
+        mid := l + (r-l)/2
+        midValue := matrix[mid/cols][mid%cols]
+        if midValue == target {
+            return true
+        } else if midValue < target {
+            l = mid + 1
+        } else {
+            r = mid - 1
+        }
+    }
+    return false
+}
+```
+
+
+
+
