@@ -259,6 +259,51 @@ func searchMatrix(matrix [][]int, target int) bool {
 }
 ```
 
+[875. Koko Eating Bananas](https://leetcode.com/problems/koko-eating-bananas/description/)
 
+Koko can decide her bananas-per-hour eating speed of k
 
+```go
+func minEatingSpeed(piles []int, H int) int {
+    l, r := 1, 1
+    for _, pile := range piles {
+        r = max(r, pile)
+    }
+    for l < r {
+        k := l + (r-l)/2
+        if hours(piles, k) > H {
+            l = k + 1
+        } else {
+            r = k
+        }
+    }
+    return l
+}
 
+func hours(piles []int, k int) int {
+    res := 0
+    for _, pile := range piles {
+        res += (pile + k - 1) / k
+    }
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+Math Tricks:
+
+Adding K to the pile size before dividing by K would indeed increase the numerator to the next multiple of K, but it would also overestimate the number of hours needed.
+
+Consider a case where pile is 10 and K is 3. The actual number of hours needed would be 4 (3 hours for the first 9 bananas and 1 more hour for the last banana).
+
+If you calculate (pile + K) / K, it would be (10 + 3) / 3 = 13 / 3 = 4.33, which rounds down to 4 in integer division. This is correct in this case.
+
+However, if pile is 9 and K is 3, the actual number of hours needed would be 3. But (pile + K) / K would be (9 + 3) / 3 = 12 / 3 = 4, which overestimates the number of hours.
+
+That's why we use (pile + K - 1) / K. It ensures that the result is rounded up to the nearest integer without overestimating the number of hours. For pile = 9 and K = 3, (pile + K - 1) / K would be (9 + 3 - 1) / 3 = 11 / 3 = 3.67, which rounds down to 3 in integer division, correctly estimating the number of hours.
