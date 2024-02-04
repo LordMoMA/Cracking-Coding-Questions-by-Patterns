@@ -145,3 +145,59 @@ func dailyTemperatures(temps []int) []int {
 }
 ```
 
+[853. Car Fleet](https://leetcode.com/problems/car-fleet/)
+
+```go
+func carFleet(target int, position []int, speed []int) int {
+    n := len(position)
+    cars := make([][2]int, n)
+    for i := 0; i < n; i++ {
+        cars[i] = [2]int{position[i], speed[i]}
+    }
+    sort.Slice(cars, func(i, j int) bool {
+        return cars[i][0] > cars[j][0]
+    })
+    fleets := 0
+    time := 0.0
+    for i := 0; i < n; i++ {
+        curTime := float64(target-cars[i][0]) / float64(cars[i][1])
+        if curTime > time {
+            time = curTime
+            fleets++
+        }
+    }
+    return fleets
+}
+```
+
+We iterate over the sorted cars. If a car needs more time to reach the target than the current maximum time cur, it cannot catch up with the car fleet that the previous car belongs to, so we increment the result res and update cur.
+
+```go
+type car struct {
+    position int
+    time     float64
+}
+
+func carFleet(target int, position []int, speed []int) int {
+    cars := make([]car, len(position))
+    for i := 0; i < len(position); i++ {
+        cars[i] = car{position: position[i], time: float64(target-position[i]) / float64(speed[i])}
+    }
+    sort.Slice(cars, func(i, j int) bool {
+        return cars[i].position > cars[j].position
+    })
+
+    res, cur := 0, 0.0
+    for _, c := range cars {
+        if c.time > cur {
+            cur = c.time
+            res++
+        }
+    }
+    return res
+}
+```
+
+The expression float64(target-position[i]) / float64(speed[i]) is used instead of float64((target-position[i]) / speed[i]) to ensure that the division is done in floating-point arithmetic, not integer arithmetic.
+
+In Go, if both operands of the / operator are integers, then integer division is performed, and the result is an integer. This means that any fractional part is discarded. For example, 5 / 2 equals 2, not 2.5.
