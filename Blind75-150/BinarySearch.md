@@ -263,6 +263,10 @@ func searchMatrix(matrix [][]int, target int) bool {
 
 Koko can decide her bananas-per-hour eating speed of k
 
+If l := 0, it will cause "runtime error: integer divide by zero".
+
+The panic "runtime error: integer divide by zero" is caused by the division operation in the hours function. If l is initialized to 0 in the minEatingSpeed function, then k in the hours function can be 0 when l and r are both 0 and k := l + (r-l)/2 is calculated.
+
 ```go
 func minEatingSpeed(piles []int, H int) int {
     l, r := 1, 1
@@ -271,6 +275,7 @@ func minEatingSpeed(piles []int, H int) int {
     }
     for l < r {
         k := l + (r-l)/2
+        // This is because if the hours required at the current speed mid are more than h, we need to increase the speed, not decrease it.
         if hours(piles, k) > H {
             l = k + 1
         } else {
