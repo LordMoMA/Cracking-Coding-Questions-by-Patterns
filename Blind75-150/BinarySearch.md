@@ -418,3 +418,11 @@ func (this *TimeMap) Get(key string, timestamp int) string {
     return ""
 }
 ```
+
+The reason l, r := 0, len(pairs) is used instead of l, r := 0, len(pairs)-1 is because of the specific binary search variant being used. This variant is sometimes called "binary search for the first true" or "binary search on a predicate".
+
+In this variant, the search space is [l, r) - that is, it includes l but excludes r. The goal is to find the smallest l such that the predicate is true, or if there is no such l, return r.
+
+This is why the loop condition is l < r instead of l <= r, and why r is set to mid instead of mid - 1 when the predicate is true. The r value is never a valid answer, so it's safe to set r to len(pairs) initially.
+
+This variant of binary search is particularly useful when the search space is infinite or not clearly defined, as it only requires the ability to compare elements, not to index them.
