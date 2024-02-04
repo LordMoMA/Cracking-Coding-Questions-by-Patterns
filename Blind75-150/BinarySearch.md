@@ -267,6 +267,10 @@ If l := 0, it will cause "runtime error: integer divide by zero".
 
 The panic "runtime error: integer divide by zero" is caused by the division operation in the hours function. If l is initialized to 0 in the minEatingSpeed function, then k in the hours function can be 0 when l and r are both 0 and k := l + (r-l)/2 is calculated.
 
+The time complexity of the minEatingSpeed function is O(N log M), where N is the number of piles and M is the maximum number of bananas in a pile. This is because in the worst case, we perform a binary search over the range [1, M] (which takes O(log M) time) and for each mid value, we iterate over all the piles to calculate the hours needed (which takes O(N) time).
+
+The space complexity of the minEatingSpeed function is O(1), which means the space required by the algorithm is constant, regardless of the number of piles. This is because we only use a fixed amount of space to store the variables l, r, k, and the results of the hours and max functions, and this does not change with the input size.
+
 ```go
 func minEatingSpeed(piles []int, H int) int {
     l, r := 1, 1
