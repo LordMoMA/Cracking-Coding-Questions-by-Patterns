@@ -321,6 +321,8 @@ That's why we use (pile + K - 1) / K. It ensures that the result is rounded up t
 
 The sort.Search function in Go is used to perform a binary search on a sorted slice. It uses a "half-interval search" algorithm, also known as binary search, to find the smallest index i in [0, n) at which f(i) is true, given the function f is a "monotone predicate", which means its truth value is consistent as i increases.
 
+sort.Search in Go is an implementation of binary search on a predicate.
+
 ```go
 x := []int{1, 3, 5, 8, 9}
 i := sort.Search(len(x), func(i int) bool { return x[i] >= 5 })
@@ -426,3 +428,13 @@ In this variant, the search space is [l, r) - that is, it includes l but exclude
 This is why the loop condition is l < r instead of l <= r, and why r is set to mid instead of mid - 1 when the predicate is true. The r value is never a valid answer, so it's safe to set r to len(pairs) initially.
 
 This variant of binary search is particularly useful when the search space is infinite or not clearly defined, as it only requires the ability to compare elements, not to index them.
+
+A predicate is a function that returns a boolean value. In the context of a binary search, a predicate is typically a function that takes an index or a value from the array and returns true if the desired condition is met and false otherwise.
+
+"Binary search on a predicate" means performing a binary search based on the result of a predicate function. Instead of searching for a specific value in a sorted array, you're searching for the first or last index where the predicate function returns true.
+
+For example, if you have a sorted array of integers and a predicate function that returns true for values greater than or equal to 10, a binary search on this predicate would find the first index in the array where the value is 10 or more.
+
+This kind of binary search is useful when the condition you're searching for can't be expressed simply as "find this value". It's also useful when the array is infinite or not clearly defined, as the predicate function can be used to determine the bounds of the search.
+
+sort.Search in Go is an implementation of binary search on a predicate.
