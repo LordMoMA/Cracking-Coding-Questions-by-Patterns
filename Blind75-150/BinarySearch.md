@@ -316,3 +316,65 @@ If you calculate (pile + K) / K, it would be (10 + 3) / 3 = 13 / 3 = 4.33, which
 However, if pile is 9 and K is 3, the actual number of hours needed would be 3. But (pile + K) / K would be (9 + 3) / 3 = 12 / 3 = 4, which overestimates the number of hours.
 
 That's why we use (pile + K - 1) / K. It ensures that the result is rounded up to the nearest integer without overestimating the number of hours. For pile = 9 and K = 3, (pile + K - 1) / K would be (9 + 3 - 1) / 3 = 11 / 3 = 3.67, which rounds down to 3 in integer division, correctly estimating the number of hours.
+
+[981. Time Based Key-Value Store](http://www.leetcode.com/problems/time-based-key-value-store/)
+
+The sort.Search function in Go is used to perform a binary search on a sorted slice. It uses a "half-interval search" algorithm, also known as binary search, to find the smallest index i in [0, n) at which f(i) is true, given the function f is a "monotone predicate", which means its truth value is consistent as i increases.
+
+```go
+x := []int{1, 3, 5, 8, 9}
+i := sort.Search(len(x), func(i int) bool { return x[i] >= 5 })
+fmt.Println(i)  // Output: 2
+```
+
+Note:
+
+```go
+x := []int{1, 3, 5, 8, 9}
+i := sort.Search(len(x), func(i int) bool { return x[i] < 5 })
+fmt.Println(i)  // Output: 2
+```
+
+the above two are the same, because the predicate is monotone.
+
+Note:
+
+If below format is adopted, there should be a comma!
+
+```go
+func Constructor() TimeMap {
+    return TimeMap{
+        m: make(map[string][]pair),
+    }
+}
+```
+
+```go
+type TimeMap struct {
+    m map[string][]pair
+}
+
+type pair struct {
+    timestamp int
+    value     string
+}
+
+/** Initialize your data structure here. */
+func Constructor() TimeMap {
+    return TimeMap{m: make(map[string][]pair)}
+}
+
+func (this *TimeMap) Set(key string, value string, timestamp int) {
+    this.m[key] = append(this.m[key], pair{timestamp, value})
+}
+
+func (this *TimeMap) Get(key string, timestamp int) string {
+    pairs := this.m[key]
+    // This will return the index of the first pair whose timestamp is greater than the given timestamp. If there is no such pair, it will return the length of the pairs slice.
+    i := sort.Search(len(pairs), func(i int) bool { return pairs[i].timestamp > timestamp })
+    if i > 0 {
+        return pairs[i-1].value
+    }
+    return ""
+}
+```
