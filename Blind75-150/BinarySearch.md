@@ -8,8 +8,8 @@ for l <= r: This is used when you're trying to find the position of a target val
 
 So, the choice between for l < r and for l <= r depends on whether you're trying to narrow down the search space to a single element or find the position of a target value.
 
-When `for l < r` use `r = mid`
-When `for l <= r` use `r = mid - 1`
+When `for l < r` use `r = mid` (element)
+When `for l <= r` use `r = mid - 1` (index)
 
 [704. Binary Search](http://leetcode.com/problems/binary-search/)
 
@@ -349,6 +349,24 @@ func Constructor() TimeMap {
 }
 ```
 
+What does TimeMap looks like:
+```go
+tm := TimeMap{
+    m: map[string][]pair{
+        "key1": {
+            {timestamp: 1, value: "value1"},
+            {timestamp: 2, value: "value2"},
+        },
+        "key2": {
+            {timestamp: 3, value: "value3"},
+            {timestamp: 4, value: "value4"},
+        },
+    },
+}
+```
+
+Solution:
+
 ```go
 type TimeMap struct {
     m map[string][]pair
@@ -368,12 +386,34 @@ func (this *TimeMap) Set(key string, value string, timestamp int) {
     this.m[key] = append(this.m[key], pair{timestamp, value})
 }
 
+// time O(log N) space O(1)
 func (this *TimeMap) Get(key string, timestamp int) string {
     pairs := this.m[key]
     // This will return the index of the first pair whose timestamp is greater than the given timestamp. If there is no such pair, it will return the length of the pairs slice.
     i := sort.Search(len(pairs), func(i int) bool { return pairs[i].timestamp > timestamp })
     if i > 0 {
         return pairs[i-1].value
+    }
+    return ""
+}
+```
+
+Implement Get manually:
+
+```go
+func (this *TimeMap) Get(key string, timestamp int) string {
+    pairs := this.m[key]
+    left, right := 0, len(pairs)
+    for left < right {
+        mid := left + (right - left) / 2
+        if pairs[mid].timestamp <= timestamp {
+            left = mid + 1
+        } else {
+            right = mid
+        }
+    }
+    if left > 0 {
+        return pairs[left-1].value
     }
     return ""
 }
