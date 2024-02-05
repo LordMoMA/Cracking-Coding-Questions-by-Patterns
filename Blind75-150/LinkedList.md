@@ -218,3 +218,139 @@ The third digits are 3 and 4. The sum is 7, plus the carry of 1 from the previou
 So, the result is [7,0,8], which represents the number 807.
 
 The line if carry > 0 { curr.Next = &ListNode{Val: carry} } outside the loop is for the case where you have a carry left after you've processed all digits from both lists. This would happen, for example, if you were adding [9,9] and [2], which would give you [1,0,1]. The final 1 comes from the carry after adding the two 9's.
+
+[146. LRU Cache](http://leetcode.com/problems/lru-cache)
+
+```go
+type LRUCache struct {
+    capacity int
+    cache    map[int]*DLinkedNode
+    head     *DLinkedNode
+    tail     *DLinkedNode
+}
+
+type DLinkedNode struct {
+    key   int
+    value int
+    prev  *DLinkedNode
+    next  *DLinkedNode
+}
+
+func initDLinkedNode(key, value int) *DLinkedNode {
+    return &DLinkedNode{
+        key:   key,
+        value: value,
+    }
+}
+
+func Constructor(capacity int) LRUCache {
+    l := LRUCache{
+        capacity: capacity,
+        cache:    map[int]*DLinkedNode{},
+        head:     initDLinkedNode(0, 0),
+        tail:     initDLinkedNode(0, 0),
+    }
+    l.head.next = l.tail
+    l.tail.prev = l.head
+    return l
+}
+
+func (this *LRUCache) Get(key int) int {
+    if _, ok := this.cache[key]; !ok {
+        return -1
+    }
+    node := this.cache[key]
+    this.moveToHead(node)
+    return node.value
+}
+
+func (this *LRUCache) Put(key int, value int) {
+    if _, ok := this.cache[key]; !ok {
+        node := initDLinkedNode(key, value)
+        this.cache[key] = node
+        this.addToHead(node)
+        if len(this.cache) > this.capacity {
+            removed := this.removeTail()
+            delete(this.cache, removed.key)
+        }
+    } else {
+        node := this.cache[key]
+        node.value = value
+        this.moveToHead(node)
+    }
+}
+
+func (this *LRUCache) addToHead(node *DLinkedNode) {
+    node.prev = this.head
+    node.next = this.head.next
+    this.head.next.prev = node
+    this.head.next = node
+}
+
+func (this *LRUCache) removeNode(node *DLinkedNode) {
+    node.prev.next = node.next
+    node.next.prev = node.prev
+}
+
+func (this *LRUCache) moveToHead(node *DLinkedNode) {
+    this.removeNode(node)
+    this.addToHead(node)
+}
+
+func (this *LRUCache) removeTail() *DLinkedNode {
+    node := this.tail.prev
+    this.removeNode(node)
+    return node
+}
+```
+
+Solution 2:
+
+```go
+import "container/list"
+
+type LRUCache struct {
+    Cap int
+    Keys map[int] *list.Element
+    List *list.List
+}
+
+type pair struct {
+    K, V int
+}
+
+func Constructor(capacity int) LRUCache {
+    return LRUCache{
+        Cap: capacity,
+        Keys: make(map[int]*list.Element),
+        List: list.New(),
+    }
+}
+
+
+func (this *LRUCache) Get(key int) int {
+    if el, ok := this.Keys[key]; ok {
+        this.List.MoveToFront(el)
+        return el.Value.(pair).V
+    }
+    return -1
+}
+
+
+func (this *LRUCache) Put(key int, value int)  {
+    if el, ok := this.Keys[key]; ok {
+        el.Value = pair{K: key, V: value}
+        this.List.MoveToFront(el)
+    } else {
+        el := this.List.PushFront(pair{K: key, V: value})
+        this.Keys[key] = el
+    }
+    if this.List.Len() > this.Cap {
+        el := this.List.Back()
+        this.List.Remove(el)
+        delete(this.Keys, el.Value.(pair).K)
+    }
+}
+
+```
+
