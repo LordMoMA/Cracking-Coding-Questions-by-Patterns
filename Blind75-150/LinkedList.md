@@ -221,19 +221,12 @@ The line if carry > 0 { curr.Next = &ListNode{Val: carry} } outside the loop is 
 
 [146. LRU Cache](http://leetcode.com/problems/lru-cache)
 
-```go
-type LRUCache struct {
-    capacity int
-    cache    map[int]*DLinkedNode
-    head     *DLinkedNode
-    tail     *DLinkedNode
-}
+[LRU Knowledge](https://books.halfrost.com/leetcode/ChapterThree/LRUCache/)
 
+```go
 type DLinkedNode struct {
-    key   int
-    value int
-    prev  *DLinkedNode
-    next  *DLinkedNode
+    key, value int
+    prev, next *DLinkedNode
 }
 
 func initDLinkedNode(key, value int) *DLinkedNode {
@@ -241,6 +234,13 @@ func initDLinkedNode(key, value int) *DLinkedNode {
         key:   key,
         value: value,
     }
+}
+
+type LRUCache struct {
+    size       int
+    capacity   int
+    cache      map[int]*DLinkedNode
+    head, tail *DLinkedNode
 }
 
 func Constructor(capacity int) LRUCache {
@@ -269,9 +269,11 @@ func (this *LRUCache) Put(key int, value int) {
         node := initDLinkedNode(key, value)
         this.cache[key] = node
         this.addToHead(node)
-        if len(this.cache) > this.capacity {
+        this.size++
+        if this.size > this.capacity {
             removed := this.removeTail()
             delete(this.cache, removed.key)
+            this.size--
         }
     } else {
         node := this.cache[key]
@@ -303,6 +305,7 @@ func (this *LRUCache) removeTail() *DLinkedNode {
     return node
 }
 ```
+
 
 Solution 2:
 
@@ -354,3 +357,52 @@ func (this *LRUCache) Put(key int, value int)  {
 
 ```
 
+Another way of doing this:
+
+```go
+package main
+
+import (
+    "container/list"
+)
+
+type LRUCache struct {
+    capacity int
+    cache    map[int]*list.Element
+    list     *list.List
+}
+
+type pair struct {
+    key   int
+    value int
+}
+
+func Constructor(capacity int) LRUCache {
+    return LRUCache{
+        capacity: capacity,
+        cache:    make(map[int]*list.Element),
+        list:     list.New(),
+    }
+}
+
+func (this *LRUCache) Get(key int) int {
+    if element, ok := this.cache[key]; ok {
+        this.list.MoveToFront(element)
+        return element.Value.(pair).value
+    }
+    return -1
+}
+
+func (this *LRUCache) Put(key int, value int) {
+    if element, ok := this.cache[key]; ok {
+        this.list.MoveToFront(element)
+        element.Value = pair{key, value}
+    } else {
+        if this.list.Len() >= this.capacity {
+            delete(this.cache, this.list.Back().Value.(pair).key)
+            this.list.Remove(this.list.Back())
+        }
+        this.cache[key] = this.list.PushFront(pair{key, value})
+    }
+}
+```
