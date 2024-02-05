@@ -143,3 +143,76 @@ func hasCycle(head *ListNode) bool {
 }
 ```
 
+[138. Copy List with Random Pointer](https://leetcode.com/problems/copy-list-with-random-pointer/)
+
+```go
+/**
+ * Definition for a Node.
+ * type Node struct {
+ *     Val int
+ *     Next *Node
+ *     Random *Node
+ * }
+ */
+
+func copyRandomList(head *Node) *Node {
+    if head == nil {
+        return nil
+    }
+    m := make(map[*Node]*Node)
+    curr := head
+    for curr != nil {
+        m[curr] = &Node{Val: curr.Val}
+        curr = curr.Next
+    }
+    curr = head
+    for curr != nil {
+        m[curr].Next = m[curr.Next]
+        m[curr].Random = m[curr.Random]
+        curr = curr.Next
+    }
+    return m[head]
+}
+```
+
+Another expression:
+
+The structure of the for loop in Go is for initialization; condition; post { }.
+
+initialization: This is executed before the first iteration. Here, node := head initializes the node variable to the head of the list.
+condition: This is the test condition checked before every iteration. If this condition evaluates to true, the loop continues; otherwise, it stops. Here, node != nil checks if the node is not nil.
+post: This is executed after every iteration. Here, node = node.Next moves the node to the next node in the list.
+
+```go
+type Node struct {
+    Val    int
+    Next   *Node
+    Random *Node
+}
+
+func copyRandomList(head *Node) *Node {
+    if head == nil {
+        return nil
+    }
+
+    nodeMap := make(map[*Node]*Node)
+
+    // First pass: make a copy of each node and store it in the map
+    for node := head; node != nil; node = node.Next {
+        nodeMap[node] = &Node{Val: node.Val}
+    }
+
+    // Second pass: set the next and random pointers for each copied node
+    for node := head; node != nil; node = node.Next {
+        if node.Next != nil {
+            nodeMap[node].Next = nodeMap[node.Next]
+        }
+        if node.Random != nil {
+            nodeMap[node].Random = nodeMap[node.Random]
+        }
+    }
+
+    // Return the copied head node
+    return nodeMap[head]
+}
+```
