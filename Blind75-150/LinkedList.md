@@ -265,3 +265,51 @@ You're setting the next and random pointers for each copied node. At this point,
 
 If you try to combine the two loops into one, you'll end up with a null pointer exception when you try to access m[curr.Next] and m[curr.Random] in the first loop, because the copies of the next and random nodes don't exist yet.
 
+[2. Add Two Numbers](http://leetcode.com/problems/add-two-numbers)
+
+Initialize a variable carry to keep track of the carry from the addition. Set the dummy node to simplify the code. Move the curr pointer to the next node in each iteration. The carry is the sum divided by 10, and the new node is the sum modulo 10.
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
+    dummy := &ListNode{}
+    curr := dummy
+    carry := 0
+    for l1 != nil || l2 != nil {
+        sum := carry
+        if l1 != nil {
+            sum += l1.Val
+            l1 = l1.Next
+        }
+        if l2 != nil {
+            sum += l2.Val
+            l2 = l2.Next
+        }
+        carry = sum / 10
+        curr.Next = &ListNode{Val: sum % 10}
+        curr = curr.Next
+    }
+    if carry > 0 {
+        curr.Next = &ListNode{Val: carry}
+    }
+    return dummy.Next
+}
+```
+
+Input: l1 = [2,4,3], l2 = [5,6,4]
+
+The first digits are 2 and 5. The sum is 7. Since 7 is less than 10, there is no carry. The first digit of the result is 7.
+
+The second digits are 4 and 6. The sum is 10. Since 10 is equal to 10, there is a carry of 1 to the next digit. The second digit of the result is 0 (10 % 10).
+
+The third digits are 3 and 4. The sum is 7, plus the carry of 1 from the previous step, which makes it 8. Since 8 is less than 10, there is no carry. The third digit of the result is 8.
+
+So, the result is [7,0,8], which represents the number 807.
+
+The line if carry > 0 { curr.Next = &ListNode{Val: carry} } outside the loop is for the case where you have a carry left after you've processed all digits from both lists. This would happen, for example, if you were adding [9,9] and [2], which would give you [1,0,1]. The final 1 comes from the carry after adding the two 9's.
