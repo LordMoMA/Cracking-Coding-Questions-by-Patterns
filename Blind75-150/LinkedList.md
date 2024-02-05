@@ -223,6 +223,12 @@ The line if carry > 0 { curr.Next = &ListNode{Val: carry} } outside the loop is 
 
 [LRU Knowledge](https://books.halfrost.com/leetcode/ChapterThree/LRUCache/)
 
+In the context of this LRU Cache implementation, the head and tail nodes are dummy nodes. They are placeholders that make the implementation easier by eliminating the need to check for null pointers.
+
+So, in the list head <-> 1 <-> 2 <-> 3 <-> 4 <-> 5 <-> tail, head and tail are dummy nodes. The actual data is stored in nodes 1 through 5.
+
+When we say "remove the tail", we're referring to removing the node before the tail dummy node, which is 5 in this case.
+
 ```go
 type DLinkedNode struct {
     key, value int
@@ -268,7 +274,7 @@ func (this *LRUCache) Put(key int, value int) {
     if _, ok := this.cache[key]; !ok {
         node := initDLinkedNode(key, value)
         this.cache[key] = node
-        this.addToHead(node)
+        this.addToHead(node)  // attention, not moveToHead()!
         this.size++
         if this.size > this.capacity {
             removed := this.removeTail()
@@ -305,6 +311,16 @@ func (this *LRUCache) removeTail() *DLinkedNode {
     return node
 }
 ```
+
+In Go, the delete built-in function is used to remove an entry from a map.
+
+removeNode 3 from 1 <-> 2 <-> 3 <-> 4 <-> 5:
+
+1 <-> 2 -> 4 <-> 5
+       3 <->
+
+1 <-> 2 <-> 4 <-> 5
+       3
 
 
 Solution 2:
