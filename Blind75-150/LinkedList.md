@@ -174,6 +174,17 @@ func copyRandomList(head *Node) *Node {
     return m[head]
 }
 ```
+If there are some data in it, it would look like a mapping between original nodes and their corresponding copied nodes.
+
+Let's say we have a linked list with three nodes:
+
+Node1(Val: 1) -> Node2(Val: 2) -> Node3(Val: 3)
+
+After running the first loop in the copyRandomList function, the map would look like this:
+
+Node1 -> CopyNode1(Val: 1)
+Node2 -> CopyNode2(Val: 2)
+Node3 -> CopyNode3(Val: 3)
 
 Another expression:
 
@@ -216,3 +227,41 @@ func copyRandomList(head *Node) *Node {
     return nodeMap[head]
 }
 ```
+
+The below solution will cause:
+
+input: [[7,null],[13,0],[11,4],[10,2],[1,0]]
+output: [[7,null]]
+expected: [[7,null],[13,0],[11,4],[10,2],[1,0]]
+
+
+```go
+func copyRandomList(head *Node) *Node {
+    if head == nil {
+        return nil
+    }
+    m := make(map[*Node]*Node)
+    curr := head
+    for curr != nil {
+        m[curr] = &Node{Val: curr.Val}
+        m[curr].Next = m[curr.Next]
+        m[curr].Random = m[curr.Random]
+        curr = curr.Next
+    }
+
+    return m[head]
+}
+```
+
+The reason you can't combine the two loops into one in the copyRandomList function is because when you're creating the copy of each node in the first loop, you don't yet have the copies of the next and random nodes to assign to m[curr].Next and m[curr].Random.
+
+In the first loop:
+
+You're creating a new node for each node in the original list and storing it in the map m. At this point, you don't have the copies of the next and random nodes yet, so you can't assign them to m[curr].Next and m[curr].Random.
+
+In the second loop:
+
+You're setting the next and random pointers for each copied node. At this point, you already have the copies of the next and random nodes, so you can assign them to m[curr].Next and m[curr].Random.
+
+If you try to combine the two loops into one, you'll end up with a null pointer exception when you try to access m[curr.Next] and m[curr.Random] in the first loop, because the copies of the next and random nodes don't exist yet.
+
