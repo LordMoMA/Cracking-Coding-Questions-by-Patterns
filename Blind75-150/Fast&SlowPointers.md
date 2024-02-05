@@ -4,6 +4,14 @@ The Floyd's Tortoise and Hare algorithm is a pointer algorithm that uses two poi
 
 [287. Find the Duplicate Number](https://leetcode.com/problems/find-the-duplicate-number/)
 
+The problem statement guarantees that there is at least one duplicate because there are n+1 integers and each integer is in the range [1, n] inclusive. This means that the array can be interpreted as a linked list where the value of each element is the index of the next node.
+
+The time complexity is O(n) and the space complexity is O(1).
+
+The line fast = nums[nums[fast]] is equivalent to moving the fast pointer two steps at a time. The outer nums[] corresponds to the second step. This is because each value in the array is treated as a pointer to another index in the array.
+
+The array can be transformed into a linked list problem because each value in the array points to another index in the array, similar to how each node in a linked list points to another node. If there is a duplicate value in the array, there will be two "pointers" to the same index, creating a cycle, similar to a cycle in a linked list.
+
 ```go
 func findDuplicate(nums []int) int {
     slow, fast := nums[0], nums[nums[0]]
@@ -19,6 +27,18 @@ func findDuplicate(nums []int) int {
     return slow
 }
 ```
+
+The array [3,1,3,4,2] can be interpreted as a linked list where the value of each element is the index of the next node. Here's how it looks:
+
+Start at index 0, the value is 3, so go to index 3.
+At index 3, the value is 4, so go to index 4.
+At index 4, the value is 2, so go to index 2.
+At index 2, the value is 3, so go to index 3.
+At index 3, the value is 4, so go to index 4.
+At index 4, the value is 2, so go to index 2.
+As you can see, we're now in a cycle: 3 -> 4 -> 2 -> 3 -> 4 -> 2 -> ...
+
+So, the duplicate number 3 is the entry point of the cycle. The Floyd's Tortoise and Hare algorithm can be used to find this entry point, which is the solution to the problem.
 
 [143. Reorder List](https://leetcode.com/problems/reorder-list/description/)
 
