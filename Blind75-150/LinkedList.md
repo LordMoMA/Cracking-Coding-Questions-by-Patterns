@@ -323,7 +323,7 @@ removeNode 3 from 1 <-> 2 <-> 3 <-> 4 <-> 5:
        3
 
 
-Solution 2:
+Solution 2 (consider rewrite container/list with your own method ):
 
 ```go
 import "container/list"
