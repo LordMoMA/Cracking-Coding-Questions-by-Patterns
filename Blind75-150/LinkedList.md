@@ -278,7 +278,7 @@ func (this *LRUCache) Put(key int, value int) {
         this.size++
         if this.size > this.capacity {
             removed := this.removeTail()
-            delete(this.cache, removed.key)
+            delete(this.cache, removed.key) // attention: delete usage
             this.size--
         }
     } else {
