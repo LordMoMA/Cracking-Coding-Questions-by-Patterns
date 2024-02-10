@@ -322,6 +322,84 @@ removeNode 3 from 1 <-> 2 <-> 3 <-> 4 <-> 5:
 1 <-> 2 <-> 4 <-> 5
        3
 
+```go
+type LRUCache struct {
+    capacity int
+    cache    map[int]*DListNode
+    head     *DListNode // Points to the least recently used node
+    tail     *DListNode // Points to the most recently used node
+}
+
+type DListNode struct {
+    key, value int
+    prev, next *DListNode
+}
+
+func Constructor(capacity int) LRUCache {
+    return LRUCache{
+        capacity: capacity,
+        cache:    make(map[int]*DListNode),
+        head:     &DListNode{},
+        tail:     &DListNode{},
+    }
+}
+
+func (this *LRUCache) Get(key int) int {
+    if node, ok := this.cache[key]; ok {
+        this.moveToFront(node)
+        return node.value
+    }
+    return -1
+}
+
+func (this *LRUCache) Put(key int, value int) {
+    if node, ok := this.cache[key]; ok {
+        node.value = value
+        this.moveToFront(node)
+        return
+    }
+
+    newNode := &DListNode{key: key, value: value}
+    this.cache[key] = newNode
+    this.addToFront(newNode)
+
+    if len(this.cache) > this.capacity {
+        this.removeTail()
+    }
+}
+
+func (this *LRUCache) addToFront(node *DListNode) {
+    node.prev = this.head
+    node.next = this.head.next
+    this.head.next = node
+    if node.next != nil {
+        node.next.prev = node
+    } else {
+        this.tail = node
+    }
+}
+
+func (this *LRUCache) removeTail() {
+    delete(this.cache, this.tail.key)
+    this.tail = this.tail.prev
+    this.tail.next = nil
+}
+
+func (this *LRUCache) moveToFront(node *DListNode) {
+    if node == this.head.next {
+        return // Already at the front
+    }
+    // Remove node from its current position
+    node.prev.next = node.next
+    if node.next != nil {
+        node.next.prev = node.prev
+    } else {
+        this.tail = node.prev
+    }
+    this.addToFront(node)
+}
+
+```
 
 Solution 2 (consider rewrite container/list with your own method ):
 
@@ -422,3 +500,5 @@ func (this *LRUCache) Put(key int, value int) {
     }
 }
 ```
+
+
