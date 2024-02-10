@@ -11,6 +11,25 @@ So, the choice between for l < r and for l <= r depends on whether you're trying
 When `for l < r` use `r = mid` (element)
 When `for l <= r` use `r = mid - 1` (index)
 
+[162. Find Peak Element](https://leetcode.com/problems/find-peak-element/description/)
+
+This one is different, we are looking for the index, but we used l < r instead of l <= r.
+
+```go
+func findPeakElement(nums []int) int {
+    l, r := 0, len(nums)-1
+    for l < r {
+        mid := l + (r-l)/2
+        if nums[mid] < nums[mid+1] {
+            l = mid+1
+        } else {
+            r = mid
+        }
+    }
+    return r
+}
+```
+
 [704. Binary Search](http://leetcode.com/problems/binary-search/)
 
 ```go
