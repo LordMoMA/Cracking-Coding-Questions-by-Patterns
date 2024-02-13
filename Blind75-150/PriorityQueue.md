@@ -170,8 +170,6 @@ func (h *IntHeap) Pop() interface{} {
 }
 ```
 
-
-[692. Top K Frequent Words](https://leetcode.com/problems/top-k-frequent-words/)
 [703. Kth Largest Element in a Stream](https://leetcode.com/problems/kth-largest-element-in-a-stream/)
 
 ```go
@@ -221,9 +219,48 @@ func (h *IntHeap) Pop() interface{} {
 }
 ```
 
+[1046. Last Stone Weight](https://leetcode.com/problems/last-stone-weight/)
+
+time complexity of O(n log n) and a space complexity of O(n).
+
+The function first pushes all elements from the stones array into a heap. Each push operation takes O(log n) time, where n is the number of elements in the heap. So, pushing all n elements into the heap takes O(n log n) time.
+Then, in the worst case, the function performs n-1 pop operations and up to n-1 push operations (when all stones have different weights). Each of these operations takes O(log n) time, so this part of the function also takes O(n log n) time.
+Therefore, the total time complexity is O(n log n) + O(n log n) = O(n log n).
+
+```go
+import "container/heap"
+
+func lastStoneWeight(stones []int) int {
+    h := &IntHeap{}
+    heap.Init(h)
+    for _, stone := range stones {
+        heap.Push(h, stone)
+    }
+    for h.Len() > 1 {
+        y := heap.Pop(h).(int)
+        x := heap.Pop(h).(int)
+        if x != y {
+            heap.Push(h, y-x)
+        }
+    }
+    if h.Len() == 0 {
+        return 0
+    }
+    return heap.Pop(h).(int)
+}
+
+type IntHeap []int
+```
+
+In the lastStoneWeight function, the result of heap.Pop(h) is being assigned to a variable directly. The heap.Pop function returns a value of type interface{}, which is a placeholder for any type in Go. When you assign this to a variable, Go doesn't know what the actual type of the value is, so you need to use a type assertion to tell Go that the value is an int.
+
+In the KthLargest struct methods, the result of heap.Pop(this.minHeap) is not being assigned to a variable. Instead, it's being discarded because the code doesn't need the value that was removed from the heap. Therefore, there's no need for a type assertion in this case.
+
+[692. Top K Frequent Words](https://leetcode.com/problems/top-k-frequent-words/)
 [767. Reorganize String](https://leetcode.com/problems/reorganize-string/)
 [973. K Closest Points to Origin](https://leetcode.com/problems/k-closest-points-to-origin/)
-[1046. Last Stone Weight](https://leetcode.com/problems/last-stone-weight/)
+
+
 [1054. Distant Barcodes](https://leetcode.com/problems/distant-barcodes/)
 [1122. Relative Sort Array](https://leetcode.com/problems/relative-sort-array/)
 [1167. Minimum Cost to Connect Sticks](https://leetcode.com/problems/minimum-cost-to-connect-sticks/)
