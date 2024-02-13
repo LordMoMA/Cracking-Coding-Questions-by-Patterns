@@ -204,3 +204,56 @@ Search: The time complexity for searching a word in a Trie is also O(k), where k
 Prefix Search: The time complexity for searching a prefix in a Trie is O(k), where k is the length of the prefix. Similar to the search operation, we need to traverse down the Trie until we reach the end of the prefix. The space complexity is O(1).
 
 The space complexity of a Trie in general is O(n), where n is the total number of characters in all words inserted into the Trie. This is because each node in the Trie represents a character.
+
+[212. Word Search II](https://leetcode.com/problems/word-search-ii/description/)
+
+```go
+type Trie struct {
+    children [26]*Trie
+    word string
+}
+
+func findWords(board [][]byte, words []string) []string {
+    root := &Trie{}
+    for _, word := range words {
+        node := root
+        for _, ch := range word {
+            ch -= 'a'
+            if node.children[ch] == nil {
+                node.children[ch] = &Trie{}
+            }
+            node = node.children[ch]
+        }
+        node.word = word
+    }
+    
+    res := make([]string, 0)
+    for i := 0; i < len(board); i++ {
+        for j := 0; j < len(board[0]); j++ {
+            dfs(board, i, j, root, &res)
+        }
+    }
+    return res
+}
+
+func dfs(board [][]byte, i, j int, node *Trie, res *[]string) {
+    if i < 0 || i >= len(board) || j < 0 || j >= len(board[0]) {
+        return
+    }
+    ch := board[i][j]
+    if ch == '#' || node.children[ch-'a'] == nil {
+        return
+    }
+    node = node.children[ch-'a']
+    if node.word != "" {
+        *res = append(*res, node.word)
+        node.word = ""
+    }
+    board[i][j] = '#'
+    dfs(board, i+1, j, node, res)
+    dfs(board, i-1, j, node, res)
+    dfs(board, i, j+1, node, res)
+    dfs(board, i, j-1, node, res)
+    board[i][j] = ch
+}
+```
