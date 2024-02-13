@@ -148,6 +148,69 @@ func max(a, b int) int {
 }
 ```
 
+Given an array of positive integers a, your task is to calculate the sum of every possible a[i] ∘ a[j], where a[i] ∘ a[j] is the concatenation of the string representations of a[i] and a[j] respectively.
+
+Example
+
+For a = [10, 2], the output should be solution(a) = 1344.
+
+a[0] ∘ a[0] = 10 ∘ 10 = 1010,
+a[0] ∘ a[1] = 10 ∘ 2 = 102,
+a[1] ∘ a[0] = 2 ∘ 10 = 210,
+a[1] ∘ a[1] = 2 ∘ 2 = 22.
+So the sum is equal to 1010 + 102 + 210 + 22 = 1344.
+
+```go
+func solution(a []int) int64 {
+    var res int64
+    for i := 0; i < len(a); i++ {
+        for j := 0; j < len(a); j++ {
+            sum := strconv.Itoa(a[i]) + strconv.Itoa(a[j])
+            num, _ := strconv.ParseInt(sum, 10, 64)
+            res += num
+        }
+    }
+    return res
+}
+
+func solution2(a []int) int64 {
+    var res int64
+    for i := 0; i < len(a); i++ {
+        for j := 0; j < len(a); j++ {
+            sum := strconv.Itoa(a[i]) + strconv.Itoa(a[j])
+            num, _ := strconv.Atoi(sum)
+            res += int64(num)
+        }
+    }
+    return res
+}
+
+// Pre-calculate string representations: Convert all numbers to strings at the beginning to avoid converting them multiple times in the loop.
+func solution3(a []int) int64 {
+    var res int64
+    strNums := make([]string, len(a))
+    for i, num := range a {
+        strNums[i] = strconv.Itoa(num)
+    }
+    for _, strNum1 := range strNums {
+        for _, strNum2 := range strNums {
+            num, _ := strconv.ParseInt(strNum1+strNum2, 10, 64)
+            res += num
+        }
+    }
+    return res
+}
+```
+Both above solutions: 
+
+Tests passed: 14/16. Execution time limit exceeded on test 15: Program exceeded the execution time limit. Make sure that it completes execution in a few seconds for any possible input.
+Click the "Run Tests" button to see output, console logs, and detailed error messages for sample or custom test cases. This information is hidden when clicking the "Submit" button in order to prevent hard-coding solutions to the hidden test cases.
+Sample tests:
+8/8
+Hidden tests:
+6/8
+Score:
+417/500
 
 
 [1672. Richest Customer Wealth](http://www.leetcode.com/problems/richest-customer-wealth/)
