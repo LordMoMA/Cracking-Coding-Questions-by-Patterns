@@ -256,9 +256,71 @@ In the lastStoneWeight function, the result of heap.Pop(h) is being assigned to 
 
 In the KthLargest struct methods, the result of heap.Pop(this.minHeap) is not being assigned to a variable. Instead, it's being discarded because the code doesn't need the value that was removed from the heap. Therefore, there's no need for a type assertion in this case.
 
+
+
+```go
+import "container/heap"
+
+func kClosest(points [][]int, k int) [][]int {
+    h := &IntHeap{}
+    heap.Init(h)
+    for _, point := range points {
+        heap.Push(h, point)
+        if h.Len() > k {
+            heap.Pop(h)
+        }
+    }
+    res := make([][]int, k)
+    for i := k - 1; i >= 0; i-- {
+        res[i] = heap.Pop(h).([]int)
+    }
+    return res
+}
+
+type IntHeap [][]int //maxHeap
+
+func (h IntHeap) Len() int           { return len(h) }
+func (h IntHeap) Less(i, j int) bool { return h[i][0]*h[i][0]+h[i][1]*h[i][1] > h[j][0]*h[j][0]+h[j][1]*h[j][1] }
+func (h IntHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+
+func (h *IntHeap) Push(x interface{}) {
+    *h = append(*h, x.([]int))
+}
+
+func (h *IntHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+```
+
+[215. Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/description/)
+
+```go
+
+func findKthLargest(nums []int, k int) int {
+    h := &IntHeap{}
+    heap.Init(h)
+    for _, num := range nums {
+        heap.Push(h, num)
+        if h.Len() > k {
+            heap.Pop(h)
+        }
+    }
+    return heap.Pop(h).(int)
+}
+
+type IntHeap []int
+```
+
 [692. Top K Frequent Words](https://leetcode.com/problems/top-k-frequent-words/)
 [767. Reorganize String](https://leetcode.com/problems/reorganize-string/)
 [973. K Closest Points to Origin](https://leetcode.com/problems/k-closest-points-to-origin/)
+
+[1054. Distant Barcodes](https://leetcode.com/problems/distant-barcodes/)
+
 
 
 [1054. Distant Barcodes](https://leetcode.com/problems/distant-barcodes/)
