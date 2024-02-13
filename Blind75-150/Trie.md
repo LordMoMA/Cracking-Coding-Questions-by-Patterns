@@ -194,7 +194,6 @@ func (this *WordDictionary) SearchTrie(word string, node *Trie) bool {
 
 ```
 
-
 The time and space complexity of operations in a Trie data structure are as follows:
 
 Insertion: The time and space complexity for inserting a word into a Trie is O(k), where k is the length of the word. This is because in the worst case, we need to add k nodes to the Trie, which takes O(k) time and space.
@@ -254,6 +253,6 @@ func dfs(board [][]byte, i, j int, node *Trie, res *[]string) {
     dfs(board, i-1, j, node, res)
     dfs(board, i, j+1, node, res)
     dfs(board, i, j-1, node, res)
-    board[i][j] = ch
+    board[i][j] = ch //backtracking
 }
 ```
