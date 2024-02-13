@@ -347,6 +347,9 @@ func findAnagrams(s string, p string) []int {
     return result
 }
 ```
+
+CodeSignal Problem, not one in LeetCode has similar pattern
+
 You are given two strings - pattern and source. The first string pattern contains only the symbols 0 and 1, and the second string source contains only lowercase English letters.
 
 Let's say that pattern matches a substring source[l..r] of source if the following three conditions are met:
