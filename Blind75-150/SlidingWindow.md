@@ -365,6 +365,8 @@ Example
 
 For pattern = "010" and source = "amazing", the output should be solution(pattern, source) = 2.
 
+time complexity: O((n-m)*m) space complexity: O(1)
+
 ```go
 func calcCount(pattern string, source string) int {
     count := 0
