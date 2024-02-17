@@ -361,6 +361,80 @@ func (h IntHeap) Len() int           { return len(h) }
 func (h IntHeap) Less(i, j int) bool { return h[i] > h[j] } //maxheap
 ```
 
+[355. Design Twitter](https://leetcode.com/problems/design-twitter/)
+
+```go
+import "container/heap"
+
+type Twitter struct {
+    time int
+    tweets map[int][]tweet
+    follows map[int]map[int]struct{}
+}
+
+type tweet struct {
+    id int
+    time int
+}
+
+func Constructor() Twitter {
+    return Twitter{
+        tweets: make(map[int][]tweet),
+        follows: make(map[int]map[int]struct{}),
+    }
+}
+
+func (t *Twitter) PostTweet(userId int, tweetId int) {
+    t.tweets[userId] = append(t.tweets[userId], tweet{tweetId, t.time})
+    t.time++
+}
+
+func (t *Twitter) GetNewsFeed(userId int) []int {
+    h := &IntHeap{}
+    heap.Init(h)
+    if tweets, ok := t.tweets[userId]; ok {
+        for i := len(tweets) - 1; i >= 0 && i >= len(tweets)-10; i-- {
+            heap.Push(h, tweets[i])
+        }
+    }
+    if f, ok := t.follows[userId]; ok {
+        for user := range f {
+            if tweets, ok := t.tweets[user]; ok {
+                for i := len(tweets) - 1; i >= 0 && i >= len(tweets)-10; i-- {
+                    heap.Push(h, tweets[i])
+                }
+            }
+        }
+    }
+    res := []int{}
+    for h.Len() > 0 && len(res) < 10 {
+        res = append(res, heap.Pop(h).(tweet).id)
+    }
+    return res
+}
+
+func (t *Twitter) Follow(followerId int, followeeId int) {
+    if _, ok := t.follows[followerId]; !ok {
+        t.follows[followerId] = make(map[int]struct{})
+    }
+    t.follows[followerId][followeeId] = struct{}{}
+}
+
+func (t *Twitter) Unfollow(followerId int, followeeId int) {
+    if f, ok := t.follows[followerId]; ok {
+        delete(f, followeeId)
+    }
+}
+
+type IntHeap []tweet
+
+func (h IntHeap) Less(i, j int) bool { return h[i].time > h[j].time } //maxheap
+```
+
+[692. Top K Frequent Words](https://leetcode.com/problems/top-k-frequent-words/)
+
+```go
+
 [692. Top K Frequent Words](https://leetcode.com/problems/top-k-frequent-words/)
 [767. Reorganize String](https://leetcode.com/problems/reorganize-string/)
 [973. K Closest Points to Origin](https://leetcode.com/problems/k-closest-points-to-origin/)
