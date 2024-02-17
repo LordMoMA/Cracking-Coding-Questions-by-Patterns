@@ -315,6 +315,52 @@ func findKthLargest(nums []int, k int) int {
 type IntHeap []int
 ```
 
+[621. Task Scheduler](https://leetcode.com/problems/task-scheduler/)
+
+```go
+import "container/heap"
+
+func leastInterval(tasks []byte, n int) int {
+    count := map[byte]int{}
+    for _, task := range tasks {
+        count[task]++
+    }
+
+    h := &IntHeap{}
+    heap.Init(h)
+    for _, c := range count {
+        heap.Push(h, c)
+    }
+
+    cycles := 0
+    for h.Len() > 0 {
+        temp := []int{}
+        for i := 0; i <= n; i++ {
+            if h.Len() > 0 {
+                temp = append(temp, heap.Pop(h).(int))
+            }
+        }
+        for _, t := range temp {
+            if t-1 > 0 {
+                heap.Push(h, t-1)
+            }
+        }
+        if h.Len() == 0 {
+            cycles += len(temp)
+        } else {
+            cycles += n + 1
+        }
+    }
+
+    return cycles
+}
+
+type IntHeap []int
+
+func (h IntHeap) Len() int           { return len(h) }
+func (h IntHeap) Less(i, j int) bool { return h[i] > h[j] } //maxheap
+```
+
 [692. Top K Frequent Words](https://leetcode.com/problems/top-k-frequent-words/)
 [767. Reorganize String](https://leetcode.com/problems/reorganize-string/)
 [973. K Closest Points to Origin](https://leetcode.com/problems/k-closest-points-to-origin/)
