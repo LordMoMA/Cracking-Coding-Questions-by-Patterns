@@ -121,6 +121,20 @@ Adding these up, the total space complexity is O(n).
 
 [78. Subsets](https://leetcode.com/problems/subsets/description/)
 
+The for loop and the subsetCopy code interact in the following way:
+
+At the start of each iteration of the for loop, an element from nums is appended to subset.
+
+The backtrack function is then called recursively with this updated subset. Inside this recursive call, a new subsetCopy is created which is a snapshot of subset at that point in time. This subsetCopy is then appended to res.
+
+After the recursive call to backtrack, the last element is removed from subset (this is the backtracking step). This does not affect subsetCopy in the recursive call, because subsetCopy was a separate copy of subset.
+
+The for loop then moves on to the next element in nums, and the process repeats.
+
+So, in each iteration of the for loop, subset is modified and a snapshot of it is captured in subsetCopy inside a recursive call to backtrack. The modifications to subset in the for loop do not affect the subsetCopy that was created in previous recursive calls, because each subsetCopy is a separate slice that was created with the state of subset at the time of its creation.
+
+time O(N * 2^N), space O(N * 2^N)
+
 ```go
 func subsets(nums []int) [][]int {
     var res [][]int
