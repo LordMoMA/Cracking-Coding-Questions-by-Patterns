@@ -432,10 +432,6 @@ func (h IntHeap) Less(i, j int) bool { return h[i].time > h[j].time } //maxheap
 ```
 
 [692. Top K Frequent Words](https://leetcode.com/problems/top-k-frequent-words/)
-
-```go
-
-[692. Top K Frequent Words](https://leetcode.com/problems/top-k-frequent-words/)
 [767. Reorganize String](https://leetcode.com/problems/reorganize-string/)
 [973. K Closest Points to Origin](https://leetcode.com/problems/k-closest-points-to-origin/)
 
