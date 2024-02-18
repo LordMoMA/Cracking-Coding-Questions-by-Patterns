@@ -363,6 +363,35 @@ func (h IntHeap) Less(i, j int) bool { return h[i] > h[j] } //maxheap
 
 [355. Design Twitter](https://leetcode.com/problems/design-twitter/)
 
+The follows map[int]map[int]struct{} is a map of maps in Go, where the inner map is essentially a set. Here's an example of what it might look like for a simple Twitter-like system:
+
+```go
+follows := map[int]map[int]struct{}{
+    1: {
+        2: struct{}{},
+        3: struct{}{},
+    },
+    2: {
+        1: struct{}{},
+    },
+    3: {
+        2: struct{}{},
+    },
+}
+
+tweets := make(map[int][]tweet)
+
+tweets[1] = []tweet{
+    {id: 101, text: "Hello, world!"},
+    {id: 102, text: "I love programming."},
+}
+
+follows := make(map[int]map[int]struct{})
+
+follows[1] = make(map[int]struct{})
+follows[1][2] = struct{}{}
+```
+
 ```go
 import "container/heap"
 
