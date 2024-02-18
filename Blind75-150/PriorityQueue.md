@@ -392,6 +392,10 @@ follows[1] = make(map[int]struct{})
 follows[1][2] = struct{}{}
 ```
 
+follows[1][2] = struct{}{} could represent that user 1 follows user 2. The empty struct is used because it doesn't take any additional space, making it a memory-efficient way to represent a set in Go.
+
+The empty struct is being used as a placeholder value in the map to represent a set. The keys of the map represent the elements of the set, and the values are irrelevant, so an empty struct is used as a placeholder because it doesn't take up any additional memory.
+
 ```go
 import "container/heap"
 
@@ -405,7 +409,7 @@ type tweet struct {
     id int
     time int
 }
-
+// time: O(1) Space O(n+m) N is the number of users and M is the number of tweets
 func Constructor() Twitter {
     return Twitter{
         tweets: make(map[int][]tweet),
@@ -418,6 +422,7 @@ func (t *Twitter) PostTweet(userId int, tweetId int) {
     t.time++
 }
 
+// time O(N log N) Space O(N) We're storing all the tweets in a heap.
 func (t *Twitter) GetNewsFeed(userId int) []int {
     h := &IntHeap{}
     heap.Init(h)
