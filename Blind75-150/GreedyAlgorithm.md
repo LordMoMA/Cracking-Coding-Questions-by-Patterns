@@ -288,3 +288,43 @@ func (h *IntHeap) Pop() interface{} {
     return x
 }
 ```
+
+[678. Valid Parenthesis String](https://leetcode.com/problems/valid-parenthesis-string/description/)
+
+In the context of the lo variable, we treat the asterisk as a closing parenthesis. This is because we're considering the "worst-case" scenario where we have the minimum number of unmatched opening parentheses.
+
+In this worst-case scenario, we want to match as many parentheses as possible to minimize the number of unmatched opening parentheses. So, when we see an asterisk, we consider it as a closing parenthesis ')' (if there's an unmatched opening parenthesis), or as an empty string (if there's no unmatched opening parenthesis), and we decrement lo.
+
+However, it's important to note that this is just one possible way to interpret the asterisk. In the context of the hi variable, we treat the asterisk as an opening parenthesis, because we're considering the "best-case" scenario where we have the maximum number of unmatched opening parentheses.
+
+This dual interpretation of the asterisk allows us to keep track of the full range of possible numbers of unmatched opening parentheses, which helps us determine whether the string can be made valid.
+
+```go
+func checkValidString(s string) bool {
+    lo, hi := 0, 0
+    for _, c := range s {
+        if c == '(' {
+            lo++
+        } else {
+            lo--
+        }
+        if c != ')' {
+            hi++
+        } else {
+            hi--
+        }
+        if hi < 0 {
+            break
+        }
+        lo = max(lo, 0)
+    }
+    return lo == 0
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```

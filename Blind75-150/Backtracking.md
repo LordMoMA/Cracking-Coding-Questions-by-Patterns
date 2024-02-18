@@ -31,6 +31,7 @@ func backtrack(candidates []int, target int, start int, combination []int, res *
     }
 }
 ```
+
 The time complexity of the combinationSum function is O(N^(T/M)) where N is the number of candidates, T is the target value, and M is the minimum value in candidates. This is because in the worst case, the function explores each possible combination of candidates. The exponent T/M comes from the fact that each recursive step decreases the target value by at least M, and there can be at most T/M recursive calls.
 
 The space complexity of the function is O(T/M) because in the worst case, if every candidate is chosen, the maximum depth of the recursion tree can be T/M. This is the maximum size of the combination array, which is stored in the call stack during the recursion.
@@ -117,3 +118,30 @@ The path string that is built up during the recursion can have a maximum length 
 The recursion stack can go as deep as 2n (in the case where we add n opening parentheses and then n closing parentheses). Each recursive call adds a new layer to the stack. So, the recursion stack contributes O(n) to the space complexity.
 
 Adding these up, the total space complexity is O(n).
+
+[78. Subsets](https://leetcode.com/problems/subsets/description/)
+
+```go
+func subsets(nums []int) [][]int {
+    var res [][]int
+    backtrack(nums, 0, []int{}, &res)
+    return res
+}
+
+func backtrack(nums []int, start int, subset []int, res *[][]int) {
+    subsetCopy := make([]int, len(subset))
+    copy(subsetCopy, subset)
+    *res = append(*res, subsetCopy)
+    for i := start; i < len(nums); i++ {
+        subset = append(subset, nums[i])
+        backtrack(nums, i+1, subset, res)
+        subset = subset[:len(subset)-1]
+    }
+}
+```
+
+How duplicate subset is skipped?
+
+In the backtrack function, the loop variable i starts from the start index and goes up to the end of nums. This means that for each subset, it only considers the current element and the elements after it. It does not consider the elements before the current element.
+
+So, when nums is [1,2,3], it first considers 1, and then it considers 2 and 3. But when it's considering 2 and 3, it does not go back and consider 1 again. This means it generates [1,2] but not [2,1].
