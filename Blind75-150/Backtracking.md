@@ -1,6 +1,47 @@
 ![Alt text](images/backtracking.png)
 ![Alt text](images/Sudoku_solved_by_bactracking.gif)
 
+[78. Subsets](https://leetcode.com/problems/subsets/description/)
+
+The for loop and the subsetCopy code interact in the following way:
+
+At the start of each iteration of the for loop, an element from nums is appended to subset.
+
+The backtrack function is then called recursively with this updated subset. Inside this recursive call, a new subsetCopy is created which is a snapshot of subset at that point in time. This subsetCopy is then appended to res.
+
+After the recursive call to backtrack, the last element is removed from subset (this is the backtracking step). This does not affect subsetCopy in the recursive call, because subsetCopy was a separate copy of subset.
+
+The for loop then moves on to the next element in nums, and the process repeats.
+
+So, in each iteration of the for loop, subset is modified and a snapshot of it is captured in subsetCopy inside a recursive call to backtrack. The modifications to subset in the for loop do not affect the subsetCopy that was created in previous recursive calls, because each subsetCopy is a separate slice that was created with the state of subset at the time of its creation.
+
+time O(N * 2^N), space O(N * 2^N)
+
+```go
+func subsets(nums []int) [][]int {
+    var res [][]int
+    backtrack(nums, 0, []int{}, &res)
+    return res
+}
+
+func backtrack(nums []int, start int, subset []int, res *[][]int) {
+    subsetCopy := make([]int, len(subset))
+    copy(subsetCopy, subset)
+    *res = append(*res, subsetCopy)
+    for i := start; i < len(nums); i++ {
+        subset = append(subset, nums[i])
+        backtrack(nums, i+1, subset, res)
+        subset = subset[:len(subset)-1]
+    }
+}
+```
+
+How duplicate subset is skipped?
+
+In the backtrack function, the loop variable i starts from the start index and goes up to the end of nums. This means that for each subset, it only considers the current element and the elements after it. It does not consider the elements before the current element.
+
+So, when nums is [1,2,3], it first considers 1, and then it considers 2 and 3. But when it's considering 2 and 3, it does not go back and consider 1 again. This means it generates [1,2] but not [2,1].
+
 [39. Combination Sum](https://leetcode.com/problems/combination-sum/)
 
 ```go
@@ -119,43 +160,4 @@ The recursion stack can go as deep as 2n (in the case where we add n opening par
 
 Adding these up, the total space complexity is O(n).
 
-[78. Subsets](https://leetcode.com/problems/subsets/description/)
 
-The for loop and the subsetCopy code interact in the following way:
-
-At the start of each iteration of the for loop, an element from nums is appended to subset.
-
-The backtrack function is then called recursively with this updated subset. Inside this recursive call, a new subsetCopy is created which is a snapshot of subset at that point in time. This subsetCopy is then appended to res.
-
-After the recursive call to backtrack, the last element is removed from subset (this is the backtracking step). This does not affect subsetCopy in the recursive call, because subsetCopy was a separate copy of subset.
-
-The for loop then moves on to the next element in nums, and the process repeats.
-
-So, in each iteration of the for loop, subset is modified and a snapshot of it is captured in subsetCopy inside a recursive call to backtrack. The modifications to subset in the for loop do not affect the subsetCopy that was created in previous recursive calls, because each subsetCopy is a separate slice that was created with the state of subset at the time of its creation.
-
-time O(N * 2^N), space O(N * 2^N)
-
-```go
-func subsets(nums []int) [][]int {
-    var res [][]int
-    backtrack(nums, 0, []int{}, &res)
-    return res
-}
-
-func backtrack(nums []int, start int, subset []int, res *[][]int) {
-    subsetCopy := make([]int, len(subset))
-    copy(subsetCopy, subset)
-    *res = append(*res, subsetCopy)
-    for i := start; i < len(nums); i++ {
-        subset = append(subset, nums[i])
-        backtrack(nums, i+1, subset, res)
-        subset = subset[:len(subset)-1]
-    }
-}
-```
-
-How duplicate subset is skipped?
-
-In the backtrack function, the loop variable i starts from the start index and goes up to the end of nums. This means that for each subset, it only considers the current element and the elements after it. It does not consider the elements before the current element.
-
-So, when nums is [1,2,3], it first considers 1, and then it considers 2 and 3. But when it's considering 2 and 3, it does not go back and consider 1 again. This means it generates [1,2] but not [2,1].
