@@ -1,6 +1,8 @@
 ![Alt text](images/backtracking.png)
 ![Alt text](images/Sudoku_solved_by_bactracking.gif)
 
+use i := 0 when the order of elements matters (permutations), and use i := start when the order does not matter (combinations).
+
 [78. Subsets](https://leetcode.com/problems/subsets/description/)
 
 The for loop and the subsetCopy code interact in the following way:
@@ -76,6 +78,48 @@ func backtrack(candidates []int, target int, start int, combination []int, res *
 The time complexity of the combinationSum function is O(N^(T/M)) where N is the number of candidates, T is the target value, and M is the minimum value in candidates. This is because in the worst case, the function explores each possible combination of candidates. The exponent T/M comes from the fact that each recursive step decreases the target value by at least M, and there can be at most T/M recursive calls.
 
 The space complexity of the function is O(T/M) because in the worst case, if every candidate is chosen, the maximum depth of the recursion tree can be T/M. This is the maximum size of the combination array, which is stored in the call stack during the recursion.
+
+[46. Permutations](https://leetcode.com/problems/permutations/description/)
+
+```go
+func permute(nums []int) [][]int {
+    var res [][]int
+    backtrack(nums, []int{}, &res)
+    return res
+}
+
+func backtrack(nums []int, permutation []int, res *[][]int) {
+    if len(permutation) == len(nums) {
+        permutationCopy := make([]int, len(permutation))
+        copy(permutationCopy, permutation)
+        *res = append(*res, permutationCopy)
+        return
+    }
+    for i := 0; i < len(nums); i++ {
+        if contains(permutation, nums[i]) {
+            continue
+        }
+        permutation = append(permutation, nums[i])
+        backtrack(nums, permutation, res)
+        permutation = permutation[:len(permutation)-1]
+    }
+}
+
+func contains(arr []int, num int) bool {
+    for _, n := range arr {
+        if n == num {
+            return true
+        }
+    }
+    return false
+}
+```
+
+c := []int{} followed by copy(c, subset) results in c remaining an empty slice
+
+In the 46. Permutations problem, we are asked to return all possible permutations of a given list. In a permutation, each element can appear in any position, and the order of elements matters. Therefore, for each recursive call, we start from the beginning of the list (i.e., i := 0) because any of the remaining elements could be the next element in the permutation.
+
+On the other hand, in the 39. Combination Sum and 78. Subsets problems, we are dealing with combinations. In a combination, the order of elements does not matter. To avoid duplications and to ensure that each combination is unique, we start from the current element or the next one (i.e., i := start) in each recursive call. This way, we ensure that we only consider each element once for each specific position in the combination.
 
 [79. Word Search](https://leetcode.com/problems/word-search/)
 
