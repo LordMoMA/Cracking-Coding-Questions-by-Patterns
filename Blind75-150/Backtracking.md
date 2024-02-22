@@ -311,4 +311,38 @@ The recursion stack can go as deep as 2n (in the case where we add n opening par
 
 Adding these up, the total space complexity is O(n).
 
+[17. Letter Combinations of a Phone Number](https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/)
 
+```go
+func letterCombinations(digits string) []string {
+    if len(digits) == 0 {
+        return []string{}
+    }
+    var res []string
+    backtrack(digits, 0, "", &res)
+    return res
+}
+
+func backtrack(digits string, idx int, path string, res *[]string) {
+    if idx == len(digits) {
+        *res = append(*res, path)
+        return
+    }
+    for _, c := range phone[digits[idx]] {
+        path += string(c) // c is a rune representing each individual letter.
+        backtrack(digits, idx+1, path, res)
+        path = path[:len(path)-1]
+    }
+}
+
+var phone = map[byte]string{
+    '2': "abc",
+    '3': "def",
+    '4': "ghi",
+    '5': "jkl",
+    '6': "mno",
+    '7': "pqrs",
+    '8': "tuv",
+    '9': "wxyz",
+}
+```
