@@ -105,9 +105,49 @@ func backtrack(candidates []int, target int, start int, combination []int, res *
 }
 ```
 
+
 The time complexity of the combinationSum function is O(N^(T/M)) where N is the number of candidates, T is the target value, and M is the minimum value in candidates. This is because in the worst case, the function explores each possible combination of candidates. The exponent T/M comes from the fact that each recursive step decreases the target value by at least M, and there can be at most T/M recursive calls.
 
 The space complexity of the function is O(T/M) because in the worst case, if every candidate is chosen, the maximum depth of the recursion tree can be T/M. This is the maximum size of the combination array, which is stored in the call stack during the recursion.
+
+[40. Combination Sum II](https://leetcode.com/problems/combination-sum-ii/description/)
+
+```go
+func combinationSum2(candidates []int, target int) [][]int {
+    sort.Ints(candidates)
+    var res [][]int
+    backtrack(candidates, target, 0, []int{}, &res)
+    return res
+}
+
+func backtrack(candidates []int, target, start int, combination []int, res *[][]int) {
+    if target == 0 {
+        combinationCopy := make([]int, len(combination))
+        copy(combinationCopy, combination)
+        *res = append(*res, combinationCopy)
+        return
+    }
+    for i := start; i < len(candidates); i++ {
+        if i > start && candidates[i] == candidates[i-1] {
+            continue
+        }
+        if candidates[i] <= target {
+            combination = append(combination, candidates[i])
+            backtrack(candidates, target-candidates[i], i+1, combination, res)
+            combination = combination[:len(combination)-1]
+        }
+    }
+}
+```
+
+The main difference between combinationSum2 and combinationSum lies in how they handle duplicate values and the reuse of values:
+
+Handling of Duplicate Values: In combinationSum2, the input array is sorted and there is a check to skip over duplicate values (if i > start && candidates[i] == candidates[i-1]). This ensures that each combination is unique. In combinationSum, there is no such check, so if the input array contains duplicate values, the output could also contain duplicate combinations.
+
+Reuse of Values: In combinationSum2, the backtrack function is called with i+1 as the start parameter (backtrack(candidates, target-candidates[i], i+1, combination, res)). This means that each value in the input array can only be used once in each combination. In combinationSum, the backtrack function is called with i as the start parameter (backtrack(candidates, target-candidates[i], i, combination, res)), which means that each value can be reused in the same combination.
+
+In summary, combinationSum2 generates combinations where each value can be used only once and duplicate combinations are not allowed, while combinationSum generates combinations where each value can be reused and duplicate combinations are allowed if the input array contains duplicate values.
+
 
 [46. Permutations](https://leetcode.com/problems/permutations/description/)
 
