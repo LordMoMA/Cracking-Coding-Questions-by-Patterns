@@ -191,6 +191,43 @@ In the 46. Permutations problem, we are asked to return all possible permutation
 
 On the other hand, in the 39. Combination Sum and 78. Subsets problems, we are dealing with combinations. In a combination, the order of elements does not matter. To avoid duplications and to ensure that each combination is unique, we start from the current element or the next one (i.e., i := start) in each recursive call. This way, we ensure that we only consider each element once for each specific position in the combination.
 
+[131. Palindrome Partitioning](https://leetcode.com/problems/palindrome-partitioning/description/)
+
+```go
+func partition(s string) [][]string {
+    var res [][]string
+    backtrack(s, 0, []string{}, &res)
+    return res
+}
+
+func backtrack(s string, start int, partition []string, res *[][]string) {
+    if start == len(s) {
+        partitionCopy := make([]string, len(partition))
+        copy(partitionCopy, partition)
+        *res = append(*res, partitionCopy)
+        return
+    }
+    for i := start; i < len(s); i++ {
+        if isPalindrome(s, start, i) {
+            partition = append(partition, s[start:i+1])
+            backtrack(s, i+1, partition, res)
+            partition = partition[:len(partition)-1]
+        }
+    }
+}
+
+func isPalindrome(s string, low, high int) bool {
+    for low < high {
+        if s[low] != s[high] {
+            return false
+        }
+        low++
+        high--
+    }
+    return true
+}
+```
+
 [79. Word Search](https://leetcode.com/problems/word-search/)
 
 ```go
