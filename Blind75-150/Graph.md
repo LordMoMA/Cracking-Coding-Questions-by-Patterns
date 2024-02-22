@@ -75,6 +75,37 @@ For DFS, the space complexity is O(MN) in the worst case due to recursion. This 
 
 For BFS, the space complexity is O(min(M, N)) because in worst case you could end up adding all the cells in the grid into the queue. However, in practice, it will be the maximum size of the queue, which depends on the size of the largest level in the graph (i.e., the maximum number of nodes reachable within the same number of steps from the start node). In the case of a grid, this would be min(M, N).
 
+[695. Max Area of Island](https://leetcode.com/problems/max-area-of-island/description/)
+
+```go
+func maxAreaOfIsland(grid [][]int) int {
+    maxArea := 0
+    for i := 0; i < len(grid); i++ {
+        for j := 0; j < len(grid[0]); j++ {
+            if grid[i][j] == 1 {
+                maxArea = max(maxArea, dfs(grid, i, j))
+            }
+        }
+    }
+    return maxArea
+}
+
+func dfs(grid [][]int, r, c int) int {
+    if r < 0 || c < 0 || r >= len(grid) || c >= len(grid[0]) || grid[r][c] == 0 {
+        return 0
+    }
+    grid[r][c] = 0
+    return 1 + dfs(grid, r+1, c) + dfs(grid, r, c+1) + dfs(grid, r-1, c) + dfs(grid, r, c-1)
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
 [133. Clone Graph](https://leetcode.com/problems/clone-graph/)
 
 ```go
@@ -139,6 +170,7 @@ The space complexity is determined by the storage required for the visited map a
 The visited map stores a clone of each node in the graph, hence O(N).
 In the worst case, the maximum depth of the recursive call stack (for DFS) or the size of the queue (for BFS) can be O(N), such as in the case of a path graph (a graph that is a single line).
 So, both the DFS and BFS solutions have a time complexity of O(N) and a space complexity of O(N).
+
 
 [417. Pacific Atlantic Water Flow](https://leetcode.com/problems/pacific-atlantic-water-flow/)
 
