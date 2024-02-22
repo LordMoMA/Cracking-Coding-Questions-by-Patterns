@@ -44,6 +44,36 @@ In the backtrack function, the loop variable i starts from the start index and g
 
 So, when nums is [1,2,3], it first considers 1, and then it considers 2 and 3. But when it's considering 2 and 3, it does not go back and consider 1 again. This means it generates [1,2] but not [2,1].
 
+[90. Subsets II](https://leetcode.com/problems/subsets-ii/description/)
+
+The time complexity of the subsetsWithDup function is O(N * 2^N), where N is the length of the input list nums. This is because in the worst case, the function generates all possible subsets of the input list, and there are 2^N possible subsets.
+
+The space complexity of the function is O(N * 2^N), which is the maximum size of the res list that stores the results. This is because in the worst case, the res list contains all possible subsets of the input list, and there are 2^N possible subsets.
+
+```go
+func subsetsWithDup(nums []int) [][]int {
+    sort.Ints(nums)
+    var res [][]int
+    backtrack(nums, 0, []int{}, &res)
+    return res
+}
+
+func backtrack(nums []int, start int, subset []int, res *[][]int) {
+    subsetCopy := make([]int, len(subset))
+    copy(subsetCopy, subset)
+    *res = append(*res, subsetCopy)
+    for i := start; i < len(nums); i++ {
+        if i > start && nums[i] == nums[i-1] {
+            continue
+        }
+        subset = append(subset, nums[i])
+        backtrack(nums, i+1, subset, res)
+        subset = subset[:len(subset)-1]
+    }
+}
+```
+
+
 [39. Combination Sum](https://leetcode.com/problems/combination-sum/)
 
 ```go
