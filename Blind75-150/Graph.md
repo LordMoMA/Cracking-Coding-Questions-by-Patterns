@@ -301,9 +301,9 @@ In each DFS, all 'O's reachable from the starting cell are marked as 'E'. So aft
 ```go
 for i := 0; i < m; i++ {
         for j := 0; j < n; j++ {
-            if board[i][j] == 'O' {
+            if board[i][j] == 'O' { // isolated O 
                 board[i][j] = 'X'
-            } else if board[i][j] == 'E' {
+            } else if board[i][j] == 'E' { // border connected E
                 board[i][j] = 'O'
             }
         }
