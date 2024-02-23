@@ -276,6 +276,46 @@ func dfs(board [][]byte, r, c int) {
 
 For the dfs, if board[r][c] == 'O', it will travese every cell in the board if there is another 'O' in the left or right or top or bottom and within board, if there is no 'O' near board[r][c], the dfs will stop?
 
+If there are no 'O' cells adjacent to the current cell (i.e., to the left, right, top, or bottom of it), then all recursive calls of dfs from this cell will immediately return, and the function will stop traversing from this cell.
+
+However, if the dfs function was called from multiple cells (as it typically is in a depth-first search), it will continue traversing from the other cells. The entire depth-first search only stops when all reachable 'O' cells have been visited.
+
+```go
+    m, n := len(board), len(board[0])
+    for i := 0; i < m; i++ {
+        dfs(board, i, 0)
+        dfs(board, i, n-1)
+    }
+    for j := 0; j < n; j++ {
+        dfs(board, 0, j)
+        dfs(board, m-1, j)
+    }
+```
+
+The first for loop is iterating over all rows. For each row, it starts a DFS from the first column (dfs(board, i, 0)) and the last column (dfs(board, i, n-1)). This effectively starts a DFS from all 'O's on the left and right borders of the board.
+
+The second for loop is iterating over all columns. For each column, it starts a DFS from the first row (dfs(board, 0, j)) and the last row (dfs(board, m-1, j)). This effectively starts a DFS from all 'O's on the top and bottom borders of the board.
+
+In each DFS, all 'O's reachable from the starting cell are marked as 'E'. So after these two loops, all 'O's that are on the border or connected to the border through other 'O's have been marked as 'E'.
+
+```go
+for i := 0; i < m; i++ {
+        for j := 0; j < n; j++ {
+            if board[i][j] == 'O' {
+                board[i][j] = 'X'
+            } else if board[i][j] == 'E' {
+                board[i][j] = 'O'
+            }
+        }
+    }
+```
+
+The 'O's that get changed to 'X' are the ones that were not reachable from any 'O' on the border of the board in the previous depth-first search (DFS). In other words, these 'O's are not connected to the border through other 'O's.
+
+The 'E's that get changed back to 'O' are the ones that were reachable from an 'O' on the border in the DFS. These are the 'O's that we temporarily marked as 'E' during the DFS to keep track of which cells we had visited.
+
+In summary, the 'O's that are connected to the border remain 'O', and the 'O's that are not connected to the border (isolated 'O's) get changed to 'X'.
+
 The dfs traversal will continue as long as it encounters cells with 'O' and within the board boundaries. If it encounters a cell with 'X' or 'E', or if it goes out of the board boundaries, it will stop and backtrack. This means that it will go back to the previous cell and continue the search in the next direction.
 
 So, the traversal will go as far as it can find connected 'O's, not just the immediate up, down, left, and right cells. It will explore the entire connected component of 'O's starting from the cell at row r and column c.
