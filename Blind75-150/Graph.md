@@ -224,6 +224,7 @@ func dfs(heights [][]int, visited [][]bool, r, c int) {
 The dfs function only marks a cell as true in the pacific or atlantic 2D slice if it can be reached from the starting cell of the DFS without moving "uphill" (i.e., to a cell with a higher value). This is controlled by the condition in the if statement.
 
 ```go
+
 if nr < 0 || nc < 0 || nr >= len(heights) || nc >= len(heights[0]) || visited[nr][nc] || heights[nr][nc] < heights[r][c] {
     continue
 }
@@ -232,4 +233,58 @@ if nr < 0 || nc < 0 || nr >= len(heights) || nc >= len(heights[0]) || visited[nr
 Time Complexity: O(M*N) 
 Space Complexity: O(M*N)
 
+[130. Surrounded Regions](https://leetcode.com/problems/surrounded-regions/description/)
+
+```go
+func solve(board [][]byte) {
+    if len(board) == 0 || len(board[0]) == 0 {
+        return
+    }
+
+    m, n := len(board), len(board[0])
+    for i := 0; i < m; i++ {
+        dfs(board, i, 0)
+        dfs(board, i, n-1)
+    }
+    for j := 0; j < n; j++ {
+        dfs(board, 0, j)
+        dfs(board, m-1, j)
+    }
+
+    for i := 0; i < m; i++ {
+        for j := 0; j < n; j++ {
+            if board[i][j] == 'O' {
+                board[i][j] = 'X'
+            } else if board[i][j] == 'E' {
+                board[i][j] = 'O'
+            }
+        }
+    }
+}
+
+func dfs(board [][]byte, r, c int) {
+    if r < 0 || c < 0 || r >= len(board) || c >= len(board[0]) || board[r][c] != 'O' {
+        return
+    }
+    board[r][c] = 'E'
+    dfs(board, r+1, c)
+    dfs(board, r-1, c)
+    dfs(board, r, c+1)
+    dfs(board, r, c-1)
+}
+```
+
+For the dfs, if board[r][c] == 'O', it will travese every cell in the board if there is another 'O' in the left or right or top or bottom and within board, if there is no 'O' near board[r][c], the dfs will stop?
+
+The dfs traversal will continue as long as it encounters cells with 'O' and within the board boundaries. If it encounters a cell with 'X' or 'E', or if it goes out of the board boundaries, it will stop and backtrack. This means that it will go back to the previous cell and continue the search in the next direction.
+
+So, the traversal will go as far as it can find connected 'O's, not just the immediate up, down, left, and right cells. It will explore the entire connected component of 'O's starting from the cell at row r and column c.
+
+In the dfs function, we are not transforming every 'X' to 'E'. Instead, we are transforming every 'O' that we can reach from the border to 'E'.
+
+The condition board[r][c] != 'O' in the dfs function ensures that we only continue the search and make transformations if the current cell contains 'O'. If the cell contains 'X', the function will return immediately and not make any changes.
+
+Then, in the solve function, we transform all remaining 'O's (those that couldn't be reached from the border) to 'X', and all 'E's (those that were reached from the border and marked as 'E' in the dfs function) back to 'O'.
+
+This effectively captures and flips all 'O's that are not connected to the border.
 
