@@ -187,13 +187,13 @@ func pacificAtlantic(heights [][]int) [][]int {
     }
 
     for i := 0; i < m; i++ {
-        dfs(heights, pacific, i, 0)
-        dfs(heights, atlantic, i, n-1)
+        dfs(heights, pacific, i, 0) // left side
+        dfs(heights, atlantic, i, n-1) // right side
     }
 
     for i := 0; i < n; i++ {
-        dfs(heights, pacific, 0, i)
-        dfs(heights, atlantic, m-1, i)
+        dfs(heights, pacific, 0, i) // top side
+        dfs(heights, atlantic, m-1, i) // bottom side
     }
 
     res := [][]int{}
