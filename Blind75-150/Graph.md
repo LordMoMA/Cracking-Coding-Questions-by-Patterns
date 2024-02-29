@@ -476,6 +476,10 @@ func dfs(graph [][]int, visited []int, course int) bool {
 }
 ```
 
+When the visited array is initially created, all of its elements are set to 0 by default. This is because in Go, when you create an array or slice with a numeric type (like int), all elements are automatically initialized to the zero value of that type, which is 0 for int.
+
+So, visited[i] == 0 will be true for any course i that has not been visited yet. As the Depth-First Search (DFS) progresses, courses are marked as being visited (1) or completely visited (2). If during this loop a course is found that hasn't been visited (0), DFS is started from that course. If DFS returns false, it means a cycle has been detected and the function returns false.
+
 [210. Course Schedule II](http://leetcode.com/problems/course-schedule-ii)
 
 ```go
