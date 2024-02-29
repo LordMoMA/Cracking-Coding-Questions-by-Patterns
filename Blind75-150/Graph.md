@@ -328,3 +328,112 @@ Then, in the solve function, we transform all remaining 'O's (those that couldn'
 
 This effectively captures and flips all 'O's that are not connected to the border.
 
+[994. Rotting Oranges](https://leetcode.com/problems/rotting-oranges/description/)
+
+```go
+func orangesRotting(grid [][]int) int {
+    if len(grid) == 0 || len(grid[0]) == 0 {
+        return 0
+    }
+
+    m, n := len(grid), len(grid[0])
+    queue := [][]int{}
+    fresh := 0
+    for i := 0; i < m; i++ {
+        for j := 0; j < n; j++ {
+            if grid[i][j] == 2 {
+                queue = append(queue, []int{i, j})
+            } else if grid[i][j] == 1 {
+                fresh++
+            }
+        }
+    }
+
+    if fresh == 0 {
+        return 0
+    }
+
+    directions := [][]int{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}
+    minutes := 0
+    for len(queue) != 0 {
+        size := len(queue)
+        for i := 0; i < size; i++ {
+            cell := queue[0]
+            queue = queue[1:]
+            for _, dir := range directions {
+                x, y := cell[0]+dir[0], cell[1]+dir[1]
+                if x < 0 || y < 0 || x >= m || y >= n || grid[x][y] != 1 {
+                    continue
+                }
+                grid[x][y] = 2
+                fresh--
+                queue = append(queue, []int{x, y})
+            }
+        }
+        minutes++
+    }
+
+    if fresh > 0 {
+        return -1
+    }
+    return minutes - 1
+}
+```
+
+The time complexity is O(M*N) because in the worst case, we might have to visit every cell in the grid once.
+
+The space complexity is O(M*N) because in the worst case, the queue can grow as large as the number of cells in the grid.
+
+The "Rotting Oranges" problem is typically solved using a Breadth-First Search (BFS) rather than a Depth-First Search (DFS). The reason for this is that BFS is better suited for problems where you need to find the shortest path or minimum number of steps to reach a certain condition, which is the case here where we want to find the minimum time to rot all oranges.
+
+DFS, on the other hand, would traverse as far as possible along each path before backtracking. This means it could potentially go through all rotten oranges before even starting to rot the first fresh orange, which would not give the correct minimum time.
+
+[286 Walls and Gates](https://leetcode.com/problems/walls-and-gates/description/)
+
+You are given a m x n 2D grid initialized with these three possible values. -1 - A wall or an obstacle. 0 - A gate. INF - Infinity means an empty room. We use the value 2^31 - 1 = 2147483647 to represent INF as you may assume that the distance to a gate is less than 2147483647.
+
+Fill each empty room with the distance to its nearest gate. If it is impossible to reach a gate, it should be filled with INF.
+
+Example:
+
+Given the 2D grid:
+
+INF -1 0 INF INF INF INF -1 INF -1 INF -1 0 -1 INF INF
+
+After running your function, the 2D grid should be:
+
+3 -1 0 1 2 2 1 -1 1 -1 2 -1 0 -1 3 4
+
+Note: The number of gates will not exceed 2500. The grid size will not exceed 100x100.
+
+```go
+func wallsAndGates(rooms [][]int) {
+    if len(rooms) == 0 || len(rooms[0]) == 0 {
+        return
+    }
+
+    m, n := len(rooms), len(rooms[0])
+    queue := [][]int{}
+    for i := 0; i < m; i++ {
+        for j := 0; j < n; j++ {
+            if rooms[i][j] == 0 {
+                queue = append(queue, []int{i, j})
+            }
+        }
+    }
+
+    directions := [][]int{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}
+    for len(queue) != 0 {
+        cell := queue[0]
+        queue = queue[1:]
+        for _, dir := range directions {
+            x, y := cell[0]+dir[0], cell[1]+dir[1]
+            if x < 0 || y < 0 || x >= m || y >= n || rooms[x][y] != 2147483647 {
+                continue
+            }
+            rooms[x][y] = rooms[cell[0]][cell[1]] + 1
+            queue = append(queue, []int{x, y})
+        }
+    }
+}
+```
