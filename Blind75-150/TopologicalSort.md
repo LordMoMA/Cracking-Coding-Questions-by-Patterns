@@ -63,7 +63,25 @@ Decrement the in-degree of each child by 1.
 If a child’s in-degree becomes ‘0’, add it to the sources Queue.
 Repeat step 1, until the source Queue is empty.
 
+## When to use this topological sort pattern
+
+Topological sort is typically used in problems that involve directed acyclic graphs (DAGs) where the order of nodes matters. Here are some elements in a problem that might suggest the use of topological sort:
+
+Ordering tasks: If the problem involves tasks that need to be completed in a certain order, where some tasks depend on others, topological sort can be used to find a valid order to complete the tasks. An example is the course schedule problem, where some courses are prerequisites for others.
+
+Build systems: In software build systems, some files need to be built before others. Topological sort can be used to find a valid build order.
+
+Project scheduling: In project management, some tasks can't start until others have been completed. Topological sort can be used to schedule the tasks.
+
+Detecting cycles: Topological sort can be used to detect cycles in a directed graph. If a topological sort of the graph can be completed, the graph is acyclic. If the topological sort can't be completed, the graph contains a cycle.
+
+Graphs with edges that represent precedence: If you have a graph where an edge from A to B means that A must come before B, then a topological sort will give you a valid ordering.
+
+Remember, topological sort can only be applied to DAGs. If the graph contains a cycle, a topological sort can't be completed.
+
 [207. Course Schedule](https://leetcode.com/problems/course-schedule/)
+
+Can also be solved with DFS.
 
 Topological Sort Pattern
 

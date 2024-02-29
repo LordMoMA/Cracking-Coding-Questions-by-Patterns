@@ -434,3 +434,45 @@ In the "Walls and Gates" problem, we don't need to track the level. We just need
 
 So, whether we need to use the size := len(queue) and for i := 0; i < size; i++ pattern in BFS depends on whether we need to track the level of BFS or not.
 
+[207. Course Schedule](http://leetcode.com/problems/course-schedule)
+
+Can also be solved with Topological Sort, BFS solution, which is more readable.
+
+This solution uses Depth-First Search (DFS) to detect if there's a cycle in the course prerequisite graph. If a cycle exists, it means there's a circular dependency between courses, and we can't finish all courses.
+
+```go
+
+func canFinish(numCourses int, prerequisites [][]int) bool {
+    graph := make([][]int, numCourses)
+    for _, p := range prerequisites {
+        graph[p[1]] = append(graph[p[1]], p[0])
+    }
+
+    visited := make([]int, numCourses)
+    for i := 0; i < numCourses; i++ {
+        if visited[i] == 0 && !dfs(graph, visited, i) {
+            return false
+        }
+    }
+    return true
+}
+
+func dfs(graph [][]int, visited []int, course int) bool {
+    if visited[course] == 1 {
+        return false
+    }
+    if visited[course] == 2 {
+        return true
+    }
+
+    visited[course] = 1
+    for _, c := range graph[course] {
+        if !dfs(graph, visited, c) {
+            return false
+        }
+    }
+    visited[course] = 2
+    return true
+}
+```
+
