@@ -476,3 +476,43 @@ func dfs(graph [][]int, visited []int, course int) bool {
 }
 ```
 
+[210. Course Schedule II](http://leetcode.com/problems/course-schedule-ii)
+
+```go
+func findOrder(numCourses int, prerequisites [][]int) []int {
+    graph := make([][]int, numCourses)
+    for _, p := range prerequisites {
+        graph[p[1]] = append(graph[p[1]], p[0])
+    }
+
+    visited := make([]int, numCourses)
+    order := []int{}
+    for i := 0; i < numCourses; i++ {
+        if visited[i] == 0 && !dfs(graph, visited, i, &order) {
+            return []int{}
+        }
+    }
+    return order
+}
+
+func dfs(graph [][]int, visited []int, course int, order *[]int) bool {
+    if visited[course] == 1 {
+        return false
+    }
+    if visited[course] == 2 {
+        return true
+    }
+
+    visited[course] = 1
+    for _, c := range graph[course] {
+        if !dfs(graph, visited, c, order) {
+            return false
+        }
+    }
+    visited[course] = 2
+    *order = append(*order, course)
+    return true
+}
+```
+
+
