@@ -390,21 +390,7 @@ DFS, on the other hand, would traverse as far as possible along each path before
 
 [286 Walls and Gates](https://leetcode.com/problems/walls-and-gates/description/)
 
-You are given a m x n 2D grid initialized with these three possible values. -1 - A wall or an obstacle. 0 - A gate. INF - Infinity means an empty room. We use the value 2^31 - 1 = 2147483647 to represent INF as you may assume that the distance to a gate is less than 2147483647.
-
-Fill each empty room with the distance to its nearest gate. If it is impossible to reach a gate, it should be filled with INF.
-
-Example:
-
-Given the 2D grid:
-
-INF -1 0 INF INF INF INF -1 INF -1 INF -1 0 -1 INF INF
-
-After running your function, the 2D grid should be:
-
-3 -1 0 1 2 2 1 -1 1 -1 2 -1 0 -1 3 4
-
-Note: The number of gates will not exceed 2500. The grid size will not exceed 100x100.
+![Walls and Gates](<Screenshot 2024-02-29 at 4.25.13 PM.png>)
 
 ```go
 func wallsAndGates(rooms [][]int) {
@@ -437,3 +423,14 @@ func wallsAndGates(rooms [][]int) {
     }
 }
 ```
+
+### About size := len(queue) and for i := 0; i < size; i++ pattern
+
+The size := len(queue) pattern is used to iterate over all elements in the queue at the current level of the BFS traversal. This is a common pattern in BFS, where you want to process all elements at the current level before moving on to the next level.
+
+This pattern ensures that we process all nodes (oranges) at the current level before we increment the time and move on to the next level.
+
+In the "Walls and Gates" problem, we don't need to track the level. We just need to fill each room with the distance to its nearest gate. The distance is calculated and updated directly in the grid as rooms[x][y] = rooms[cell[0]][cell[1]] + 1. So, we don't need to use the size := len(queue) and for i := 0; i < size; i++ pattern. We just keep processing nodes in the queue until the queue is empty.
+
+So, whether we need to use the size := len(queue) and for i := 0; i < size; i++ pattern in BFS depends on whether we need to track the level of BFS or not.
+
