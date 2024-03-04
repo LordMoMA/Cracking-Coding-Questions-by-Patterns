@@ -109,6 +109,105 @@ func (uf *UnionFind) union(node1, node2 int) {
 }
 ```
 
+[684. Redundant Connection](http://leetcode.com/problems/redundant-connection)
+
+we're looking for the first edge that creates a cycle in the graph. This means we're not interested in the number of disjoint sets (or connected components) in the graph, which is what the count field in a Union-Find data structure typically keeps track of.
+
+The count field is useful in scenarios where we need to keep track of the number of disjoint sets in the graph, such as in problems where we need to find the number of islands in a grid or the number of connected components in a graph.
+
+Simple verision:
+
+```go
+type UnionFind struct {
+    parent []int
+}
+
+func newUnionFind(n int) UnionFind {
+    parent := make([]int, n+1) // The added edge has two different vertices chosen from 1 to n
+    for i := range parent {
+        parent[i] = i
+    }
+    return UnionFind{parent: parent}
+}
+
+func (uf *UnionFind) find(x int) int {
+    if uf.parent[x] != x {
+        uf.parent[x] = uf.find(uf.parent[x])
+    }
+    return uf.parent[x]
+}
+
+func (uf *UnionFind) union(x, y int) bool {
+    rootX, rootY := uf.find(x), uf.find(y)
+    if rootX == rootY {
+        return false
+    }
+    uf.parent[rootX] = rootY
+    return true
+}
+
+func findRedundantConnection(edges [][]int) []int {
+    uf := newUnionFind(len(edges))
+    for _, edge := range edges {
+        if !uf.union(edge[0], edge[1]) {
+            return edge
+        }
+    }
+    return []int{}
+}
+```
+
+Performance Optimised:
+
+```go
+func findRedundantConnection(edges [][]int) []int {
+    n := len(edges)
+    uf := NewUnionFind(n)
+    for _, edge := range edges {
+        if uf.Find(edge[0]-1) == uf.Find(edge[1]-1) {
+            return edge
+        }
+        uf.Union(edge[0]-1, edge[1]-1)
+    }
+    return nil
+}
+
+type UnionFind struct {
+    parent []int
+    rank   []int
+}
+
+func NewUnionFind(n int) *UnionFind {
+    parent := make([]int, n)
+    rank := make([]int, n)
+    for i := range parent {
+        parent[i] = i
+    }
+    return &UnionFind{parent: parent, rank: rank}
+}
+
+func (uf *UnionFind) Find(x int) int {
+    if uf.parent[x] != x {
+        uf.parent[x] = uf.Find(uf.parent[x])
+    }
+    return uf.parent[x]
+}
+
+func (uf *UnionFind) Union(x, y int) {
+    rootX, rootY := uf.Find(x), uf.Find(y)
+    if rootX != rootY {
+        if uf.rank[rootX] > uf.rank[rootY] {
+            uf.parent[rootY] = rootX
+        } else if uf.rank[rootX] < uf.rank[rootY] {
+            uf.parent[rootX] = rootY
+        } else {
+            uf.parent[rootY] = rootX
+            uf.rank[rootX]++
+        }
+    }
+}
+```
+
 [323 Number of Connected Components In An Undirected Graph (Medium)](https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/)
 
 Given n nodes labeled from 0 to n - 1 and a list of undirected edges (each edge is a pair of nodes), write a function to find the number of connected components in an undirected graph.
