@@ -1,12 +1,70 @@
 [Union Find in 5 minutes](https://www.youtube.com/watch?v=ayW5B2W9hfo&ab_channel=PotatoCoders)
 
-rank is used to keep track of the depth of the trees representing the sets. Initially, all elements are their own set, so the depth of each tree is 0, which is the default value for elements in an int slice in Go. Therefore, there's no need to explicitly set the rank of each element to 0.
+rank is used to keep track of the depth of the trees representing the sets. Initially, all elements are their own set, so the depth of each tree is 0, which is the default value for elements in an int slice in Go. Therefore, there's no need to explicitly set the rank of each element to 0. When two sets are merged, the resulting set's rank is the maximum of the two original sets' ranks, plus one if the two original sets had the same rank.
 
- size is used to keep track of the number of elements in each set. Initially, all elements are their own set, so each set has one element. Therefore, the size of each set is initialized to 1.
+size is used to keep track of the number of elements in each set. Initially, all elements are their own set, so each set has one element. Therefore, the size of each set is initialized to 1.
 
 Both implementations use a similar strategy to optimize the union operation: they always attach the smaller set to the larger set to minimize the increase in depth/size. The NewUnionFind function does this by comparing the ranks (depths) of the sets, while the newUnionFind function does it by comparing the sizes of the sets.
 
 So, both implementations are correct, and the best one to use depends on whether you want to optimize based on the depth of the sets (NewUnionFind) or the number of elements in the sets (newUnionFind).
+
+1. Merging two sets of the same rank:
+
+Set A:
+
+```bash
+1
+|
+2
+```
+
+Set B:
+
+```bash
+3
+|
+4
+```
+
+If we merge sets A and B, the resulting set will have a rank of 1, and the tree will look like this:
+
+```bash 
+  3
+ / \
+1   4
+|
+2
+```
+
+Merging two sets of different ranks:
+
+Set A:
+
+```bash
+1
+|
+2
+```
+
+Set B:
+
+```bash
+3
+|
+4
+|
+5
+```
+
+If we merge sets A and B, the resulting set will have a rank of 2, and the tree will look like this:
+
+```bash
+  3
+ / \
+1   4
+|   |
+2   5
+```
 
 Pattern 1:
 
