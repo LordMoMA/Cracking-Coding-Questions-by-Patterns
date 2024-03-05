@@ -65,6 +65,8 @@ func canPlaceFlowers(flowerbed []int, n int) bool {
 
 Boyer-Moore Voting Algorithm
 
+After iterating over the entire array, major will be the majority element. This is because any element that isn't the majority will eventually cause count to decrease to 0, at which point a new candidate for the majority element will be chosen. The actual majority element will always be able to survive this process and be the final candidate.
+
 ```go
 func majorityElement(nums []int) int {
     var major, count int
