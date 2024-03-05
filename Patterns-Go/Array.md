@@ -141,4 +141,46 @@ func indexOf(num int, nums []int) int {
     return -1
 }
 ```
+[724. Find Pivot Index](https://leetcode.com/problems/find-pivot-index/description/)
 
+```go
+func pivotIndex(nums []int) int {
+    sum := 0
+    for _, v := range nums {
+        sum += v
+    }
+    leftSum := 0
+    for i, v := range nums {
+        if leftSum == sum-leftSum-v {
+            return i
+        }
+        leftSum += v
+    }
+    return -1
+}
+```
+
+🛑 A solution did not work:
+
+This approach doesn't correctly calculate the sums of the numbers to the left and right of each index because it doesn't consider the entire sum of the numbers to the left and right of the current index.
+
+```go
+
+func pivotIndex(nums []int) int {
+    l, r := 0, len(nums)-1
+    lsum, rsum := nums[l], nums[r]
+    for l < r {
+        if lsum < rsum {
+            lsum += nums[l]
+            l++
+        } else if lsum > rsum {
+            rsum += nums[r]
+            r--
+        }
+        if lsum == rsum {
+            return r-1
+        }
+    }
+    return -1
+}
+```
