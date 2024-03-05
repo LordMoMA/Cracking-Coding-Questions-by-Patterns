@@ -1,4 +1,4 @@
-[605. Can Place Flowers](http://www.lintcode.com/en/problem/can-place-flowers/)
+[605. Can Place Flowers](https://leetcode.com/problems/can-place-flowers/description/)
 
 ```go
 func canPlaceFlowers(flowerbed []int, n int) bool {
@@ -58,5 +58,26 @@ func canPlaceFlowers(flowerbed []int, n int) bool {
         }
     }
     return n <= 0
+}
+```
+
+[169. Majority Element](https://leetcode.com/problems/majority-element/description/)
+
+Boyer-Moore Voting Algorithm
+
+```go
+func majorityElement(nums []int) int {
+    var major, count int
+    for i := 0; i < len(nums); i++ {
+        if count == 0 {
+            major = nums[i]
+            count++
+        } else if major == nums[i] {
+            count++
+        } else {
+            count--
+        }
+    }
+    return major
 }
 ```
