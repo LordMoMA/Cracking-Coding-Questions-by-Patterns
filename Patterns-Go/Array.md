@@ -87,18 +87,18 @@ func majorityElement(nums []int) int {
 [496. Next Greater Element I](https://leetcode.com/problems/majority-element)
 
 ```go
-func nextGreaterElement(findNums []int, nums []int) []int {
+func nextGreaterElement(nums1 []int, nums2 []int) []int {
     m := make(map[int]int)
     stack := make([]int, 0)
-    for _, v := range nums {
+    for _, v := range nums2 {
         for len(stack) > 0 && stack[len(stack)-1] < v {
             m[stack[len(stack)-1]] = v
             stack = stack[:len(stack)-1]
         }
         stack = append(stack, v)
     }
-    res := make([]int, len(findNums))
-    for i, v := range findNums {
+    res := make([]int, len(nums1))
+    for i, v := range nums1 {
         if val, ok := m[v]; ok {
             res[i] = val
         } else {
