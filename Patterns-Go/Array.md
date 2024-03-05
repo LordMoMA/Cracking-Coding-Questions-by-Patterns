@@ -83,3 +83,62 @@ func majorityElement(nums []int) int {
     return major
 }
 ```
+
+[496. Next Greater Element I](https://leetcode.com/problems/majority-element)
+
+```go
+func nextGreaterElement(findNums []int, nums []int) []int {
+    m := make(map[int]int)
+    stack := make([]int, 0)
+    for _, v := range nums {
+        for len(stack) > 0 && stack[len(stack)-1] < v {
+            m[stack[len(stack)-1]] = v
+            stack = stack[:len(stack)-1]
+        }
+        stack = append(stack, v)
+    }
+    res := make([]int, len(findNums))
+    for i, v := range findNums {
+        if val, ok := m[v]; ok {
+            res[i] = val
+        } else {
+            res[i] = -1
+        }
+    }
+    return res
+}
+```
+
+Another recommended solution:
+
+```go
+func nextGreaterElement(nums1 []int, nums2 []int) []int {
+    res := make([]int, len(nums1))
+    for i, num := range nums1 {
+        idx := indexOf(num, nums2)
+        if idx + 1 < len(nums2) {
+            for _, v := range nums2[idx+1:] {
+                if v > num {
+                    res[i] = v
+                    break // important: Once you find a number that is greater than num, you should break the loop.
+                } else {
+                    res[i] = -1
+                }
+            }  
+        } else {
+            res[i] = -1
+        }
+    }
+    return res
+}
+
+func indexOf(num int, nums []int) int {
+    for i, v := range nums {
+        if num == v {
+            return i
+        }
+    }
+    return -1
+}
+```
+
