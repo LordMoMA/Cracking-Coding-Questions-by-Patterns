@@ -10,6 +10,22 @@ The size of 10000 * sizeof(char*) depends on the size of a pointer on your syste
 Remember that sizeof(char*) gives the size of a pointer to a char, not the size of a char itself. The size of a char is always 1 byte, but the size of a pointer can vary depending on the system.
 
 ```c
+int* res = malloc(10 * sizeof(int)); // Dynamically allocates memory for an array of 10 integers
+
+char** res = malloc(10 * sizeof(char*)); // Dynamically allocates memory for an array of 10 strings
+for(int i = 0; i < 10; i++) {
+    res[i] = malloc(50 * sizeof(char)); // Allocate memory for each string
+}
+
+free(res); // For the integer array
+
+for(int i = 0; i < 10; i++) {
+    free(res[i]); // Free each string
+}
+free(res); // Then free the array of strings
+```
+
+```c
 void backtrack(int left, int right, char* path, char*** res, int* returnSize, int* pathSize) {
     if (left == 0 && right == 0) {
         path[*pathSize] = '\0';
