@@ -270,6 +270,14 @@ The space complexity of the function is O(L), where L is the length of the word.
 
 The solution for generating parentheses is often referred to as a backtracking solution because it builds candidates for the solution incrementally and abandons a candidate ("backtracks") as soon as it determines that the candidate cannot possibly be extended to a valid solution.
 
+### pointer knowledge
+
+function parameters are passed by value. This means that when you pass a variable to a function, the function receives a copy of the variable, not the original variable itself
+
+&res in generateParenthesis gets the memory address of res (i.e., it gets a pointer to res).
+
+*res in backtrack accesses the value at the memory address stored in res (i.e., it dereferences the pointer to modify the original variable).
+
 ```go
 func generateParenthesis(n int) []string {
     var res []string
