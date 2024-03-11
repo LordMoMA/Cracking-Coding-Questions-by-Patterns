@@ -25,6 +25,16 @@ for(int i = 0; i < 10; i++) {
 free(res); // Then free the array of strings
 ```
 
+The line path[*pathSize] = '\0' is used to add a null character at the end of the current string stored in path.
+
+In C, strings are arrays of characters, and the end of the string is marked by a special character: the null character, which is represented as '\0'. This is a convention in C programming to denote the end of a string.
+
+When you're building a string character by character, like in a backtracking algorithm, you need to manually add this null character at the end of your string once you're done building it. This is what path[*pathSize] = '\0' does: it adds the null character at the position *pathSize in the path array, effectively marking the end of the string.
+
+This is important because many functions in the C standard library (like printf, strcpy, etc.) expect strings to be null-terminated. They keep reading characters until they encounter a '\0', so if you don't add one, they could read past the end of your actual data, leading to undefined behavior.
+
+Solution:
+
 ```c
 void backtrack(int left, int right, char* path, char*** res, int* returnSize, int* pathSize) {
     if (left == 0 && right == 0) {
