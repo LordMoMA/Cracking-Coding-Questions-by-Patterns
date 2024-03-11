@@ -319,39 +319,6 @@ The recursion stack can go as deep as 2n (in the case where we add n opening par
 
 Adding these up, the total space complexity is O(n).
 
-```c
-void backtrack(int left, int right, char* path, char*** res, int* returnSize, int* pathSize) {
-    if (left == 0 && right == 0) {
-        path[*pathSize] = '\0';
-        (*res)[*returnSize] = malloc((*pathSize + 1) * sizeof(char));
-        strcpy((*res)[*returnSize], path);
-        (*returnSize)++;
-        return;
-    }
-    if (left > 0) {
-        path[*pathSize] = '(';
-        (*pathSize)++;
-        backtrack(left - 1, right, path, res, returnSize, pathSize);
-        (*pathSize)--;
-    }
-    if (right > left) {
-        path[*pathSize] = ')';
-        (*pathSize)++;
-        backtrack(left, right - 1, path, res, returnSize, pathSize);
-        (*pathSize)--;
-    }
-}
-
-char** generateParenthesis(int n, int* returnSize) {
-    char** res = malloc(10000 * sizeof(char*));
-    char* path = malloc((2 * n + 1) * sizeof(char)); // Allocate 2n + 1 bytes for path
-    int pathSize = 0;
-    *returnSize = 0;
-    backtrack(n, n, path, &res, returnSize, &pathSize);
-    free(path);
-    return res;
-}
-```
 
 [17. Letter Combinations of a Phone Number](https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/)
 
