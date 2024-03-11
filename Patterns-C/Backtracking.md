@@ -1,6 +1,8 @@
 
 [22. Generate Parentheses](http://leetcode.com/problems/generate-parentheses/)
 
+### difference between char** res = malloc(10000 * sizeof(char*)) and char* res = malloc(10000 * sizeof(char))
+
 char* res = malloc(10000 * sizeof(char)) allocates memory for a single string of 10000 characters. res is a pointer to the first character of this string.
 
 char** res = malloc(10000 * sizeof(char*)) on the other hand, allocates memory for an array of 10000 pointers to strings. res is a pointer to the first element of this array of pointers. Each of these pointers can then be used to point to a different string.
@@ -25,6 +27,8 @@ for(int i = 0; i < 10; i++) {
 free(res); // Then free the array of strings
 ```
 
+### why path[*pathSize] = '\0'?
+
 The line path[*pathSize] = '\0' is used to add a null character at the end of the current string stored in path.
 
 In C, strings are arrays of characters, and the end of the string is marked by a special character: the null character, which is represented as '\0'. This is a convention in C programming to denote the end of a string.
@@ -32,6 +36,10 @@ In C, strings are arrays of characters, and the end of the string is marked by a
 When you're building a string character by character, like in a backtracking algorithm, you need to manually add this null character at the end of your string once you're done building it. This is what path[*pathSize] = '\0' does: it adds the null character at the position *pathSize in the path array, effectively marking the end of the string.
 
 This is important because many functions in the C standard library (like printf, strcpy, etc.) expect strings to be null-terminated. They keep reading characters until they encounter a '\0', so if you don't add one, they could read past the end of your actual data, leading to undefined behavior.
+
+### why char*** res in backtrack func? 
+
+In the backtrack function, res is used to store the generated combinations of parentheses. Each combination is a string, and there can be multiple combinations, so an array of strings (i.e., a char**) is needed. Since the array needs to be modified from within the function, a pointer to the array (i.e., a char***) is used.
 
 Solution:
 
