@@ -87,3 +87,29 @@ Size of T2: 8
 Size of T3: 16
 ```
 
+## Conversion of structs
+
+```go
+type number struct {
+	f	float32
+}
+
+type nr number   // new distinct type
+type nrAlias = number // alias type
+
+func main() {
+    a := number{5.0}
+    b := nr{5.0}
+    c := nrAlias{5.0}
+    // var i float32 = b   // compile-error: cannot use b (type nr) as type float32 in assignment
+    // var i = float32(b)  // compile-error: cannot convert b (type nr) to type float32
+    // var d number = b    // compile-error: cannot use b (type nr) as type number in assignment
+    // needs a conversion:
+    var d = number(b) // use explicit conversion to convert a nr to a number.
+    // an alias doesn't need conversion:
+    var e = b // var e nr = b also works
+    fmt.Println(a, b, c, d, e)
+}
+```
+
+nr is a new distinct type based on number. It means nr has the same underlying structure as number, but it's considered a completely different type by the Go compiler. You can't directly assign a value of type nr to a variable of type number or vice versa without explicit conversion.
