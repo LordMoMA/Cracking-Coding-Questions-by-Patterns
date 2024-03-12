@@ -33,6 +33,7 @@ func bubbleSort(arr []int) []int {
     return arr
 }
 ```
+
 Please note that in C, arrays are passed to functions by reference, not by value. This means that any changes made to the array inside the function will affect the original array. Therefore, there's no need to return the array from the function.
 
 ```c
