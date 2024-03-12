@@ -37,3 +37,53 @@ func main() {
   fmt.Printf("The name of the person is %s %s\n", pers3.firstName, pers3.lastName)
 }
 ```
+
+## Struct Size
+
+The size of T2 is not dependent on the size of T1, but rather on the size of the pointer it contains.
+
+```c
+typedef struct {
+    int a[4]; // 4 integers, so size is 4 * sizeof(int)
+} T1;
+
+typedef struct {
+    T1* t1_ptr; // Pointer to T1, so size is sizeof(T1*)
+} T2;
+```
+
+In this case, sizeof(T1) would be 16 bytes (on a system where sizeof(int) is 4 bytes), because T1 contains an array of 4 integers. However, sizeof(T2) would be 8 bytes on a 64-bit system, because T2 contains a single pointer, and the size of a pointer on a 64-bit system is 8 bytes.
+
+So, even though T1 is 16 bytes, T2 is only 8 bytes because it contains a pointer to T1, not an actual T1 structure. The size of a pointer is the same regardless of the type of data it points to.
+
+```go
+package main
+import (
+  "fmt"
+  "unsafe"  // to use function Sizeof()
+)
+
+type T1 struct {  
+  a, b int64
+}
+
+type T2 struct {
+  t1 *T1  // pointer to T1
+}
+
+type T3 struct {
+  t1 T1   // value type of T1
+}
+
+func main() {
+  fmt.Println("Size of T1:", unsafe.Sizeof(T1{}))       // T1 value type
+  fmt.Println("Size of T2:", unsafe.Sizeof(T2{&T1{}}))  // T2 containing pointer to T1
+  fmt.Println("Size of T3:", unsafe.Sizeof(T3{}))       // Value of T3
+}
+
+// output
+Size of T1: 16
+Size of T2: 8
+Size of T3: 16
+```
+
