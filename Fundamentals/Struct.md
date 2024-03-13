@@ -113,3 +113,57 @@ func main() {
 ```
 
 nr is a new distinct type based on number. It means nr has the same underlying structure as number, but it's considered a completely different type by the Go compiler. You can't directly assign a value of type nr to a variable of type number or vice versa without explicit conversion.
+
+## Tags: key “value” convention
+
+Go allows the definition of multiple tags through the use of the key: "value" format. Look at the following example to see that once we have a tag, the value of its key can be retrieved through the Get method:
+
+```go
+package main
+import (
+"fmt"
+"reflect"
+)
+
+type T struct {
+  a int "This is a tag"
+  b int `A raw string tag`
+  c int `key1:"value1" key2:"value2"`
+}
+
+func main() {
+  t := T{}
+  fmt.Println(reflect.TypeOf(t).Field(0).Tag)
+  if field, ok := reflect.TypeOf(t).FieldByName("b"); ok {
+    fmt.Println(field.Tag)
+  }
+  if field, ok := reflect.TypeOf(t).FieldByName("c"); ok {
+    fmt.Println(field.Tag)
+    fmt.Println(field.Tag.Get("key1"))
+  }
+  if field, ok := reflect.TypeOf(t).FieldByName("d"); ok {
+    fmt.Println(field.Tag)
+  } else {
+    fmt.Println("Field not found")
+  }
+}
+```
+
+## Anonymous Struct
+
+```go
+package main
+import "fmt"
+
+type C struct {   // struct 
+    x float32      
+    int      // int type anonymous field
+    string     // string type anonymous field
+  }
+
+  func main() {
+    c := C{3.14, 7, "hello"}  // making struct via literal expression
+    fmt.Println(c.x, c.int, c.string) // output: 3.14 7 hello
+    fmt.Println(c)  // output: {3.14 7 hello}
+}
+```
