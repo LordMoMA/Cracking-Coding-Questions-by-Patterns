@@ -167,3 +167,84 @@ type C struct {   // struct
     fmt.Println(c)  // output: {3.14 7 hello}
 }
 ```
+
+### Check what is wrong in below code:
+
+```go
+package main
+
+import "container/list"
+
+func (p *list.List) Iter() {
+    // ...
+}
+func main() {
+  lst := new(list.List)
+  for _ = range lst.Iter() {
+  }
+}
+```
+
+in Go, you can't add methods to types from another package. This is a fundamental restriction in Go's type system to ensure that the behavior of a type is consistent and predictable no matter where it's used.
+
+To work around this, you can define a new type in your own package that embeds the List type, and then add methods to your new type. Here's how you might do it:
+
+```go
+package main
+
+import "container/list"
+
+type MyList struct {
+    *list.List
+}
+
+func (p *MyList) Iter() {
+    // ...
+}
+
+func main() {
+    lst := &MyList{list.New()}
+    for _ = range lst.Iter() {
+    }
+}
+```
+
+
+### predict the output:
+
+```go
+package main
+
+import "fmt"
+
+type T struct {
+    a int
+    b float32
+    c string
+}
+
+func main() {
+    t := &T{ 7, -2.35, "abc\tdef" }
+    fmt.Printf("%v\n", t)
+}
+
+func (t *T) String() string {
+    return fmt.Sprintf("%d / %f / %q", t.a, t.b, t.c)
+}
+
+// 7 / -2.350000 / "abc\tdef"
+```
+In your main function, you're creating a new instance of T and printing it with fmt.Printf("%v\n", t). The %v verb is a default format and it prints your struct as-is. However, you've also defined a String method on T. In Go, if you define a method with this signature:
+
+```go
+func (t *T) String() string
+```
+
+Then whenever you print your type with fmt.Print or fmt.Printf, Go will automatically use this String method to convert your type to a string. This is because fmt.Print and fmt.Printf use the String method if it's available, as part of the fmt.Stringer interface.
+
+So, when you do fmt.Printf("%v\n", t), Go is actually calling t.String() to get a string representation of t, and that's why you see 7 / -2.350000 / "abc\tdef" printed to the console.
+
+The %f verb in the fmt.Sprintf function is used to format a floating-point number. By default, it formats the number with 6 digits after the decimal point. So, even though the number -2.35 only has two non-zero digits after the decimal point, fmt.Sprintf with %f will print it as -2.350000.
+
+If you want to control the number of digits after the decimal point, you can do so by specifying a precision in the format specifier. For example, %.2f will print a floating-point number with exactly 2 digits after the decimal point. So fmt.Sprintf("%.2f", t.b) would print -2.35.
+
