@@ -110,3 +110,96 @@ In your code, the WaitGroup is used to make the main function wait until the pro
 
 You typically use a WaitGroup in scenarios where you need to wait for one or more goroutines to complete before continuing. This is common in scenarios where you have concurrent operations that other operations depend on. For example, if you're fetching data from multiple URLs concurrently, you might use a WaitGroup to wait until all the data has been fetched before processing it.
 
+## Pipe and filter pattern
+
+The Sieve-Prime Algorithm
+
+version 1:
+
+```go
+package main
+import "fmt"
+
+// Send the sequence 2, 3, 4, ... to channel ch.
+func generate(ch chan int) {
+  for i := 2; ; i++ {
+    ch <- i // Send i to channel ch.
+  }
+}
+
+// Copy the values from channel in to channel out,
+// removing those divisible by prime.
+func filter(in, out chan int, prime int) {
+  for {
+    i := <-in // Receive value of new variable i from in.
+    if i%prime != 0 {
+      out <- i // Send i to channel out.
+    }
+  }
+}
+
+// The prime sieve
+func main() {
+  ch := make(chan int) // Create a new channel.
+  go generate(ch) // Start generate() as a goroutine.
+  for {
+    prime := <-ch
+    fmt.Print(prime, " ")
+    ch1 := make(chan int)
+    go filter(ch, ch1, prime)
+    ch = ch1
+  }
+}
+```
+
+version 2:
+
+```go
+package main
+import "fmt"
+
+// Send the sequence 2, 3, 4, ... to returned channel
+func generate() chan int {
+  ch := make(chan int)
+  go func() {
+    for i := 2; ; i++ {
+     ch <- i
+    }
+  }()
+  return ch
+}
+
+// Filter out input values divisible by prime, send rest to returned channel
+func filter(in chan int, prime int) chan int {
+  out := make(chan int)
+  go func() {
+    for {
+      if i := <-in; i%prime != 0 {
+       out <- i
+      }
+    }
+  }()
+  return out
+}
+
+func sieve() chan int {
+  out := make(chan int)
+  go func() {
+    ch := generate()
+    for {
+      prime := <-ch
+      ch = filter(ch, prime)
+      out <- prime
+    }
+  }()
+  return out
+}
+
+func main() {
+  primes := sieve()
+  for {
+    fmt.Println(<-primes)
+  }
+}
+```
+
