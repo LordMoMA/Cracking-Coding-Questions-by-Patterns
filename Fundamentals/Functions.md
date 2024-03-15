@@ -101,6 +101,16 @@ func (m *metricsUpstreamsHealthyUpdater) Init() {
 }
 ```
 
+The recover function is used here as a safety net to catch any unexpected panics that might occur within the goroutine. This is a common pattern when working with goroutines, as an unhandled panic in a goroutine can cause the entire program to crash.
+
+In this specific code, a panic could potentially occur in the following places:
+
+In the m.update() method: If there's a bug or unexpected condition in this method that causes a panic, the recover function will catch it.
+
+In the select statement: Although it's less likely, a panic could occur if there's a bug in the handling of the ticker or context.
+
+By using recover in a deferred function, the code ensures that if a panic occurs anywhere in the goroutine, it will be caught and logged, and the goroutine will exit gracefully instead of crashing the program.
+
 This is a good example of using recover in Go.
 
 The Init function starts a goroutine that periodically updates some metrics. If an unhandled error or panic occurs in the update method or anywhere else in the goroutine, the deferred function will recover from the panic, log an error message with the panic details and the stack trace, and then allow the goroutine to exit gracefully.
@@ -108,3 +118,30 @@ The Init function starts a goroutine that periodically updates some metrics. If 
 This is a good practice because it prevents a panic in one goroutine from bringing down the entire program. It also logs useful information about the panic, which can help with debugging.
 
 However, it's important to note that recovering from a panic is not a substitute for proper error handling. You should still try to handle errors gracefully in your code and only use recover as a last resort to prevent the program from crashing.
+
+## About Panic
+
+The use of panic in Go is typically reserved for situations where the program cannot or should not continue execution due to a severe error, such as an invalid state that could lead to data corruption.
+
+In your example, the panic is used within a function that is passed to protect, which is designed to recover from panics. This is a way to demonstrate how protect works. In a real-world application, you might not intentionally cause a panic like this.
+
+However, there are scenarios where you might want to recover from a panic to allow the program to continue running. For example, in a web server, you might want to recover from a panic in a request handler to prevent a single faulty request from bringing down the entire server. In this case, even though a panic occurs in the handler, the server can recover and continue handling other requests.
+
+In general, it's recommended to use error handling for expected and recoverable errors, and reserve panic for severe errors where it's not safe or meaningful for the program to continue. Recovering from a panic should be used sparingly and only in cases where it's necessary to prevent the program from crashing.
+
+## Panic use cases:
+
+These are usually severe errors that indicate a bug in the program. Here are some scenarios where using panic might be appropriate:
+
+Out-of-bounds access: If your code tries to access an element of an array or slice using an index that is out of bounds, this is a programming error that should be fixed. You might use panic to stop the program and alert you to the problem.
+
+Nil pointer dereference: If your code tries to access a field or method of a nil object, this is a programming error. You might use panic to stop the program in this case.
+
+Invalid type assertion: If your code does a type assertion that fails, this is a programming error. You might use panic to stop the program.
+
+Invariant violation: If your code has certain invariants (conditions that should always be true), and one of these invariants is violated, this might be a good place to use panic.
+
+Unable to initialize critical resources: If your program absolutely requires certain resources to run (like a configuration file or a database connection), and it can't initialize those resources, you might use panic to stop the program, as it can't function correctly without them.
+
+Remember, panic should be used sparingly, and only for severe errors that should stop the execution of the current goroutine or program. For most error conditions, it's better to return an error and let the caller decide how to handle it.
+
