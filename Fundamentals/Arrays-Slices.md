@@ -1,3 +1,61 @@
+## Useful code snippets for arrays and slices
+
+To create an array
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    // Declare an array of integers of size 5
+    var arr [5]int
+    fmt.Println(arr)  // Outputs: [0 0 0 0 0]
+
+    // Initialize an array with values
+    arr2 := [5]int{1, 2, 3, 4, 5}
+    fmt.Println(arr2)  // Outputs: [1 2 3 4 5]
+}
+```
+
+or
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    // Create a pointer to an array of 5 integers
+    arr := new([5]int)
+    fmt.Println(arr)  // Outputs: &[0 0 0 0 0]
+
+    // You can access the elements of the array through the pointer
+    (*arr)[0] = 1
+    (*arr)[1] = 2
+    fmt.Println(arr)  // Outputs: &[1 2 0 0 0]
+}
+```
+
+The main practical difference is that, in the second snippet, arr is a pointer, so you can pass it to functions or assign it to other variables, and it will still point to the same underlying array. Changes to the array through one pointer will be visible through other pointers to the same array.
+
+In contrast, in the first snippet, if you pass arr or arr2 to a function or assign them to other variables, Go will create a copy of the array, because arrays in Go are value types. Changes to the copy will not affect the original array.
+
+You can use var arr *[5]int to declare a pointer to an array of 5 integers. However, this will initialize arr to nil, not to a pointer to a zeroed array. If you want arr to point to a zeroed array, you need to allocate the array yourself, like this:
+
+```go
+var arr *[5]int = &[5]int{}
+```
+
+or more simply
+
+```go
+arr := &[5]int{}
+```
+
+arr := new([5]int) or arr := &[5]int{} declares a pointer to an array of 5 integers and allocates a zeroed array. arr points to the array after these statements.
+
+
 ## Q1
 
 What is the output of the following Go program?
