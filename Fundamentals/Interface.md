@@ -64,3 +64,24 @@ func main() {
 
 In this example, even though p is nil, when it's assigned to i, i is not nil because it holds a type (*MyType). So the output of this program is "i is not nil".
 
+## A type classifier
+
+In Go, a type classifier is not a built-in concept, but you can create functions to classify types using type assertions and type switches.
+
+A type assertion provides access to an interface value's underlying concrete value.
+
+```go
+func classifier(items ...interface{}) {
+  for i, x := range items {
+    switch x.(type) {
+    case bool: fmt.Printf("param #%d is a bool\n", i)
+    case float64: fmt.Printf("param #%d is a float64\n", i)
+    case int, int64: fmt.Printf("param #%d is an int\n", i)
+    case nil: fmt.Printf("param #%d is nil\n", i)
+    case string: fmt.Printf("param #%d is a string\n", i)
+
+    default: fmt.Printf("param #%d's type is unknown\n", i)
+    }
+  }
+}
+```
