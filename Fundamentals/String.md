@@ -46,3 +46,81 @@ func main() {
     fmt.Printf("The reversed string using variant 3 is -%s-\n", reverse3(str))
 }
 ```
+
+## Finding number of bytes and characters in string
+
+```go
+package main
+
+import (
+  "fmt"
+  "unicode/utf8"
+)
+
+func main() {
+  str := "Hello, 世界"
+
+  // Number of bytes
+  byteCount := len(str)
+  fmt.Println("Number of bytes:", byteCount)
+
+  // Number of characters
+  charCount := utf8.RuneCountInString(str)
+  charCount2 := len([]rune(str))
+  fmt.Println("Number of characters:", charCount)
+  fmt.Println("Number of characters 2nd version:", charCount2)
+}
+
+// output
+Number of bytes: 13
+Number of characters: 9
+Number of characters 2nd version: 9
+```
+
+## Concatenating strings
+
+The fastest way is:
+
+```go
+// with a bytes.Buffer 
+var buffer bytes.Buffer
+var s string
+buffer.WriteString(s)
+fmt.Print(buffer.String(), "\n")
+```
+
+Anther fastest way:
+
+```go
+var builder strings.Builder
+
+strs := []string{"Hello", ", ", "World", "!"}
+
+for _, str := range strs {
+    builder.WriteString(str)
+}
+
+fmt.Println(builder.String())  // Outputs: Hello, World!
+```
+
+Other ways are:
+
+```go
+Strings.Join() // using Join function
+str1 += str2 // using += operator
+```
+
+bytes.Buffer and strings.Builder are both used for efficient concatenation of strings in Go, but they have some differences:
+
+bytes.Buffer:
+
+It can be used for both string and byte slice manipulation.
+It provides methods for reading from and writing to the buffer.
+It's safe for concurrent use by multiple goroutines.
+strings.Builder:
+
+It's designed specifically for building strings, so it only provides methods for writing strings.
+It's simpler and safer to use than bytes.Buffer if you only need to build a string.
+It's not safe for concurrent use by multiple goroutines.
+
+In general, if you only need to build a string, strings.Builder is the better choice. If you need to manipulate byte slices or read from the buffer, you should use bytes.Buffer.
