@@ -338,3 +338,75 @@ func floatsToStrings(numbers []string) ([]float64, error) {
   return floats, nil
 }
 ```
+
+## Using closures with goroutines
+
+```go
+package main
+import (
+"fmt"
+"time"
+)
+
+var values = [5]int{10, 11, 12, 13, 14}
+
+func main() {
+  // version A:
+  for ix := range values { // ix is the index
+    func() {
+      fmt.Print(ix, " ")
+    }() // call closure, prints each index
+  }
+  fmt.Println()
+  // version B: same as A, but call closure as a goroutine
+  for ix := range values {
+    go func() {
+      fmt.Print(ix, " ")
+    }()
+  }
+
+  fmt.Println()
+  time.Sleep(5e9)
+  // version C: the right way
+  for ix := range values {
+    go func(ix int) {
+     fmt.Print(ix, " ")
+    }(ix)
+  }
+  fmt.Println()
+  time.Sleep(5e9)
+  // version D: print out the values:
+  for ix := range values {
+    val := values[ix]
+    go func() {
+      fmt.Print(val, " ")
+    }()
+  }
+  time.Sleep(1e9)
+}
+
+// output
+0 1 2 3 4 
+
+4 4 4 4 4 
+3 0 4 1 2 11 10 12 13 14   
+```
+The issue with the above code lies in how closures and goroutines interact with the loop variable.
+
+In version B, the goroutine closure is capturing the loop variable ix. Because goroutines are concurrent, the loop may finish iterating before any of the goroutines start executing. By the time they execute, ix may have its final value from the loop (which is 4 in this case), so all goroutines might print 4 instead of their respective index.
+
+To explain further: 
+
+The reason why this code prints 4 4 4 4 4 is due to the way Go's goroutines and closures work.
+
+In this loop, the anonymous function (closure) captures the loop variable ix. However, goroutines are not executed immediately when they are encountered. They are scheduled to run concurrently and may run at any time in the future.
+
+By the time these goroutines actually run, the loop may have already finished executing. This means that the ix variable has reached its final value, which is 4 (since arrays are 0-indexed and the length of values is 5). So, each goroutine is printing the final value of ix, which is 4.
+
+This is a common gotcha in Go when using goroutines inside loops. The solution is to pass the loop variable as an argument to the function, which ensures that each goroutine gets its own copy of the variable.
+
+Version D has a similar issue. It captures val, which is derived from ix, so it has the same problem.
+
+Version C is the correct way to use goroutines with closures in a loop. It passes ix as an argument to the closure, so each goroutine gets its own copy of the index, and they print the correct values.
+
+Remember, when you launch a goroutine from a loop and the goroutine works with variables from the loop, pass those variables as arguments to the goroutine's function to ensure each goroutine works with the correct values.
