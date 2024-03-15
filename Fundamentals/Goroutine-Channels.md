@@ -410,3 +410,34 @@ Version D has a similar issue. It captures val, which is derived from ix, so it 
 Version C is the correct way to use goroutines with closures in a loop. It passes ix as an argument to the closure, so each goroutine gets its own copy of the index, and they print the correct values.
 
 Remember, when you launch a goroutine from a loop and the goroutine works with variables from the loop, pass those variables as arguments to the goroutine's function to ensure each goroutine works with the correct values.
+
+
+## Finding number of bytes and characters in string
+
+```go
+package main
+
+import (
+  "fmt"
+  "unicode/utf8"
+)
+
+func main() {
+  str := "Hello, 世界"
+
+  // Number of bytes
+  byteCount := len(str)
+  fmt.Println("Number of bytes:", byteCount)
+
+  // Number of characters
+  charCount := utf8.RuneCountInString(str)
+  charCount2 := len([]rune(str))
+  fmt.Println("Number of characters:", charCount)
+  fmt.Println("Number of characters 2nd version:", charCount2)
+}
+
+// output
+Number of bytes: 13
+Number of characters: 9
+Number of characters 2nd version: 9
+```
