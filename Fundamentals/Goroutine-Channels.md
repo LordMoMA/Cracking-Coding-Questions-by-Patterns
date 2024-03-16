@@ -1,3 +1,100 @@
+## Rule of Thumb
+
+A rule of thumb if you use parallelism to gain efficiency over serial computation:
+
+"The amount of work done inside goroutines has to be much larger than the costs associated with creating goroutines and sending data back and forth between them."
+
+Using buffered channels for performance: A buffered channel can easily double its throughput depending on the context, and the performance gain can be 10x or more. You can further try to optimize by adjusting the capacity of the channel.
+
+```go
+ch := make(chan type, buf)
+```
+
+Limiting the number of items in a channel and packing them in arrays: Channels become a bottleneck if you pass a lot of individual items through them. You can work around this by packing chunks of data into arrays and then unpacking on the other end. This can give a speed gain of a factor 10x.
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func sum(arr []int, resultChan chan int) {
+	sum := 0
+	for _, num := range arr {
+		sum += num
+	}
+	resultChan <- sum
+}
+
+func main() {
+    // Create a large slice of integers.
+    arr := make([]int, 1e6)
+    for i := range arr {
+      arr[i] = i
+    }
+
+    // Calculate the sum serially.
+    start := time.Now()
+    result := 0
+    for _, num := range arr {
+      result += num
+    }
+    fmt.Println("Serial:", time.Since(start))
+    fmt.Println("Serial Sum:", result)
+
+    // Calculate the sum in parallel.
+    start = time.Now()
+    resultChan := make(chan int)
+    go sum(arr[:len(arr)/2], resultChan)
+    go sum(arr[len(arr)/2:], resultChan)
+    sum1 := <-resultChan
+    sum2 := <-resultChan
+    totalSum := sum1 + sum2
+    fmt.Println("Parallel:", time.Since(start))
+    fmt.Println("Parallel Sum:", totalSum)
+}
+```
+
+The parallel version might be slower due to the overhead of creating goroutines and channels. In Go, creating a goroutine has a cost, and communicating between goroutines using channels also has a cost. If the work done by each goroutine is not enough to offset this cost, then the parallel version can end up being slower than the serial version.
+
+In your case, you're splitting the work into just two goroutines. The overhead of creating the goroutines and the channel might be higher than the benefit of running the two halves of the array in parallel.
+
+You might see a benefit from parallelism if you split the work into more chunks and used more goroutines, especially if you have a multi-core processor. However, there's a trade-off: creating too many goroutines can also slow down your program due to the overhead of scheduling and context switching.
+
+Here's an example of how you might split the work into more chunks:
+  
+  ```go
+  // Calculate the sum in parallel.
+start = time.Now()
+n := runtime.NumCPU() // Number of chunks
+resultChan := make(chan int, n) // Buffered channel
+chunkSize := len(arr) / n
+for i := 0; i < n; i++ {
+    start := i * chunkSize
+    end := start + chunkSize
+    if i == n-1 {
+        end = len(arr) // Make sure we include any leftover elements in the last chunk
+    }
+    go sum(arr[start:end], resultChan)
+}
+totalSum := 0
+for i := 0; i < n; i++ {
+    totalSum += <-resultChan
+}
+fmt.Println("Parallel:", time.Since(start))
+fmt.Println("Parallel Sum:", totalSum)
+
+// output
+Serial: 637µs
+Serial Sum: 499999500000
+Parallel: 447.708µs
+Parallel Sum: 499999500000
+```
+
+This version splits the array into as many chunks as there are CPU cores, and creates a goroutine for each chunk. This might give you better performance, but it will depend on the specifics of your hardware and workload.
+
 ## Semophore Pattern
 
 Implementing a semaphore using a buffered channel
@@ -411,4 +508,45 @@ Version C is the correct way to use goroutines with closures in a loop. It passe
 
 Remember, when you launch a goroutine from a loop and the goroutine works with variables from the loop, pass those variables as arguments to the goroutine's function to ensure each goroutine works with the correct values.
 
+## Using an in- and out-channel instead of locking
 
+Using in- and out-channels instead of locking is a concurrency pattern in Go that leverages channels for synchronization and communication between goroutines, instead of using traditional locking mechanisms like mutexes.
+
+In this pattern, you have one or more "worker" goroutines that read input data from an "in" channel, perform some computation on the data, and then write the results to an "out" channel. The main goroutine sends data to the workers through the in-channel and receives results from the out-channel.
+
+This pattern has several advantages:
+
+It's easy to understand and reason about, because data flows in one direction from the in-channel to the out-channel.
+It's safe from data races, because each piece of data is owned by one goroutine at a time.
+
+It's flexible and scalable, because you can easily adjust the number of worker goroutines to match your workload and hardware.
+
+Here's a simple example:
+
+
+```go
+func worker(in <-chan int, out chan<- int) {
+    for num := range in {
+        out <- num * num // Square the number
+    }
+}
+
+func main() {
+    in := make(chan int, 100)
+    out := make(chan int, 100)
+
+    // Start a worker goroutine.
+    go worker(in, out)
+
+    // Send numbers to the worker.
+    for i := 0; i < 10; i++ {
+        in <- i
+    }
+    close(in) // No more numbers to send
+
+    // Receive and print the results.
+    for i := 0; i < 10; i++ {
+        fmt.Println(<-out)
+    }
+}
+```
