@@ -212,6 +212,44 @@ Hidden tests:
 Score:
 417/500
 
+[303. Range Sum Query - Immutable](https://leetcode.com/problems/range-sum-query-immutable/description/)
+
+You can certainly solve the problem by looping through the array and adding up the elements between indices i and j each time the sumRange function is called. However, this approach would have a time complexity of O(n) for each sumRange query, where n is the length of the range. This could be inefficient if you have a large number of queries or large ranges.
+
+The prefix sum approach, on the other hand, has a time complexity of O(1) for each sumRange query, after an initial preprocessing step of O(n) to compute the prefix sums. This makes it much more efficient for large numbers of queries or large ranges.
+
+In other words, the prefix sum approach trades off a little extra space complexity and an initial preprocessing step for much faster query times. This is a common trade-off in computer science known as space-time tradeoff.
+
+```go
+package main
+
+import "fmt"
+
+type NumArray struct {
+    prefixSum []int
+}
+
+func Constructor(nums []int) NumArray {
+    prefixSum := make([]int, len(nums)+1)
+    for i := 0; i < len(nums); i++ {
+        prefixSum[i+1] = prefixSum[i] + nums[i]
+    }
+    return NumArray{prefixSum: prefixSum}
+}
+
+func (this *NumArray) SumRange(i int, j int) int {
+    return this.prefixSum[j+1] - this.prefixSum[i]
+}
+
+func main() {
+    nums := []int{-2, 0, 3, -5, 2, -1}
+    numArray := Constructor(nums)
+    fmt.Println(numArray.SumRange(0, 2)) // Outputs: 1
+    fmt.Println(numArray.SumRange(2, 5)) // Outputs: -1
+    fmt.Println(numArray.SumRange(0, 5)) // Outputs: -3
+}
+```
+
 
 [1672. Richest Customer Wealth](http://www.leetcode.com/problems/richest-customer-wealth/)
 
