@@ -249,7 +249,90 @@ func main() {
     fmt.Println(numArray.SumRange(0, 5)) // Outputs: -3
 }
 ```
+[448. Find All Numbers Disappeared in an Array](https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/description/)
 
+```go
+func findDisappearedNumbers(nums []int) []int {
+    for _, num := range nums {
+        idx := abs(num) - 1
+        if nums[idx] > 0 {
+            nums[idx] *= -1
+        }
+    }
+    
+    res := []int{}
+    for i, num := range nums {
+        if num > 0 {
+            res = append(res, i+1)
+        }
+    }
+    
+    return res
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+```
+
+[1189. Maximum Number of Balloons](https://leetcode.com/problems/maximum-number-of-balloons/description/)
+
+```go
+func maxNumberOfBalloons(text string) int {
+    count := make(map[rune]int)
+    for _, ch := range text {
+        count[ch]++
+    }
+    
+    count['l'] /= 2
+    count['o'] /= 2
+    
+    minCount := count['b']
+    for _, ch := range "balon" {
+        if count[ch] < minCount {
+            minCount = count[ch]
+        }
+    }
+    
+    return minCount
+}
+```
+[290. Word Pattern](https://leetcode.com/problems/word-pattern/)
+
+
+```go
+import (
+    "strings"
+)
+
+func wordPattern(pattern string, s string) bool {
+    words := strings.Split(s, " ")
+    if len(pattern) != len(words) {
+        return false
+    }
+
+    patternToWord := make(map[byte]string)
+    wordToPattern := make(map[string]byte)
+
+    for i := 0; i < len(pattern); i++ {
+        p, w := pattern[i], words[i]
+        if pw, ok := patternToWord[p]; ok && pw != w {
+            return false
+        }
+        if wp, ok := wordToPattern[w]; ok && wp != p {
+            return false
+        }
+        patternToWord[p] = w
+        wordToPattern[w] = p
+    }
+
+    return true
+}
+
+```
 
 [1672. Richest Customer Wealth](http://www.leetcode.com/problems/richest-customer-wealth/)
 
