@@ -333,6 +333,35 @@ func wordPattern(pattern string, s string) bool {
 }
 
 ```
+[705. Design HashSet](https://leetcode.com/problems/design-hashset/description/)
+```go
+type MyHashSet struct {
+    set map[int]bool
+}
+
+/** Initialize your data structure here. */
+func Constructor() MyHashSet {
+    return MyHashSet{
+        set: make(map[int]bool),
+    }
+}
+
+/** Adds a value to the set. */
+func (this *MyHashSet) Add(key int) {
+    this.set[key] = true
+}
+
+/** Removes a value from the set. */
+func (this *MyHashSet) Remove(key int) {
+    delete(this.set, key)
+}
+
+/** Returns true if this set contains the specified element */
+func (this *MyHashSet) Contains(key int) bool {
+    _, exists := this.set[key]
+    return exists
+}
+```
 
 [1672. Richest Customer Wealth](http://www.leetcode.com/problems/richest-customer-wealth/)
 
@@ -342,4 +371,4 @@ func wordPattern(pattern string, s string) bool {
 
 [1920. Build Array from Permutation](http://www.leetcode.com/problems/build-array-from-permutation/)
 
-```go
+k``go
