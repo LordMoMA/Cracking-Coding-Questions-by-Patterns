@@ -362,6 +362,37 @@ func (this *MyHashSet) Contains(key int) bool {
     return exists
 }
 ```
+[706. Design HashMap](https://leetcode.com/problems/design-hashmap/description/)
+```go
+package main
+
+type MyHashMap struct {
+    keys map[int]int
+}
+
+/** Initialize your data structure here. */
+func Constructor() MyHashMap {
+    return MyHashMap{keys: make(map[int]int)}
+}
+
+/** value will always be non-negative. */
+func (this *MyHashMap) Put(key int, value int) {
+    this.keys[key] = value
+}
+
+/** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
+func (this *MyHashMap) Get(key int) int {
+    if value, exists := this.keys[key]; exists {
+        return value
+    }
+    return -1
+}
+
+/** Removes the mapping of the specified value key if this map contains a mapping for the key */
+func (this *MyHashMap) Remove(key int) {
+    delete(this.keys, key)
+}
+```
 
 [1672. Richest Customer Wealth](http://www.leetcode.com/problems/richest-customer-wealth/)
 
