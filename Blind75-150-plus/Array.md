@@ -393,6 +393,30 @@ func (this *MyHashMap) Remove(key int) {
     delete(this.keys, key)
 }
 ```
+[75. Sort Colors](https://leetcode.com/problems/sort-colors/description/)
+
+This solution is known as the "Three Pointer" or "Dutch National Flag" algorithm, as it effectively partitions the array into three sections: one for 0's, one for 1's, and one for 2's.
+
+```go
+func sortColors(nums []int) {
+    low, mid, high := 0, 0, len(nums)-1
+
+    for mid <= high {
+        switch nums[mid] {
+        case 0:
+            nums[mid], nums[low] = nums[low], nums[mid]
+            low++
+            mid++
+        case 1:
+            mid++
+        case 2:
+            nums[mid], nums[high] = nums[high], nums[mid]
+            high--
+        }
+    }
+}
+
+```
 
 [1672. Richest Customer Wealth](http://www.leetcode.com/problems/richest-customer-wealth/)
 
