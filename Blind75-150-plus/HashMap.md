@@ -110,3 +110,34 @@ func longestConsecutive(nums []int) int {
     return longestStreak
 }
 ```
+
+[535. Encode and Decode TinyURL](https://leetcode.com/problems/encode-and-decode-tinyurl/description/)
+```go
+import (
+    "strconv"
+)
+
+type Codec struct {
+    urls map[string]string
+}
+
+func Constructor() Codec {
+    return Codec {
+        urls: make(map[string]string),
+    }
+}
+
+// Encodes a URL to a shortened URL.
+func (this *Codec) encode(longUrl string) string {
+	key := strconv.Itoa(len(longUrl))
+    this.urls[key] = longUrl
+    return "http://tinyurl.com/"+ key
+}
+
+// Decodes a shortened URL to its original URL.
+func (this *Codec) decode(shortUrl string) string {
+    key := shortUrl[len("http://tinyurl.com/"):]
+    return this.urls[key]
+}
+
+```
