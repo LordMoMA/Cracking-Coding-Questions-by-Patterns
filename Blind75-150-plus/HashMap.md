@@ -141,3 +141,22 @@ func (this *Codec) decode(shortUrl string) string {
 }
 
 ```
+[554. Brick Wall](https://leetcode.com/problems/brick-wall/description/)
+
+```go
+func leastBricks(wall [][]int) int {
+    gaps := make(map[int]int)
+    maxGap := 0
+    for _, row := range wall {
+        width := 0
+        for _, brick := range row[:len(row)-1]{
+            width += brick
+            gaps[width]++
+            if gaps[width] > maxGap {
+                maxGap = gaps[width]
+            }
+        }
+    }
+    return len(wall) - maxGap
+}
+```
