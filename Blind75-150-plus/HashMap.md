@@ -160,3 +160,103 @@ func leastBricks(wall [][]int) int {
     return len(wall) - maxGap
 }
 ```
+[560. Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/description/)
+
+A subarray is a contiguous non-empty sequence of elements within an array.
+
+```go
+func subarraySum(nums []int, k int) int {
+    sum, count := 0, 0
+    sums := make(map[int]int)
+    sums[0] = 1
+    for _, num := range nums {
+        sum += num
+        if val, ok := sums[sum - k]; ok {
+            count += val
+        }
+        sums[sum]++
+    }
+    return count
+}
+```
+If the subarray doesn't need to be contiguous, the problem becomes a different one, often referred to as a "subsequence" problem.
+
+In this case, you're looking for a subsequence (not necessarily contiguous) whose sum equals k. This problem can be solved using a depth-first search (DFS) or dynamic programming.
+
+### Here's a DFS approach in Go:
+
+```go
+func subsequenceSum(nums []int, k int) int {
+    return dfs(nums, k, 0, 0)
+}
+
+func dfs(nums []int, k, sum, idx int) int {
+    if idx == len(nums) {
+        if sum == k {
+            return 1
+        }
+        return 0
+    }
+    return dfs(nums, k, sum+nums[idx], idx+1) + dfs(nums, k, sum, idx+1)
+}
+```
+The line return dfs(nums, k, sum+nums[idx], idx+1) + dfs(nums, k, sum, idx+1) is exploring two possibilities at each step of the recursion:
+
+dfs(nums, k, sum+nums[idx], idx+1): This is the case where we include the current number (nums[idx]) in our subsequence. We add the current number to our running sum (sum+nums[idx]) and move to the next index (idx+1).
+
+dfs(nums, k, sum, idx+1): This is the case where we exclude the current number from our subsequence. We keep the running sum as it is (sum) and move to the next index (idx+1).
+
+Backtracking is implicit in the recursion. When a recursive call is made, the current state (including the current sum and index) is pushed onto the call stack. When the recursive call returns, the state is popped from the stack, effectively undoing the changes made in the recursive call. This is the essence of backtracking.
+
+In the line return dfs(nums, k, sum+nums[idx], idx+1) + dfs(nums, k, sum, idx+1), the first call to dfs explores the possibility of including the current number in the sum. After this call returns and its result is added to the total, the second call to dfs is made, which explores the possibility of excluding the current number from the sum. The state from the first call is not carried over to the second call, because each call operates on its own copy of the state. This is how backtracking is achieved in this code.
+
+let's consider a simple example with an array of three elements: [1, 2, 3] and we are looking for a subsequence sum of k.
+
+The recursive calls can be visualized as a binary tree:
+
+```bash
+                     (0, 0)  // sum = 0, idx = 0
+                    /       \
+          (1, 1)             (0, 1)  // include nums[0] or not
+         /     \             /     \
+ (3, 2)         (1, 2) (2, 2)       (0, 2)  // include nums[1] or not
+ /   \          /   \   /   \       /   \
+(6,3) (3,3)   (4,3) (1,3) (5,3) (2,3) (3,3) (0,3) // include nums[2] or not
+```
+
+Each node in the tree is a pair (sum, idx), where sum is the current sum and idx is the current index. The left child of each node represents the case where the number at index idx is included in the sum, and the right child represents the case where the number is not included.
+
+The leaf nodes represent all possible subsequences of the array. For example, the leftmost leaf node (6,3) represents the subsequence [1, 2, 3], and the rightmost leaf node (0,3) represents the empty subsequence [].
+
+The dfs function explores this tree depth-first, and for each leaf node, it checks if the sum is equal to k. The total count of subsequences with sum k is the sum of the results of all paths in the tree.
+
+The time complexity of this solution is O(2^n), where n is the length of the input array, because in the worst case, it explores all possible subsequences of the array. The space complexity is O(n), because in the worst case, the depth of the recursion tree can go up to n.
+
+### DP version
+
+The dynamic programming (DP) version of the "subsequence sum equals k" problem can be solved using a 2D DP table. The idea is to build a table dp[i][j] where dp[i][j] is true if there is a subsequence of nums[0..i] with sum equal to j, and false otherwise.
+
+```go
+func subsequenceSum(nums []int, k int) bool {
+    n := len(nums)
+    dp := make([][]bool, n+1)
+    for i := range dp {
+        dp[i] = make([]bool, k+1)
+    }
+    dp[0][0] = true
+
+    for i := 1; i <= n; i++ {
+        for j := 0; j <= k; j++ {
+            if j < nums[i-1] {
+                dp[i][j] = dp[i-1][j]
+            } else {
+                dp[i][j] = dp[i-1][j] || dp[i-1][j-nums[i-1]]
+            }
+        }
+    }
+    return dp[n][k]
+}
+```
+The time complexity of this dynamic programming solution is O(nk), where n is the length of the input array and k is the target sum. This is because we need to fill in a DP table with nk cells.
+
+The space complexity is also O(n*k), because that's the size of the DP table. Each cell in the table stores a boolean value, indicating whether a subsequence with a certain sum can be formed from the first few elements of the array.
