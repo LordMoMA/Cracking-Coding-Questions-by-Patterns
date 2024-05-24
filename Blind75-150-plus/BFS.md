@@ -171,3 +171,68 @@ func goodNodes(root *TreeNode) int {
 }
 
 ```
+
+traverse a binary tree and group the nodes by their column in the tree. This is a common problem in binary tree traversal and can be solved using a breadth-first search (BFS) algorithm with a slight modification to keep track of the column each node is in.
+
+// Input: pointer to root node
+//    
+//    1
+//  /  \
+// 7    2
+//     / \
+//    3   8
+         /
+        5
+// output [[1,3][2,5].[8]]
+
+```go
+type TreeNode struct {
+    Val   int
+    Left  *TreeNode
+    Right *TreeNode
+}
+
+type QueueItem struct {
+    Node  *TreeNode
+    Index int
+}
+
+func verticalOrder(root *TreeNode) [][]int {
+    if root == nil {
+        return [][]int{}
+    }
+
+    columnTable := make(map[int][]int)
+    min, max := 0, 0
+    queue := []QueueItem{{root, 0}}
+
+    for len(queue) > 0 {
+        item := queue[0]
+        queue = queue[1:]
+
+        node, index := item.Node, item.Index
+        columnTable[index] = append(columnTable[index], node.Val)
+
+        if node.Left != nil {
+            queue = append(queue, QueueItem{node.Left, index - 1})
+            if min > index-1 {
+                min = index - 1
+            }
+        }
+
+        if node.Right != nil {
+            queue = append(queue, QueueItem{node.Right, index + 1})
+            if max < index+1 {
+                max = index + 1
+            }
+        }
+    }
+
+    result := make([][]int, max-min+1)
+    for i := min; i <= max; i++ {
+        result[i-min] = columnTable[i]
+    }
+
+    return result
+}
+```
