@@ -236,3 +236,195 @@ func verticalOrder(root *TreeNode) [][]int {
     return result
 }
 ```
+[987. Vertical Order Traversal of a Binary Tree](https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/description/)
+
+A harder problem of the above question, here it needs to keep track of the level of the node, and make sure the lower level comes before the higher level.
+
+## BFS
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+
+type QueueItem struct {
+    node *TreeNode
+    index int
+    level int
+}
+
+type Pair struct {
+    val int
+    level int
+}
+
+func verticalTraversal(root *TreeNode) [][]int {
+    if root == nil {
+        return [][]int{}
+    }
+    table := make(map[int][]Pair)
+    queue := []QueueItem{{root, 0, 0}}
+    min, max := 0, 0
+
+    for len(queue) > 0 {
+        item := queue[0]
+        queue = queue[1:]
+        node, index, level := item.node, item.index, item.level
+        table[index] = append(table[index], Pair{node.Val, level})
+        if node.Left != nil {
+            queue = append(queue, QueueItem{node.Left, index - 1, level + 1})
+            if min > index - 1 {
+                min = index - 1
+            }
+
+        }
+        if node.Right != nil {
+            queue = append(queue, QueueItem{node.Right, index + 1, level + 1})
+            if max < index + 1 {
+                max = index + 1
+            }
+        }
+    }
+
+    result := make([][]int, max - min + 1)
+    for i := min; i <= max; i++ {
+        pairs := table[i]
+        sort.Slice(pairs, func(j, k int) bool {
+            if pairs[j].level == pairs[k].level {
+                return pairs[j].val < pairs[k].val
+            }
+            return pairs[j].level < pairs[k].level
+        })
+        for _, pair := range pairs {
+            result[i-min] = append(result[i-min], pair.val)
+        }
+    }
+    return result
+}
+```
+
+## BFS 2 
+
+```go
+import (
+    "sort"
+)
+
+type TreeNode struct {
+    Val   int
+    Left  *TreeNode
+    Right *TreeNode
+}
+
+type Node struct {
+    node *TreeNode
+    row  int
+    col  int
+}
+
+func verticalTraversal(root *TreeNode) [][]int {
+    if root == nil {
+        return [][]int{}
+    }
+
+    nodes := []Node{}
+    queue := []Node{{root, 0, 0}}
+
+    for len(queue) > 0 {
+        cur := queue[0]
+        queue = queue[1:]
+        nodes = append(nodes, cur)
+
+        if cur.node.Left != nil {
+            queue = append(queue, Node{cur.node.Left, cur.row + 1, cur.col - 1})
+        }
+        if cur.node.Right != nil {
+            queue = append(queue, Node{cur.node.Right, cur.row + 1, cur.col + 1})
+        }
+    }
+
+    sort.Slice(nodes, func(i, j int) bool {
+        if nodes[i].col != nodes[j].col {
+            return nodes[i].col < nodes[j].col
+        }
+        if nodes[i].row != nodes[j].row {
+            return nodes[i].row < nodes[j].row
+        }
+        return nodes[i].node.Val < nodes[j].node.Val
+    })
+
+    result := [][]int{}
+    lastCol := nodes[0].col
+    column := []int{}
+
+    for _, n := range nodes {
+        if n.col != lastCol {
+            lastCol = n.col
+            result = append(result, column)
+            column = []int{}
+        }
+        column = append(column, n.node.Val)
+    }
+
+    result = append(result, column)
+
+    return result
+}
+```
+
+## DFS solution
+
+```go
+import "sort"
+
+type TreeNode struct {
+    Val   int
+    Left  *TreeNode
+    Right *TreeNode
+}
+
+type Node struct {
+    col int
+    row int
+    val int
+}
+
+func verticalTraversal(root *TreeNode) [][]int {
+    nodes := []Node{}
+    dfs(root, 0, 0, &nodes)
+    sort.Slice(nodes, func(i, j int) bool {
+        if nodes[i].col != nodes[j].col {
+            return nodes[i].col < nodes[j].col
+        }
+        if nodes[i].row != nodes[j].row {
+            return nodes[i].row < nodes[j].row
+        }
+        return nodes[i].val < nodes[j].val
+    })
+
+    prevCol := nodes[0].col
+    ans := [][]int{{}}
+    for _, node := range nodes {
+        if node.col != prevCol {
+            prevCol = node.col
+            ans = append(ans, []int{})
+        }
+        ans[len(ans)-1] = append(ans[len(ans)-1], node.val)
+    }
+    return ans
+}
+
+func dfs(node *TreeNode, row, col int, nodes *[]Node) {
+    if node == nil {
+        return
+    }
+    *nodes = append(*nodes, Node{col, row, node.Val})
+    dfs(node.Left, row+1, col-1, nodes)
+    dfs(node.Right, row+1, col+1, nodes)
+}
+```
