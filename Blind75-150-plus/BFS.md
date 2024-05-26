@@ -363,12 +363,12 @@ func verticalTraversal(root *TreeNode) [][]int {
     column := []int{}
 
     for _, n := range nodes {
-        if n.col != lastCol {
+        if n.col != lastCol { // this is 2nd and onwards
             lastCol = n.col
             result = append(result, column)
             column = []int{}
         }
-        column = append(column, n.node.Val)
+        column = append(column, n.node.Val) // this is the 1st step
     }
 
     result = append(result, column)
@@ -376,6 +376,9 @@ func verticalTraversal(root *TreeNode) [][]int {
     return result
 }
 ```
+For the first node in the nodes slice, n.col is equal to lastCol (since lastCol was initialized to nodes[0].col). So, the if condition n.col != lastCol is false, and the code inside the if block is skipped. Then, the value of the first node is added to the column slice with column = append(column, n.node.Val).
+
+For the second and subsequent nodes, the if condition n.col != lastCol is checked. If the column of the current node is different from lastCol, it means we have moved to a new column. In this case, lastCol is updated to the column of the current node, the current column is added to the result, and a new column is started. If the column of the current node is the same as lastCol, the if block is skipped.
 
 ## DFS solution
 
