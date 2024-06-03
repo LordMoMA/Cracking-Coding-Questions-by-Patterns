@@ -31,3 +31,5 @@ Think and look for insights online for the first 30 minutes, if it still does no
 Always think and try for around 10–15 min, if not working check my solutions.
 
 Time your coding durations, make sure easy and medium questions don’t pass 20 min and hard 35 min.
+
+hahahah

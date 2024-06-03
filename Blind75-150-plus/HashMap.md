@@ -260,3 +260,85 @@ func subsequenceSum(nums []int, k int) bool {
 The time complexity of this dynamic programming solution is O(nk), where n is the length of the input array and k is the target sum. This is because we need to fill in a DP table with nk cells.
 
 The space complexity is also O(n*k), because that's the size of the DP table. Each cell in the table stores a boolean value, indicating whether a subsequence with a certain sum can be formed from the first few elements of the array.
+
+
+[359. Logger Rate Limiter](https://leetcode.com/problemset/?search=rate+limiter&page=1)
+Design a logger system that receives a stream of messages along with their timestamps. Each unique message should only be printed at most every 10 seconds (i.e., a message printed at timestamp t will prevent other identical messages from being printed until timestamp t + 10).
+
+All messages will come in chronological order. Several messages may arrive at the same timestamp.
+
+Implement the Logger class:
+
+Logger() Initializes the logger object.
+bool shouldPrintMessage(int timestamp, string message) Returns true if the message should be printed in the given timestamp, otherwise returns false.
+
+```go
+package main
+
+import "fmt"
+
+type Logger struct {
+	messages map[string]int
+}
+
+/** Initialize your data structure here. */
+func Constructor() Logger {
+	return Logger{messages: make(map[string]int)}
+}
+
+/*
+  - Returns true if the message should be printed in the given timestamp, otherwise returns false.
+    If this method returns false, the message will not be printed.
+    The timestamp is in seconds granularity.
+*/
+func (this *Logger) ShouldPrintMessage(timestamp int, message string) bool {
+	if time, ok := this.messages[message]; !ok || timestamp-time >= 10 {
+		this.messages[message] = timestamp
+		return true
+	}
+	return false
+}
+
+func main() {
+	logger := Constructor()
+
+	fmt.Println(logger.ShouldPrintMessage(1, "foo"))  // returns true
+	fmt.Println(logger.ShouldPrintMessage(2, "bar"))  // returns true
+	fmt.Println(logger.ShouldPrintMessage(3, "foo"))  // returns false
+	fmt.Println(logger.ShouldPrintMessage(8, "bar"))  // returns false
+	fmt.Println(logger.ShouldPrintMessage(10, "foo")) // returns false
+	fmt.Println(logger.ShouldPrintMessage(11, "foo")) // returns true
+}
+```
+Using closure in NodeJS 
+
+```js
+function createLogger() {
+    let messages = {};
+
+    return function(timestamp, message) {
+        if (!messages[message] || timestamp - messages[message] >= 10) {
+            messages[message] = timestamp;
+            return true;
+        }
+        return false;
+    };
+}
+```
+Using class in NodeJS
+
+```js
+class Logger {
+    constructor() {
+        this.messages = {};
+    }
+
+    shouldPrintMessage(timestamp, message) {
+        if (this.messages[message] === undefined || timestamp - this.messages[message] >= 10) {
+            this.messages[message] = timestamp;
+            return true;
+        }
+        return false;
+    }
+}
+```
