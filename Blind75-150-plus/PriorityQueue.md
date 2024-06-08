@@ -6,6 +6,12 @@ The heap.Interface includes the sort.Interface and adds two more methods: Push a
 
 When you're implementing a priority queue using the container/heap package in Go, you need to define these five methods.
 
+In Go, the container/heap package uses the sort.Interface as part of its heap.Interface. This means that when you implement a type that satisfies the heap.Interface, it must also satisfy the sort.Interface because the heap.Interface embeds the sort.Interface.
+
+When you import container/heap, you're implicitly making use of the sort.Interface without directly importing sort. The heap functions internally call the Len, Less, and Swap methods of your type, which are required by the sort.Interface.
+
+
+
 [347. Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/)
 
 The heap data structure in Go does not provide direct access to its elements. It only provides access to the top element (the minimum or maximum, depending on whether it's a min-heap or max-heap) through the heap.Pop() function. This is because heaps are binary trees that are stored in arrays for efficiency, and the elements are not sorted in a way that allows direct access.
@@ -463,6 +469,124 @@ func (t *Twitter) Unfollow(followerId int, followeeId int) {
 type IntHeap []tweet
 
 func (h IntHeap) Less(i, j int) bool { return h[i].time > h[j].time } //maxheap
+```
+[1985. Find the Kth Largest Integer in the Array](https://leetcode.com/problems/find-the-kth-largest-integer-in-the-array/description/)
+
+time complexity: O(n log k)
+
+Here's why:
+
+The loop that iterates over the input array has a time complexity of O(n), as it performs a constant amount of work for each element in the array.
+
+Inside the loop, the heap.Push and heap.Pop operations each have a time complexity of O(log k), as they need to maintain the heap property in a heap of size k. These operations are performed at most once for each element in the array.
+
+Therefore, the overall time complexity is O(n log k), as the loop and the heap operations are combined in a nested manner.
+
+The space complexity of the solution is O(k), as the heap used to store the k largest numbers requires k space.
+
+
+### 🥶 Be careful about this problem: 
+
+If we directly work with int in this problem we will get:
+
+pass test: output: "9223372036854775807", expected: "38272299275037314530" when k = 3
+
+The issue is that the int type in Go has a maximum value of 9223372036854775807 (for 64-bit systems), and the number 38272299275037314530 is larger than this maximum value.
+
+so below tradional solution did not work:
+
+```go
+func kthLargestNumber(nums []string, k int) string {
+    minHeap := &minHeap{}
+    heap.Init(minHeap)
+
+    for _, num := range nums {
+        cur, _ := strconv.Atoi(num)
+        heap.Push(minHeap, cur)
+        if minHeap.Len() > k {
+            heap.Pop(minHeap)
+        }
+    }
+    return strconv.Itoa(heap.Pop(minHeap).(int))
+}
+
+type minHeap []int
+
+func (m minHeap) Len() int { return len(m)}
+func (m minHeap) Swap(i, j int)  { m[i], m[j] = m[j], m[i]}
+func (m minHeap) Less(i, j int) bool { return m[i] < m[j]}
+
+func (m *minHeap) Push(x interface{}) {
+    *m = append(*m, x.(int))
+}
+
+func (m *minHeap) Pop() interface{} {
+    old := *m
+    n := len(old)
+    x := old[n-1]
+    *m = old[:n-1]
+    return x 
+}
+```
+
+To solve this problem, you can use the big.Int type from the math/big package, which can handle arbitrarily large integers. However, the container/heap package and the comparison operators (<, >, etc.) do not work with big.Int directly.
+
+A workaround is to keep the numbers as strings and compare them as strings.
+
+And we should know that we can compare strings using the standard comparison operators: ==, !=, <, <=, >, and >=. These operators compare strings lexicographically, character by character, based on the Unicode values of the characters.
+
+see an example of how string comparison works:
+
+```js
+console.log("10" < "2");  // true (lexicographical comparison)
+console.log(parseInt("10") < parseInt("2"));  // false (numerical comparison)
+```
+consider the strings "10" and "2". Lexicographically, "10" is less than "2" because '1' (the first character of "10") is less than '2'. However, numerically, 10 is greater than 2.
+
+```go
+package main
+
+import (
+    "container/heap"
+    "fmt"
+)
+
+type minHeap []string
+
+func (m minHeap) Len() int { return len(m) }
+func (m minHeap) Swap(i, j int)  { m[i], m[j] = m[j], m[i] }
+func (m minHeap) Less(i, j int) bool { // ❤️  this is where we need to be careful
+    if len(m[i]) == len(m[j]) {
+        return m[i] < m[j]
+    }
+    return len(m[i]) < len(m[j])
+}
+
+func (m *minHeap) Push(x interface{}) {
+    *m = append(*m, x.(string))
+}
+
+func (m *minHeap) Pop() interface{} {
+    old := *m
+    n := len(old)
+    x := old[n-1]
+    *m = old[:n-1]
+    return x 
+}
+
+func kthLargestNumber(nums []string, k int) string {
+    minHeap := &minHeap{}
+    heap.Init(minHeap)
+
+    for _, num := range nums {
+        heap.Push(minHeap, num)
+        if minHeap.Len() > k {
+            heap.Pop(minHeap)
+        }
+    }
+    return heap.Pop(minHeap).(string)
+}
+
 ```
 
 [692. Top K Frequent Words](https://leetcode.com/problems/top-k-frequent-words/)
