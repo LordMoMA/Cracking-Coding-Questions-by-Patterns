@@ -54,4 +54,58 @@ Arithmetic Operations: If you need to perform arithmetic operations (like additi
 
 For these reasons, it's generally more efficient to use a data type like big.Int that can handle large integers directly, rather than converting the integers to strings and using string comparison.
 
+### Go's drawbacks
+
+so priority queue in go, we can only use string comparision for large numbers, because heap package did not support math big package.
+
+The container/heap package in Go doesn't directly support the math/big package. The heap package requires the elements of the heap to implement the sort.Interface, which includes the Len, Less, and Swap methods. The big.Int type doesn't implement these methods.
+
+If you want to use a priority queue with large numbers, one option is to store the numbers as strings and implement the sort.Interface methods to perform lexicographic comparison. This would allow you to use the heap package to manage the priority queue.
+
+However, keep in mind that lexicographic comparison is not the same as numeric comparison. For example, the string "200" is lexicographically less than the string "30" because '2' is less than '3'. If you want to compare the strings numerically, you would need to implement the Less method to convert the strings to big.Int values and compare them using the big.Int.Cmp method.
+
+Here's an example of how you might do this:
+
+```go
+type BigIntHeap []string
+
+func (h BigIntHeap) Len() int           { return len(h) }
+func (h BigIntHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h BigIntHeap) Less(i, j int) bool {
+    a := new(big.Int)
+    b := new(big.Int)
+    a.SetString(h[i], 10)
+    b.SetString(h[j], 10)
+    return a.Cmp(b) < 0
+}
+func (h *BigIntHeap) Push(x interface{}) { *h = append(*h, x.(string)) }
+func (h *BigIntHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+```
+
+the BigIntHeap type is a slice of strings that implements the sort.Interface and the heap.Interface. The Less method converts the strings to big.Int values and compares them using the big.Int.Cmp method. This allows the BigIntHeap to be used with the heap package to create a priority queue that can handle arbitrarily large numbers.
+
+As to 
+
+```go
+func (m minHeap) Less(i, j int) bool {
+    if len(m[i]) == len(m[j]) {
+        return m[i] < m[j]
+    }
+    return len(m[i]) < len(m[j])
+}
+```
+
+This function compares two strings in the heap. If the strings have the same length, it compares them lexicographically. If the strings have different lengths, it considers the shorter string to be less than the longer string.
+
+This approach can work for comparing strings that represent non-negative integers, because a longer string represents a larger number and, for strings of the same length, lexicographic comparison is the same as numeric comparison.
+
+However, this approach does not work for strings that represent negative integers or non-integer numbers, because the length of the string does not necessarily correspond to the magnitude of the number.
+
+Also, keep in mind that this approach is less efficient than comparing the numbers directly, because it requires comparing the strings character by character. If you need to perform a lot of comparisons, it might be more efficient to convert the strings to big.Int values and compare them directly, as in the previous example.
 Read more to expand knowledge here at [Shannon's theorem](https://en.wikipedia.org/wiki/Noisy-channel_coding_theorem#:~:text=The%20Shannon%20limit%20or%20Shannon,for%20a%20particular%20noise%20level.)
