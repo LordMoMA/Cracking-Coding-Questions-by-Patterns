@@ -34,6 +34,16 @@ While it might seem easier to convert large integers to strings and compare them
 
 2. Memory Usage: Strings use more memory than integers. Each digit of the number requires at least one byte of memory in a string, whereas in an integer, each digit requires less than a byte (since an integer can represent a range of values in a single byte).
 
+let's take an example. Consider the number 12345.
+
+As an integer: In binary, 12345 is represented as 11000000111001, which is 14 bits long. On a typical system, this would be stored in a 16-bit integer type (like short in C/C++ or int16 in Go), which uses 2 bytes of memory.
+
+As a string: The string "12345" consists of 5 characters. In most programming languages, a string is a sequence of Unicode characters. In the simplest case where each character is an ASCII character (like our digits here), each character uses 1 byte of memory. So the string "12345" uses 5 bytes of memory.
+
+So in this example, the integer 12345 uses less memory (2 bytes) than its string representation "12345" (5 bytes).
+
+This difference becomes even more pronounced with larger numbers. For example, the number 12345678901234567890 can be represented in 8 bytes as a 64-bit integer, but its string representation "12345678901234567890" would require 20 bytes of memory.
+
 3. Arithmetic Operations: If you need to perform arithmetic operations (like addition, subtraction, multiplication, etc.) on the numbers, it's much more efficient to do this with integers than with strings. Performing arithmetic operations on strings requires converting the strings back to integers, performing the operation, and then converting the result back to a string.
 
 For these reasons, it's generally more efficient to use a data type like big.Int that can handle large integers directly, rather than converting the integers to strings and using string comparison.
