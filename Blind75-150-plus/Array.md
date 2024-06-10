@@ -417,6 +417,50 @@ func sortColors(nums []int) {
 }
 
 ```
+[896. Monotonic Array](https://leetcode.com/problems/monotonic-array/description/)
+
+```go
+func isMonotonic(nums []int) bool {
+    increasing := true
+    decreasing := true
+    for i := 1; i < len(nums); i++ {
+        if nums[i] > nums[i-1] {
+            decreasing = false
+        } else if nums[i] < nums[i-1] {
+            increasing = false
+        }
+    }
+    return increasing || decreasing
+}
+```
+
+### What if we use nums[i+1] and nums[i]?
+
+In modern CPUs, memory is loaded into the cache in blocks (also known as cache lines). When you access an element in an array, the entire block of memory containing that element is loaded into the cache. This means that subsequent accesses to nearby elements are faster because they're already in the cache.
+
+In the context of the isMonotonic function, when you access nums[i], the CPU loads a block of memory containing nums[i] into the cache. If nums[i+1] is in the same block, accessing it will be fast because it's already in the cache. But if nums[i+1] is not in the same block (e.g., if nums[i] is at the end of a block), accessing it will cause a cache miss and the CPU will have to fetch a new block from the main memory.
+
+```go
+// Version 1: Potentially causes a cache miss when accessing nums[i+1]
+for i := 0; i < len(nums)-1; i++ {
+    if nums[i] > nums[i+1] {
+        decreasing = false
+    } else if nums[i] < nums[i+1] {
+        increasing = false
+    }
+}
+
+// Version 2: Less likely to cause a cache miss because it only accesses nums[i] and nums[i-1]
+for i := 1; i < len(nums); i++ {
+    if nums[i] > nums[i-1] {
+        decreasing = false
+    } else if nums[i] < nums[i-1] {
+        increasing = false
+    }
+}
+```
+
+
 
 [1672. Richest Customer Wealth](http://www.leetcode.com/problems/richest-customer-wealth/)
 
