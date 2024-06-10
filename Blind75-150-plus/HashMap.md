@@ -342,3 +342,58 @@ class Logger {
     }
 }
 ```
+
+[1512. Number of Good Pairs](https://leetcode.com/problems/number-of-good-pairs/description/)
+
+```go
+func numIdenticalPairs(nums []int) int {
+    count := 0
+    freq := make(map[int]int)
+
+    for _, num := range nums {
+        if _, ok := freq[num]; ok {
+            count += freq[num]
+        }
+        freq[num]++
+    }
+
+    return count
+}
+```
+For each number, it increments the count by the current frequency of the number and then increments the frequency.
+
+let's take an example array: nums = [1, 2, 3, 1, 1, 3].
+
+For 1, freq[1] is not set, so we set freq[1] to 1.
+For 2, freq[2] is not set, so we set freq[2] to 1.
+For 3, freq[3] is not set, so we set freq[3] to 1.
+For the second 1, freq[1] is 1, so we increment count by 1 and increment freq[1] to 2.
+For the third 1, freq[1] is 2, so we increment count by 2 (because we can form 2 new pairs with the third 1 and the two previous 1s) and increment freq[1] to 3.
+For the second 3, freq[3] is 1, so we increment count by 1 and increment freq[3] to 2.
+
+At the end, count is 4, which is the number of good pairs in the array.
+
+Another solution:
+
+```go
+func numIdenticalPairs(nums []int) int {
+    gp := make(map[int][]int)
+    sum := 0
+    for i, v := range nums {
+        gp[v] = append(gp[v], i)
+    }
+    for _, arr := range gp {
+        n := len(arr)
+        if n > 1 {
+            sum += ((n * (n-1)) / 2)
+        }
+    }
+    return sum
+}
+```
+
+The function you provided is less efficient because it uses more memory and does more work than necessary.
+
+Memory Usage: It creates a slice for each unique number in the array and stores the indices of that number in the slice. This uses more memory than the solution I provided, which only stores the count of each number.
+
+Work Done: It calculates the number of pairs by computing the combination formula n*(n-1)/2 for each unique number. This is more work than necessary because you can increment the count of pairs as you go along, as in the solution I provided.
