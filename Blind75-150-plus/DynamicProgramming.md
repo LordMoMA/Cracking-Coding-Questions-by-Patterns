@@ -625,7 +625,26 @@ func max(a, b int) int {
     return b
 }
 ```
+[119. Pascal's Triangle II](https://leetcode.com/problems/pascals-triangle-ii/description/)
 
+Use breakpoints to understand this logic, especially how the inner loop for j is going.
+
+```go
+func getRow(rowIndex int) []int {
+    pascal := make([]int, rowIndex+1)
+    pascal[0] = 1
+    for i := 1; i < rowIndex+1; i++ {
+        for j := i; j > 0; j-- {
+            if j == i {
+                pascal[j] = 1
+            } else {
+                pascal[j] = pascal[j] + pascal[j-1]
+            }
+        }
+    }
+    return pascal
+}
+```
 
 
 [518. Coin Change 2](http://www.leetcode.com/problems/coin-change-2/)
