@@ -459,7 +459,48 @@ for i := 1; i < len(nums); i++ {
     }
 }
 ```
+[1160. Find Words That Can Be Formed by Characters](https://leetcode.com/problems/find-words-that-can-be-formed-by-characters/description/)
 
+```go
+package main
+
+import "fmt"
+
+func countCharacters(words []string, chars string) int {
+    charsCount := count(chars)
+    res := 0
+    for _, word := range words {
+        wordCount := count(word)
+        if contains(charsCount, wordCount) {
+            res += len(word)
+        }
+    }
+    return res
+}
+
+func count(s string) [26]int {
+    var arr [26]int
+    for _, ch := range s {
+        arr[ch-'a']++
+    }
+    return arr
+}
+
+func contains(arr1, arr2 [26]int) bool {
+    for i := 0; i < 26; i++ {
+        if arr1[i] < arr2[i] {
+            return false
+        }
+    }
+    return true
+}
+
+func main() {
+    words := []string{"cat","bt","hat","tree"}
+    chars := "atach"
+    fmt.Println(countCharacters(words, chars))  // Output: 6
+}
+```
 
 
 [1672. Richest Customer Wealth](http://www.leetcode.com/problems/richest-customer-wealth/)
