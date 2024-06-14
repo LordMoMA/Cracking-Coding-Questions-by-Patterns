@@ -389,4 +389,17 @@ func isVowel(ch byte) bool {
     return strings.ContainsRune("aeiouy", rune(ch))
 }
 ```
+[2264. Largest 3-Same-Digit Number in String](https://leetcode.com/problems/largest-3-same-digit-number-in-string/description/)
 
+```go
+func largestGoodInteger(num string) string {
+    maxStr := ""
+    for i := 0; i < len(num)-2; i++ {
+        subStr := num[i:i+3]
+        if subStr[0] == subStr[1] && subStr[1] == subStr[2] && subStr > maxStr {
+            maxStr = subStr
+        }
+    }
+    return maxStr
+}
+```
