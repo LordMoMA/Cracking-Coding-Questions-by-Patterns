@@ -397,3 +397,21 @@ The function you provided is less efficient because it uses more memory and does
 Memory Usage: It creates a slice for each unique number in the array and stores the indices of that number in the slice. This uses more memory than the solution I provided, which only stores the count of each number.
 
 Work Done: It calculates the number of pairs by computing the combination formula n*(n-1)/2 for each unique number. This is more work than necessary because you can increment the count of pairs as you go along, as in the solution I provided.
+
+[1436. Destination City](https://leetcode.com/problems/destination-city/description/)
+
+```go
+func destCity(paths [][]string) string {
+    startCities := make(map[string]bool)
+    for _, path := range paths {
+        startCities[path[0]] = true
+    }
+    
+    for _, path := range paths {
+        if _, exists := startCities[path[1]]; !exists {
+            return path[1]
+        }
+    }
+    return ""
+}
+```
