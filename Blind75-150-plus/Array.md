@@ -501,7 +501,28 @@ func main() {
     fmt.Println(countCharacters(words, chars))  // Output: 6
 }
 ```
+[1913. Maximum Product Difference Between Two Pairs](https://leetcode.com/problems/maximum-product-difference-between-two-pairs/description/)
 
+```go
+func maxProductDifference(nums []int) int {
+    max1, max2, min1, min2 := 0, 0, math.MaxInt64, math.MaxInt64
+    for _, num := range nums {
+        if num > max1 {
+            max2 = max1
+            max1 = num  
+        } else if num > max2 {
+            max2 = num
+        }
+        if num < min1 {
+            min2 = min1
+            min1 = num 
+        } else if num < min2 {
+            min2 = num
+        }
+    }
+    return (max1*max2)-(min1*min2)
+}
+```
 
 [1672. Richest Customer Wealth](http://www.leetcode.com/problems/richest-customer-wealth/)
 
