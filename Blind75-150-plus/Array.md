@@ -523,6 +523,34 @@ func maxProductDifference(nums []int) int {
     return (max1*max2)-(min1*min2)
 }
 ```
+[1422. Maximum Score After Splitting a String](https://leetcode.com/problems/maximum-score-after-splitting-a-string/description/)
+```go
+func maxScore(s string) int {
+    // Initial score is based on counting all '1's for the right part.
+    onesCount := 0
+    for _, ch := range s {
+        if ch == '1' {
+            onesCount++
+        }
+    }
+
+    score, maxScore := 0, 0
+    // Iterate through the string, except the last character.
+    for i := 0; i < len(s)-1; i++ {
+        if s[i] == '0' {
+            score++ // Increment score for '0' in the left part.
+        } else {
+            onesCount-- // Decrement onesCount for '1' moving from right to left part.
+        }
+        // Update maxScore with the current score plus remaining onesCount.
+        if current := score + onesCount; current > maxScore {
+            maxScore = current
+        }
+    }
+
+    return maxScore
+}
+```
 
 [1672. Richest Customer Wealth](http://www.leetcode.com/problems/richest-customer-wealth/)
 
