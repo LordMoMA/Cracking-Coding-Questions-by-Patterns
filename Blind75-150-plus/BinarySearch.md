@@ -68,6 +68,8 @@ func findMin(nums []int) int {
 ```
 
 [33. Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/description/)
+Tik Tok Interview Question on July 2nd, 2024, interviewed by Lead Ad team, Interviewer was in China and a follow-up question related to this one was asked.
+The question is find the max index of target if the array has duplicated values. for example [1,2,3,3,3] target = 3, the answer is 4, not 2 or 3.
 
 ```go
 func search(nums []int, target int) int {
