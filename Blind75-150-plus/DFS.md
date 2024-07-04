@@ -342,3 +342,54 @@ func dfs(node *TreeNode, maxSoFar int, count *int) {
     dfs(node.Right, maxSoFar, count)
 }
 ```
+
+[841. Keys and Rooms](https://leetcode.com/problems/keys-and-rooms/description/)
+
+```go
+func canVisitAllRooms(rooms [][]int) bool {
+    visited := make([]bool, len(rooms))
+    var dfs func(room int)
+    dfs = func(room int) {
+        visited[room] = true
+        for _, key := range rooms[room] {
+            if !visited[key] {
+                dfs(key)
+            }
+        }
+    }
+    dfs(0) // Start DFS from room 0
+    for _, v := range visited {
+        if !v {
+            return false // If any room is not visited, return false
+        }
+    }
+    return true // All rooms visited
+}
+```
+
+```go
+// Separate the DFS logic into its own function for clarity and reusability.
+
+func canVisitAllRooms(rooms [][]int) bool {
+    visited := make([]bool, len(rooms))
+    dfs(rooms, 0, visited) // Start DFS from room 0, passing the visited slice
+
+    // Check if all rooms have been visited
+    for _, v := range visited {
+        if !v {
+            return false // If any room is not visited, return false
+        }
+    }
+    return true // All rooms visited
+}
+
+// dfs function to perform depth-first search
+func dfs(rooms [][]int, currentRoom int, visited []bool) {
+    visited[currentRoom] = true
+    for _, key := range rooms[currentRoom] {
+        if !visited[key] {
+            dfs(rooms, key, visited) // Visit the room that the key opens
+        }
+    }
+}
+```
