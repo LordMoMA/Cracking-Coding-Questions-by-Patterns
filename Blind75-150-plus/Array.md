@@ -1,4 +1,3 @@
-
 [238. Product of Array Except Self](http://www.leetcode.com/problems/product-of-array-except-self/)
 
 ```go
@@ -22,6 +21,7 @@ func productExceptSelf(nums []int) []int {
     return answer
 }
 ```
+
 [271. Encode and Decode Strings](https://leetcode.com/problems/encode-and-decode-strings/description/)
 
 The problem "271. Encode and Decode Strings" asks to design an algorithm to encode a list of strings to a single string, and then decode the single string back into the original list of strings.
@@ -82,6 +82,7 @@ func (this *Codec) Decode(s string) []string {
     return res
 }
 ```
+
 There are other ways to encode a list of strings to a single string without using strings.Builder. One common alternative is to use string concatenation with the + operator. However, keep in mind that this can be less efficient than using strings.Builder if you're concatenating a large number of strings.
 
 ```go
@@ -128,7 +129,7 @@ func getConcatenation2(nums []int) []int {
 
 [1299. Replace Elements with Greatest Element on Right Side](http://www.leetcode.com/problems/replace-elements-with-greatest-element-on-right-side/)
 
-```go  
+```go
 // O(n) time, O(1) space
 func replaceElements(arr []int) []int {
     n := len(arr)
@@ -201,7 +202,8 @@ func solution3(a []int) int64 {
     return res
 }
 ```
-Both above solutions: 
+
+Both above solutions:
 
 Tests passed: 14/16. Execution time limit exceeded on test 15: Program exceeded the execution time limit. Make sure that it completes execution in a few seconds for any possible input.
 Click the "Run Tests" button to see output, console logs, and detailed error messages for sample or custom test cases. This information is hidden when clicking the "Submit" button in order to prevent hard-coding solutions to the hidden test cases.
@@ -249,6 +251,7 @@ func main() {
     fmt.Println(numArray.SumRange(0, 5)) // Outputs: -3
 }
 ```
+
 [448. Find All Numbers Disappeared in an Array](https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/description/)
 
 ```go
@@ -259,14 +262,14 @@ func findDisappearedNumbers(nums []int) []int {
             nums[idx] *= -1
         }
     }
-    
+
     res := []int{}
     for i, num := range nums {
         if num > 0 {
             res = append(res, i+1)
         }
     }
-    
+
     return res
 }
 
@@ -286,22 +289,22 @@ func maxNumberOfBalloons(text string) int {
     for _, ch := range text {
         count[ch]++
     }
-    
+
     count['l'] /= 2
     count['o'] /= 2
-    
+
     minCount := count['b']
     for _, ch := range "balon" {
         if count[ch] < minCount {
             minCount = count[ch]
         }
     }
-    
+
     return minCount
 }
 ```
-[290. Word Pattern](https://leetcode.com/problems/word-pattern/)
 
+[290. Word Pattern](https://leetcode.com/problems/word-pattern/)
 
 ```go
 import (
@@ -333,7 +336,9 @@ func wordPattern(pattern string, s string) bool {
 }
 
 ```
+
 [705. Design HashSet](https://leetcode.com/problems/design-hashset/description/)
+
 ```go
 type MyHashSet struct {
     set map[int]bool
@@ -362,7 +367,9 @@ func (this *MyHashSet) Contains(key int) bool {
     return exists
 }
 ```
+
 [706. Design HashMap](https://leetcode.com/problems/design-hashmap/description/)
+
 ```go
 package main
 
@@ -393,6 +400,7 @@ func (this *MyHashMap) Remove(key int) {
     delete(this.keys, key)
 }
 ```
+
 [75. Sort Colors](https://leetcode.com/problems/sort-colors/description/)
 
 This solution is known as the "Three Pointer" or "Dutch National Flag" algorithm, as it effectively partitions the array into three sections: one for 0's, one for 1's, and one for 2's.
@@ -417,6 +425,7 @@ func sortColors(nums []int) {
 }
 
 ```
+
 [896. Monotonic Array](https://leetcode.com/problems/monotonic-array/description/)
 
 ```go
@@ -459,6 +468,7 @@ for i := 1; i < len(nums); i++ {
     }
 }
 ```
+
 [1160. Find Words That Can Be Formed by Characters](https://leetcode.com/problems/find-words-that-can-be-formed-by-characters/description/)
 
 ```go
@@ -501,6 +511,7 @@ func main() {
     fmt.Println(countCharacters(words, chars))  // Output: 6
 }
 ```
+
 [1913. Maximum Product Difference Between Two Pairs](https://leetcode.com/problems/maximum-product-difference-between-two-pairs/description/)
 
 ```go
@@ -509,13 +520,13 @@ func maxProductDifference(nums []int) int {
     for _, num := range nums {
         if num > max1 {
             max2 = max1
-            max1 = num  
+            max1 = num
         } else if num > max2 {
             max2 = num
         }
         if num < min1 {
             min2 = min1
-            min1 = num 
+            min1 = num
         } else if num < min2 {
             min2 = num
         }
@@ -523,7 +534,9 @@ func maxProductDifference(nums []int) int {
     return (max1*max2)-(min1*min2)
 }
 ```
+
 [1422. Maximum Score After Splitting a String](https://leetcode.com/problems/maximum-score-after-splitting-a-string/description/)
+
 ```go
 func maxScore(s string) int {
     // Initial score is based on counting all '1's for the right part.
@@ -551,6 +564,7 @@ func maxScore(s string) int {
     return maxScore
 }
 ```
+
 [min length of the highest degree in an array]
 
 for example: [3, 2, 1, 1, 4], return 2, because highest degree is 1, it appeared twice and the array is [1,1], so it should be 2.
