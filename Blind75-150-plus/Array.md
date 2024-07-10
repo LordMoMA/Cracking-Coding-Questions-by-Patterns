@@ -551,6 +551,58 @@ func maxScore(s string) int {
     return maxScore
 }
 ```
+[min length of the highest degree in an array]
+
+for example: [3, 2, 1, 1, 4], return 2, because highest degree is 1, it appeared twice and the array is [1,1], so it should be 2.
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+type NumInfo struct {
+    firstIndex int
+    lastIndex  int
+    count      int
+}
+
+func findShortestSubArray(nums []int) int {
+    numInfo := make(map[int]*NumInfo)
+    degree := 0
+    minLength := len(nums)
+
+    for i, num := range nums {
+        if _, ok := numInfo[num]; !ok {
+            numInfo[num] = &NumInfo{firstIndex: i, lastIndex: i, count: 1}
+        } else {
+            numInfo[num].lastIndex = i
+            numInfo[num].count++
+        }
+
+        if numInfo[num].count > degree {
+            degree = numInfo[num].count
+        }
+    }
+
+    for _, info := range numInfo {
+        if info.count == degree {
+            length := info.lastIndex - info.firstIndex + 1
+            if length < minLength {
+                minLength = length
+            }
+        }
+    }
+
+    return minLength
+}
+
+func main() {
+    nums := []int{1, 2, 2, 1, 1, 3, 3, 3, 2, 2, 2, 1}
+    fmt.Println(findShortestSubArray(nums))  // Output: 5
+}
+```
 
 [1672. Richest Customer Wealth](http://www.leetcode.com/problems/richest-customer-wealth/)
 
