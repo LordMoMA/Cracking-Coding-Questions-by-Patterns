@@ -415,3 +415,141 @@ func destCity(paths [][]string) string {
     return ""
 }
 ```
+
+[sorted dates]
+
+there is empty space between the mm yyy and dd
+
+```
+example: ["01 Jan 1990", "05 May 1987"]
+return: ["05 May 1987", "01 Jan 1990" ]
+```
+
+```go
+package main
+
+import (
+    "fmt"
+    "sort"
+    "strings"
+)
+
+var monthToNum = map[string]string{
+    "Jan": "01",
+    "Feb": "02",
+    "Mar": "03",
+    "Apr": "04",
+    "May": "05",
+    "Jun": "06",
+    "Jul": "07",
+    "Aug": "08",
+    "Sep": "09",
+    "Oct": "10",
+    "Nov": "11",
+    "Dec": "12",
+}
+
+func sortDates(dates []string) []string {
+    // Create a slice of indices and a slice of sortable dates.
+    indices := make([]int, len(dates))
+    sortableDates := make([]string, len(dates))
+
+    // Convert the dates from "dd MMM yyyy" format to "yyyyMMdd" format.
+    for i, date := range dates {
+        indices[i] = i
+        parts := strings.Split(date, " ")
+        day := parts[0]
+        month := parts[1]
+        year := parts[2]
+        sortableDates[i] = year + monthToNum[month] + day
+    }
+
+    // Sort the indices slice using the sortableDates slice.
+    sort.Slice(indices, func(i, j int) bool {
+        return sortableDates[indices[i]] < sortableDates[indices[j]]
+    })
+
+    // Create a new slice for the sorted dates.
+    sortedDates := make([]string, len(dates))
+    for i, index := range indices {
+        sortedDates[i] = dates[index]
+    }
+
+    return sortedDates
+}
+
+func main() {
+    dates := []string{"01 Jan 2022", "15 Feb 2023", "01 Feb 2022", "12 Jan 2023"}
+    sortedDates := sortDates(dates)
+    fmt.Println(sortedDates)
+}
+```
+
+Solution 2:
+```go
+package main
+
+import (
+    "fmt"
+    "sort"
+)
+
+var monthToNum = map[string]string{
+    "Jan": "01",
+    "Feb": "02",
+    "Mar": "03",
+    "Apr": "04",
+    "May": "05",
+    "Jun": "06",
+    "Jul": "07",
+    "Aug": "08",
+    "Sep": "09",
+    "Oct": "10",
+    "Nov": "11",
+    "Dec": "12",
+}
+
+var numToMonth = map[string]string{
+    "01": "Jan",
+    "02": "Feb",
+    "03": "Mar",
+    "04": "Apr",
+    "05": "May",
+    "06": "Jun",
+    "07": "Jul",
+    "08": "Aug",
+    "09": "Sep",
+    "10": "Oct",
+    "11": "Nov",
+    "12": "Dec",
+}
+
+func sortDates(dates []string) []string {
+    // Convert the dates from "ddMMMyyyy" format to "yyyymmdd" format.
+    for i, date := range dates {
+        day := date[:2]
+        month := date[3:6]
+        year := date[7:]
+        dates[i] = year + monthToNum[month] + day
+    }
+
+    // Use the sort.Strings function from the sort package to sort the dates.
+    sort.Strings(dates)
+
+    // Convert the dates back to "ddMMMyyyy" format.
+    for i, date := range dates {
+        year := date[:4]
+        month := date[4:6]
+        day := date[6:]
+        dates[i] = day + " " + numToMonth[month] + " " + year
+    }
+
+    return dates
+}
+
+func main() {
+    dates := []string{"01 Jan 2022", "15 Feb 2023", "01 Feb 2022", "12 Jan 2023"}
+    sortedDates := sortDates(dates)
+    fmt.Println(sortedDates)
+}
+```
