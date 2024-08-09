@@ -552,4 +552,58 @@ func main() {
     sortedDates := sortDates(dates)
     fmt.Println(sortedDates)
 }
+
+```
+[697. Degree of an Array](https://leetcode.com/problems/degree-of-an-array/description/)
+
+```go
+package main
+
+import (
+    "fmt"
+    "math"
+)
+
+func findShortestSubArray(nums []int) int {
+    // Maps to store the frequency, first occurrence, and last occurrence of each element
+    frequency := make(map[int]int)
+    firstOccurrence := make(map[int]int)
+    lastOccurrence := make(map[int]int)
+
+    // Iterate through the array to populate the maps
+    for i, num := range nums {
+        if _, exists := frequency[num]; !exists {
+            firstOccurrence[num] = i
+        }
+        frequency[num]++
+        lastOccurrence[num] = i
+    }
+
+    // Find the degree of the array
+    maxFrequency := 0
+    for _, freq := range frequency {
+        if freq > maxFrequency {
+            maxFrequency = freq
+        }
+    }
+
+    // Find the minimum length of subarray with the same degree
+    minLength := math.MaxInt32
+    for num, freq := range frequency {
+        if freq == maxFrequency {
+            length := lastOccurrence[num] - firstOccurrence[num] + 1
+            if length < minLength {
+                minLength = length
+            }
+        }
+    }
+
+    return minLength
+}
+
+func main() {
+    // Example usage
+    nums := []int{1, 2, 2, 3, 1, 4, 2}
+    fmt.Println(findShortestSubArray(nums)) // Output: 6
+}
 ```
