@@ -618,6 +618,33 @@ func main() {
 }
 ```
 
+[1758. Minimum Changes To Make Alternating Binary String](https://leetcode.com/problems/minimum-changes-to-make-alternating-binary-string/description/)
+
+```go
+func minOperations(s string) int {
+	count0, count1 := 0, 0
+	for i, str := range s {
+		expect1, expect2 := '0', '1'
+		if i%2 == 1 {
+			expect1 = '1'
+			expect2 = '0'
+		}
+
+		if str != expect1 {
+			count1++
+		}
+		if str != expect2 {
+			count0++
+		}
+
+	}
+	if count1 > count0 {
+		return count0
+	}
+	return count1
+}
+```
+
 [1672. Richest Customer Wealth](http://www.leetcode.com/problems/richest-customer-wealth/)
 
 ```go
